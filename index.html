@@ -215,7 +215,10 @@ ul.clean{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 [hidden]{display:none!important}
 figure.illus{margin:0;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#F4F8FB}
 figure.illus svg{display:block;width:100%;height:auto}
-figure.illus figcaption{padding:8px 14px;font-size:14px;color:#5F6B78;background:#FFFDF8;border-top:1px solid #E2D9C6}
+.vwrap{position:relative;padding-top:56.25%;border-radius:14px;overflow:hidden;background:#000}
+.vwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.anim-btn{margin-left:auto;flex:none;border:1px solid #E2D9C6;background:#fff;color:#13324A;border-radius:8px;padding:4px 10px;font-size:13px;font-weight:700}
+figure.illus figcaption{display:flex;gap:10px;align-items:center;padding:8px 14px;font-size:14px;color:#5F6B78;background:#FFFDF8;border-top:1px solid #E2D9C6}
 .reset-btn{margin:0 22px 8px;background:none;border:1px solid rgba(255,255,255,.25);color:var(--side-text);border-radius:10px;padding:7px 12px;font-size:14px;font-weight:700;text-align:left}
 .reset-btn:hover{border-color:var(--side-acc);color:#fff}
 .reset-all{background:none;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:8px 14px;font-size:14px;font-weight:700}
@@ -262,7 +265,7 @@ figure.illus figcaption{padding:8px 14px;font-size:14px;color:#5F6B78;background
     <span class="ring"></span><span class="sun"></span>
     <p class="school">Trường THCS Hòa Trí · Tổ KHTN – GDTC</p>
     <h1>Bài giảng điện tử KHTN 9 – Phần Vật lí</h1>
-    <p class="sub" style="font-size:14px;color:#F2A65A;margin-bottom:4px">Phiên bản 08/11/2026 (bản 4) · 13 bài (Bài 5 – Bài 17)</p>
+    <p class="sub" style="font-size:14px;color:#F2A65A;margin-bottom:4px">Phiên bản 08/11/2026 (bản 6) · 13 bài (Bài 5 – Bài 17)</p>
     <p class="sub">Chọn bài để học. Tiến độ của em được lưu trên điện thoại hoặc máy tính em đang dùng.</p>
   </header>
   <div class="hbar"><h2>Danh sách bài học</h2><button class="theme-btn" data-theme-toggle>Sáng/Tối</button></div>
@@ -601,12 +604,12 @@ meter: `<svg viewBox="0 0 600 260"><rect width="600" height="260" fill="#F4F8FB"
  <rect x="330" y="40" width="200" height="180" rx="14" fill="#fff" stroke="#13324A" stroke-width="3"/><rect x="350" y="70" width="160" height="44" rx="6" fill="#13324A"/>
  <text x="362" y="102" font-size="26" font-weight="800" fill="#7FDCAA" font-family="monospace">01248</text>${T(400, 140, 'kWh')}${T(350, 190, 'Công tơ điện')}${T(88, 240, 'Công suất định mức')}</svg>`,
 coil: `<svg viewBox="0 0 600 260"><rect width="600" height="260" fill="#F4F8FB"/>
- <rect x="40" y="105" width="70" height="40" fill="#D93A2B"/><rect x="110" y="105" width="70" height="40" fill="#2F6FD6"/><text x="64" y="132" font-size="20" font-weight="800" fill="#fff">N</text><text x="136" y="132" font-size="20" font-weight="800" fill="#fff">S</text>
+ <g><animateTransform attributeName="transform" type="translate" values="0 0;45 0;45 0;0 0;0 0" keyTimes="0;0.4;0.5;0.9;1" dur="4s" repeatCount="indefinite"/><rect x="40" y="105" width="70" height="40" fill="#D93A2B"/><rect x="110" y="105" width="70" height="40" fill="#2F6FD6"/><text x="64" y="132" font-size="20" font-weight="800" fill="#fff">N</text><text x="136" y="132" font-size="20" font-weight="800" fill="#fff">S</text></g>
  <path d="M60 165 L160 165" stroke="#A94F0C" stroke-width="3" marker-end="url(#ah)"/><defs><marker id="ah" markerWidth="10" markerHeight="10" refX="6" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#A94F0C"/></marker></defs>
  ${[0, 1, 2, 3, 4, 5, 6].map(k => `<ellipse cx="${230 + k * 18}" cy="125" rx="9" ry="40" fill="none" stroke="#B87333" stroke-width="5"/>`).join('')}
  <path d="M230 165 L230 225 L470 225 L470 190 M338 165 L338 200 L430 200" fill="none" stroke="#13324A" stroke-width="3"/>
- <rect x="420" y="70" width="140" height="120" rx="12" fill="#fff" stroke="#13324A" stroke-width="3"/><path d="M445 150 A45 45 0 0 1 535 150" fill="none" stroke="#9AA0A6" stroke-width="2"/><line x1="490" y1="160" x2="515" y2="112" stroke="#D2462D" stroke-width="4"/><circle cx="490" cy="160" r="6" fill="#13324A"/>${T(475, 182, 'G')}
- ${T(40, 250, 'Đưa nam châm lại gần cuộn dây: kim điện kế lệch')}</svg>`,
+ <rect x="420" y="70" width="140" height="120" rx="12" fill="#fff" stroke="#13324A" stroke-width="3"/><path d="M445 150 A45 45 0 0 1 535 150" fill="none" stroke="#9AA0A6" stroke-width="2"/><line x1="490" y1="160" x2="490" y2="108" stroke="#D2462D" stroke-width="4"><animateTransform attributeName="transform" type="rotate" values="0 490 160;35 490 160;0 490 160;0 490 160;-35 490 160;0 490 160;0 490 160" keyTimes="0;0.2;0.4;0.5;0.7;0.9;1" dur="4s" repeatCount="indefinite"/></line><circle cx="490" cy="160" r="6" fill="#13324A"/>${T(475, 182, 'G')}
+ ${T(40, 250, 'Nam châm lại gần: kim lệch một bên · ra xa: lệch bên kia · đứng yên: kim về 0')}</svg>`,
 effects: `<svg viewBox="0 0 600 260"><rect width="600" height="260" fill="#F4F8FB"/>
  <g transform="translate(75,110)"><path d="M0 50 C-40 20 -10 -10 0 -50 C10 -20 40 0 30 30 C25 45 10 55 0 50Z" fill="#EE8A2A"/><path d="M2 46 C-15 30 0 10 4 -10 C12 10 22 25 12 40Z" fill="#F2D02F"/></g>
  <g transform="translate(225,105)"><circle r="40" fill="#F2D02F" opacity=".3"/><path d="M0 -38 C-26 -38 -32 -6 -16 12 C-10 20 -10 26 -10 32 L10 32 C10 26 10 20 16 12 C32 -6 26 -38 0 -38Z" fill="#FFF6C8" stroke="#13324A" stroke-width="3"/><rect x="-10" y="32" width="20" height="16" fill="#9AA0A6"/></g>
@@ -622,8 +625,8 @@ suncycle: `<svg viewBox="0 0 600 260"><rect width="600" height="260" fill="#DDEF
  ${T(20, 250, 'Nước bay hơi', 'fill="#fff"')}${T(340, 250, 'Than đá (hóa thạch) →', 'fill="#fff"')}${T(340, 100, 'Mưa')}</svg>`,
 renew: `<svg viewBox="0 0 600 260"><rect width="600" height="260" fill="#DDEFF7"/><circle cx="60" cy="50" r="30" fill="#F2A65A"/><rect x="0" y="205" width="600" height="55" fill="#7A9A6B"/>
  <g transform="translate(70,150) skewX(-20)"><rect width="110" height="55" fill="#2F4F8F" stroke="#fff" stroke-width="2"/>${[1, 2, 3].map(k => `<line x1="${k * 27.5}" y1="0" x2="${k * 27.5}" y2="55" stroke="#fff"/>`).join('')}<line x1="0" y1="27" x2="110" y2="27" stroke="#fff"/></g><rect x="110" y="205" width="6" height="0"/>
- <rect x="268" y="80" width="8" height="125" fill="#fff" stroke="#9AA0A6"/><g transform="translate(272,80)"><circle r="6" fill="#9AA0A6"/>${[0, 120, 240].map(a => `<rect x="-4" y="-62" width="8" height="58" rx="4" fill="#fff" stroke="#9AA0A6" transform="rotate(${a + 15})"/>`).join('')}</g>
- <path d="M380 205 Q400 180 420 205 T460 205 T500 205" fill="none" stroke="#2F6FD6" stroke-width="5"/>
+ <rect x="268" y="80" width="8" height="125" fill="#fff" stroke="#9AA0A6"/><g transform="translate(272,80)"><g><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite"/>${[0, 120, 240].map(a => `<rect x="-4" y="-62" width="8" height="58" rx="4" fill="#fff" stroke="#9AA0A6" transform="rotate(${a + 15})"/>`).join('')}</g><circle r="6" fill="#9AA0A6"/></g>
+ <path d="M360 205 Q380 180 400 205 T440 205 T480 205 T520 205" fill="none" stroke="#2F6FD6" stroke-width="5"><animateTransform attributeName="transform" type="translate" values="0 0;20 0;0 0" dur="2s" repeatCount="indefinite"/></path>
  <path d="M520 120 L590 120 L590 205 L540 205Z" fill="#9AA0A6"/><path d="M540 205 L590 205 L590 225 L520 225Z" fill="#3B82B5"/>
  ${T(70, 245, 'Mặt trời', 'fill="#fff"')}${T(240, 245, 'Gió', 'fill="#fff"')}${T(390, 245, 'Sóng biển', 'fill="#fff"')}${T(505, 245, 'Dòng sông', 'fill="#fff"')}</svg>`
 };
@@ -642,13 +645,148 @@ const PAGE_ART = {
   'bai16-intro': ['suncycle', 'Năng lượng Mặt Trời trong tự nhiên và nhiên liệu hóa thạch.'],
   'bai17-intro': ['renew', 'Một số dạng năng lượng tái tạo.'], 'bai17-khai-niem': ['renew', 'Năng lượng mặt trời, gió, sóng biển, dòng sông.']
 };
-function addArt(pg, lesId, pageId) {
+let addArt = function (pg, lesId, pageId) {
   const a = PAGE_ART[lesId + '-' + pageId]; if (!a || !ART[a[0]]) return;
   const box = el('figure', 'illus', ART[a[0]] + `<figcaption>${a[1]}</figcaption>`);
   const svg = box.querySelector('svg'); svg.setAttribute('role', 'img'); svg.setAttribute('aria-label', a[1]);
   const ref = pageId === 'intro' ? pg.children[1] : pg.children[2];
   ref ? pg.insertBefore(box, ref) : pg.appendChild(box);
-}
+};
+/* ---- lớp chuyển động (hoạt hình) phủ lên hình ---- */
+const DOT = (path, dur, begin = 0, col = '#FFD25A', r = 6) => `<circle r="${r}" fill="${col}" stroke="#A94F0C" stroke-width="1.5"><animateMotion path="${path}" dur="${dur}s" begin="${begin}s" repeatCount="indefinite"/></circle>`;
+const ANIM = {
+  coin: DOT('M430 222 L462 125 L548 46', 2) + DOT('M430 222 L462 125 L548 46', 2, 1) + `<circle r="5" fill="#FFD25A" stroke="#A94F0C"><animateMotion path="M150 222 L218 86" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0" keyTimes="0;0.9;1" dur="2s" repeatCount="indefinite"/></circle>`,
+  mirage: DOT('M490 92 Q300 200 72 118', 3) + DOT('M490 92 Q300 200 72 118', 3, 1.5),
+  fiber: [0, 0.8, 1.6, 2.4].map(b => DOT('M10 40 L60 130 L115 102 L195 158 L275 102 L355 158 L435 102 L515 158 L570 130', 3.2, b)).join(''),
+  prism: DOT('M20 160 L262 128 L332 136', 1.5, 0, '#fff') + ['#D93A2B', '#EE8A2A', '#F2D02F', '#2E9E4A', '#2F86D6', '#3B3FA8', '#8B3FC2'].map((c, k) => `<circle r="5" fill="${c}" stroke="#fff"><animateMotion path="M332 136 L585 ${84 + k * 22}" dur="1.5s" begin="0.75s" repeatCount="indefinite"/></circle>`).join(''),
+  lenses: [85, 130, 175].map(y => DOT(`M20 ${y} L150 ${y} L270 130`, 2)).join('') + [[85, 55], [130, 130], [175, 205]].map(([y, y2]) => DOT(`M320 ${y} L425 ${y} L585 ${y2}`, 2)).join(''),
+  bench: `<polygon points="108,122 300,80 300,164" fill="#F2D02F" opacity=".25"><animate attributeName="opacity" values=".1;.35;.1" dur="2s" repeatCount="indefinite"/></polygon><polygon points="300,80 300,164 432,150 432,96" fill="#F2D02F" opacity=".2"><animate attributeName="opacity" values=".1;.3;.1" dur="2s" repeatCount="indefinite"/></polygon>`,
+  ohm: [0, 0.75, 1.5, 2.25].map(b => DOT('M300 50 L480 50 L480 210 L120 210 L120 50 L270 50', 3, b, '#FFD25A', 5)).join(''),
+  circuits: [0, 1, 2].map(b => DOT('M260 50 L260 190 L40 190 L40 50 L130 50', 3, b, '#FFD25A', 5)).join('') + [0, 1, 2].map(b => DOT('M560 50 L560 210 L340 210 L340 50 L430 50', 3, b, '#FFD25A', 5) + DOT('M560 50 L560 130 L340 130 L340 50 L430 50', 3, b + 0.5, '#FFD25A', 5)).join(''),
+  meter: `<circle cx="150" cy="110" r="70" fill="#F2D02F" opacity=".2"><animate attributeName="opacity" values=".1;.45;.1" dur="1.6s" repeatCount="indefinite"/></circle>`,
+  effects: `<circle cx="225" cy="105" r="44" fill="#F2D02F" opacity=".2"><animate attributeName="opacity" values=".05;.45;.05" dur="1.4s" repeatCount="indefinite"/></circle><circle cx="75" cy="60" r="6" fill="#F2A65A" opacity=".8"><animate attributeName="cy" values="70;20" dur="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".8;0" dur="1.2s" repeatCount="indefinite"/></circle>`,
+  suncycle: [270, 295, 320, 345].map((x, k) => `<line x1="${x}" y1="90" x2="${x - 4}" y2="102" stroke="#2F6FD6" stroke-width="3"><animateTransform attributeName="transform" type="translate" values="0 0;-8 90" dur="1.2s" begin="${k * 0.3}s" repeatCount="indefinite"/></line>`).join('') + DOT('M80 215 Q150 140 230 80', 3, 0, '#BFE0F5', 5),
+  renew: DOT('M60 80 L120 165', 1.5, 0, '#FFD25A', 4) + DOT('M60 80 L120 165', 1.5, 0.75, '#FFD25A', 4)
+};
+const _addArt0 = addArt;
+addArt = function (pg, lesId, pageId) {
+  const a = PAGE_ART[lesId + '-' + pageId]; if (!a || !ART[a[0]]) return;
+  let svg = ART[a[0]]; if (ANIM[a[0]]) svg = svg.replace(/<\/svg>\s*$/, ANIM[a[0]] + '</svg>');
+  const box = el('figure', 'illus', svg + `<figcaption><span>${a[1]}</span></figcaption>`);
+  const s = box.querySelector('svg'); s.setAttribute('role', 'img'); s.setAttribute('aria-label', a[1]);
+  if (s.querySelector('animate,animateMotion,animateTransform')) {
+    const bt = el('button', 'anim-btn', '⏸ Tạm dừng'); let paused = false;
+    const set = p => { paused = p; try { p ? s.pauseAnimations() : s.unpauseAnimations(); } catch (e) {} bt.textContent = p ? '▶ Xem chuyển động' : '⏸ Tạm dừng'; };
+    bt.onclick = () => set(!paused); box.querySelector('figcaption').appendChild(bt);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) setTimeout(() => set(true));
+  }
+  const ref = pageId === 'intro' ? pg.children[1] : pg.children[2];
+  ref ? pg.insertBefore(box, ref) : pg.appendChild(box);
+};
+/* ---- Video minh họa: thêm mã video YouTube cho từng bài, ví dụ bai5: [['dQw4w9WgXcQ', 'Thí nghiệm khúc xạ']] ---- */
+const VIDEOS = {};
+const _addArt1 = addArt;
+addArt = function (pg, lesId, pageId) {
+  _addArt1(pg, lesId, pageId);
+  const v = VIDEOS[lesId]; if (pageId !== 'intro' || !v || !v.length) return;
+  const c = el('div', 'card'); c.appendChild(el('h3', '', 'Video minh họa'));
+  v.forEach(([id, cap]) => { const w = el('div', 'vwrap'); w.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${id}" title="${cap}" loading="lazy" allowfullscreen allow="accelerometer; encrypted-media; picture-in-picture"></iframe>`; c.append(w, el('p', 'copy-main', cap)); });
+  pg.appendChild(c);
+};
+/* ---------- Bổ sung hình cho các trang kiến thức ---------- */
+const BG = c => `<rect width="600" height="260" fill="${c || '#F4F8FB'}"/>`;
+const ARROW = (x1, y1, x2, y2, c = '#D2462D', w = 3) => { const a = Math.atan2(y2 - y1, x2 - x1), mx = (x1 + x2) / 2, my = (y1 + y2) / 2, p = (d, r) => `${mx + r * Math.cos(a + d)},${my + r * Math.sin(a + d)}`; return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}"/><polygon points="${mx + 9 * Math.cos(a)},${my + 9 * Math.sin(a)} ${p(2.5, 9)} ${p(-2.5, 9)}" fill="${c}"/>`; };
+Object.assign(ART, {
+snell: `<svg viewBox="0 0 600 260">${BG()}<rect y="130" width="600" height="130" fill="#CFE6F2"/><line x1="0" y1="130" x2="600" y2="130" stroke="#5F6B78" stroke-width="2"/><line x1="300" y1="10" x2="300" y2="250" stroke="#5F6B78" stroke-dasharray="6 5"/>
+ ${ARROW(190, 20, 300, 130)}${ARROW(300, 130, 362, 250)}${ARROW(300, 130, 410, 20, '#D2462D', 1.5)}
+ <path d="M300 80 A50 50 0 0 0 265 94" fill="none" stroke="#A94F0C" stroke-width="2"/><path d="M300 180 A50 50 0 0 0 323 174" fill="none" stroke="#A94F0C" stroke-width="2"/>
+ ${T(276, 74, 'i')}${T(312, 200, 'r')}${T(176, 18, 'S')}${T(368, 250, 'K')}${T(306, 22, 'N')}${T(306, 252, "N′")}${T(306, 124, 'I')}${T(20, 30, 'Không khí')}${T(20, 245, 'Thủy tinh / nước')}${T(420, 30, 'Tia phản xạ', 'fill="#A94F0C"')}${T(380, 210, 'Tia khúc xạ IK')}${T(60, 110, 'Tia tới SI')}</svg>`,
+speed: `<svg viewBox="0 0 600 260">${BG()}${[['Không khí (n ≈ 1)', '#F4F8FB', 3], ['Nước (n = 1,333)', '#CFE6F2', 4], ['Kim cương (n = 2,419)', '#E6DDF5', 7.3]].map(([n, c, d], k) => `<rect x="190" y="${30 + k * 75}" width="390" height="50" rx="10" fill="${c}" stroke="#9AA0A6"/>${T(10, 60 + k * 75, n)}<circle r="9" fill="#F2D02F" stroke="#A94F0C" stroke-width="2" cy="${55 + k * 75}"><animate attributeName="cx" values="200;570" dur="${d}s" repeatCount="indefinite"/></circle>`).join('')}${T(20, 252, 'Chiết suất càng lớn, ánh sáng truyền càng chậm (v = c/n)')}</svg>`,
+tir: `<svg viewBox="0 0 600 260">${BG()}<rect y="130" width="600" height="130" fill="#CFE6F2"/><line x1="0" y1="130" x2="600" y2="130" stroke="#5F6B78" stroke-width="2"/>
+ ${[[100, 30, '#2F86D6'], [300, 45, '#E8892B'], [500, 65, '#D2462D']].map(([cx, ang, c]) => { const r = ang * Math.PI / 180, L = 95, sx = cx - L * Math.sin(r), sy = 130 + L * Math.cos(r); let s = `<line x1="${cx}" y1="40" x2="${cx}" y2="250" stroke="#9AA0A6" stroke-dasharray="4 4"/>` + ARROW(sx, sy, cx, 130, c); const sr = 1.5 * Math.sin(r); s += ARROW(cx, 130, cx + L * Math.sin(r), 130 + L * Math.cos(r), c, sr > 1 ? 3 : 1.5); if (sr < 1) { const rr = Math.asin(sr); s += ARROW(cx, 130, cx + L * Math.sin(rr), 130 - L * Math.cos(rr), c); } else if (Math.abs(sr - 1) < .02) s += `<line x1="${cx}" y1="130" x2="${cx + 90}" y2="129" stroke="${c}" stroke-width="3"/>`; return s; }).join('')}
+ ${T(10, 24, 'Không khí (n₂ = 1)')}${T(10, 150, 'Thủy tinh (n₁ = 1,5)')}${T(60, 250, 'i < i_th')}${T(270, 250, 'i ≈ i_th')}${T(395, 250, 'i > i_th: phản xạ toàn phần', 'fill="#A94F0C"')}</svg>`,
+mono: `<svg viewBox="0 0 600 260">${BG('#1B2430')}<polygon points="300,40 215,215 385,215" fill="#CFE6F2" opacity=".85" stroke="#fff" stroke-width="2"/><rect x="90" y="120" width="16" height="70" fill="#D93A2B" opacity=".9"/>
+ <line x1="20" y1="165" x2="98" y2="155" stroke="#fff" stroke-width="6"/><line x1="106" y1="154" x2="262" y2="130" stroke="#D93A2B" stroke-width="5"/><line x1="262" y1="130" x2="332" y2="138" stroke="#D93A2B" stroke-width="4"/><line x1="332" y1="138" x2="585" y2="100" stroke="#D93A2B" stroke-width="5"/>
+ ${T(60, 112, 'Kính lọc đỏ', 'fill="#fff"')}${T(400, 160, 'Vẫn chỉ một màu đỏ', 'fill="#fff"')}${T(20, 245, 'Ánh sáng đơn sắc không bị tán sắc khi qua lăng kính', 'fill="#fff"')}</svg>`,
+flower: `<svg viewBox="0 0 600 260">${BG()}<g transform="translate(200,125)">${Array.from({ length: 16 }, (_, k) => `<ellipse rx="16" ry="44" cy="-58" fill="#F2C230" stroke="#D9A21E" transform="rotate(${k * 22.5})"/>`).join('')}<circle r="44" fill="#6B3F1E"/></g>
+ <path d="M330 170 Q380 120 450 140 Q400 200 330 170Z" fill="#2E9E4A"/>${ARROW(560, 30, 470, 100, '#F2D02F')}${ARROW(250, 40, 330, 15, '#F2C230')}${T(420, 22, 'Ánh sáng trắng')}${T(330, 40, 'phản xạ vàng', 'fill="#A94F0C"')}${T(440, 190, 'Lá: phản xạ lục')}${T(150, 250, 'Nhụy: hấp thụ phần lớn ánh sáng')}</svg>`,
+lensparts: `<svg viewBox="0 0 600 260">${BG()}<line x1="20" y1="130" x2="580" y2="130" stroke="#13324A" stroke-width="2"/><path d="M300 40 Q345 130 300 220 Q255 130 300 40Z" fill="#CFE6F2" stroke="#1E6F6A" stroke-width="2"/>
+ ${[95, 165].map(y => `<line x1="40" y1="${y}" x2="300" y2="${y}" stroke="#D2462D" stroke-width="3"/><line x1="300" y1="${y}" x2="420" y2="130" stroke="#D2462D" stroke-width="3"/>`).join('')}${ARROW(140, 60, 460, 200, '#2F86D6', 2.5)}
+ <circle cx="300" cy="130" r="5" fill="#13324A"/><circle cx="180" cy="130" r="5" fill="#13324A"/><circle cx="420" cy="130" r="5" fill="#13324A"/>
+ ${T(306, 150, 'O')}${T(174, 152, 'F')}${T(414, 152, "F′")}<line x1="300" y1="240" x2="420" y2="240" stroke="#A94F0C" stroke-width="2"/>${T(330, 258, 'f = OF′', 'fill="#A94F0C"')}${T(470, 125, 'Trục chính')}${T(400, 215, 'Tia qua O truyền thẳng', 'fill="#2F86D6"')}</svg>`,
+candle: `<svg viewBox="0 0 600 260">${BG('#1B2430')}<rect x="80" y="140" width="22" height="70" fill="#F4E9D0"/><path d="M91 140 C80 120 92 105 91 95 C100 110 102 125 91 140Z" fill="#F2A65A"/>
+ <ellipse cx="300" cy="140" rx="12" ry="60" fill="#CFE6F2" opacity=".85"/><rect x="460" y="60" width="12" height="160" fill="#F4F8FB"/><g transform="translate(466,140) scale(1,-1)"><rect x="-8" y="-70" width="16" height="50" fill="#F4E9D0" opacity=".8"/><path d="M0 -20 C-8 -6 0 6 0 14 C6 4 8 -8 0 -20Z" fill="#F2A65A"/></g>
+ <line x1="91" y1="100" x2="300" y2="100" stroke="#F2D02F" stroke-width="2" opacity=".7"/><line x1="300" y1="100" x2="466" y2="205" stroke="#F2D02F" stroke-width="2" opacity=".7"/><line x1="91" y1="100" x2="466" y2="205" stroke="#F2D02F" stroke-width="2" opacity=".5"/>
+ ${T(40, 245, 'Ngọn nến (vật)', 'fill="#fff"')}${T(250, 245, 'Thấu kính hội tụ', 'fill="#fff"')}${T(300, 40, 'Ảnh thật, ngược chiều trên màn', 'fill="#fff"')}</svg>`,
+grid: `<svg viewBox="0 0 600 260">${BG('#fff')}${Array.from({ length: 31 }, (_, k) => `<line x1="${k * 20}" y1="0" x2="${k * 20}" y2="260" stroke="#E2E8EE"/>`).join('')}${Array.from({ length: 14 }, (_, k) => `<line x1="0" y1="${k * 20}" x2="600" y2="${k * 20}" stroke="#E2E8EE"/>`).join('')}
+ <line x1="0" y1="120" x2="600" y2="120" stroke="#13324A" stroke-width="2"/><line x1="200" y1="30" x2="200" y2="210" stroke="#1E6F6A" stroke-width="3"/>
+ ${ARROW(50, 120, 50, 80, '#D2462D', 4)}<line x1="50" y1="80" x2="200" y2="80" stroke="#E8892B" stroke-width="2"/><line x1="200" y1="80" x2="500" y2="200" stroke="#E8892B" stroke-width="2"/><line x1="50" y1="80" x2="500" y2="200" stroke="#E8892B" stroke-width="2"/>
+ ${ARROW(500, 120, 500, 200, '#6A3FB5', 4)}<circle cx="300" cy="120" r="4" fill="#13324A"/><circle cx="100" cy="120" r="4" fill="#13324A"/>${T(294, 140, "F′")}${T(94, 140, 'F')}${T(38, 140, 'A')}${T(36, 78, 'B')}${T(508, 116, "A′")}${T(508, 204, "B′")}${T(206, 140, 'O')}${T(250, 250, 'd = 7,5 cm, f = 5 cm ⇒ d′ = 15 cm, h′ = 4 cm')}</svg>`,
+ohmtri: `<svg viewBox="0 0 600 260">${BG()}<polygon points="180,30 60,220 300,220" fill="#FFFDF8" stroke="#13324A" stroke-width="3"/><line x1="100" y1="150" x2="260" y2="150" stroke="#13324A" stroke-width="3"/><line x1="180" y1="150" x2="180" y2="220" stroke="#13324A" stroke-width="3"/>
+ <text x="162" y="125" font-size="42" font-weight="800" fill="#D2462D">U</text><text x="118" y="200" font-size="38" font-weight="800" fill="#2F6FD6">I</text><text x="205" y="200" font-size="38" font-weight="800" fill="#1E6F6A">R</text>
+ ${T(350, 80, 'Che đại lượng cần tìm:')}${T(350, 115, 'I = U / R', 'fill="#2F6FD6"')}${T(350, 145, 'U = I · R', 'fill="#D2462D"')}${T(350, 175, 'R = U / I', 'fill="#1E6F6A"')}${T(350, 215, 'U (V) · I (A) · R (Ω)')}</svg>`,
+wire: `<svg viewBox="0 0 600 260">${BG()}<rect x="40" y="50" width="520" height="12" rx="6" fill="#B87333"/><rect x="40" y="120" width="260" height="12" rx="6" fill="#B87333"/><rect x="40" y="185" width="260" height="30" rx="12" fill="#B87333"/>
+ ${T(40, 40, 'Dây dài: R lớn')}${T(320, 132, 'Dây ngắn: R nhỏ hơn')}${T(320, 205, 'Dây ngắn, tiết diện lớn: R nhỏ nhất')}${T(40, 250, 'R = ρ · l / S (cùng chất liệu đồng)')}</svg>`,
+devices: `<svg viewBox="0 0 600 260">${BG()}<g transform="translate(100,110)"><path d="M-50 30 L40 30 Q50 -10 10 -20 L-30 -20 Q-50 -10 -50 30Z" fill="#9AA0A6"/><rect x="-20" y="-40" width="40" height="22" rx="8" fill="#5F6B78"/><path d="M-30 45 q5 -10 0 -20 M0 45 q5 -10 0 -20 M30 45 q5 -10 0 -20" stroke="#EE8A2A" stroke-width="3" fill="none"/></g>
+ <g transform="translate(300,100)"><circle r="50" fill="none" stroke="#5F6B78" stroke-width="3"/><g><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="1s" repeatCount="indefinite"/>${[0, 120, 240].map(a => `<ellipse rx="12" ry="38" cy="-22" fill="#2F86D6" opacity=".8" transform="rotate(${a})"/>`).join('')}</g><circle r="8" fill="#13324A"/><rect x="-6" y="50" width="12" height="40" fill="#5F6B78"/></g>
+ <g transform="translate(500,100)"><circle r="44" fill="#F2D02F" opacity=".3"><animate attributeName="opacity" values=".1;.45;.1" dur="1.4s" repeatCount="indefinite"/></circle><path d="M0 -38 C-26 -38 -32 -6 -16 12 C-10 20 -10 26 -10 32 L10 32 C10 26 10 20 16 12 C32 -6 26 -38 0 -38Z" fill="#FFF6C8" stroke="#13324A" stroke-width="3"/><rect x="-10" y="32" width="20" height="16" fill="#9AA0A6"/></g>
+ ${T(40, 240, 'Bàn là: nhiệt năng')}${T(240, 240, 'Quạt: cơ năng')}${T(430, 240, 'Đèn: quang năng')}</svg>`,
+house: `<svg viewBox="0 0 600 260">${BG('#DDEFF7')}<polygon points="300,30 120,120 480,120" fill="#D93A2B"/><rect x="150" y="120" width="300" height="120" fill="#FFFDF8" stroke="#13324A" stroke-width="2"/>
+ <rect x="180" y="145" width="70" height="55" fill="#BFE0F5" stroke="#13324A"/><rect x="350" y="150" width="60" height="90" fill="#7B4A2A"/><g transform="translate(215,172)"><circle r="12" fill="#F2D02F"><animate attributeName="opacity" values="1;.3;1" dur="2s" repeatCount="indefinite"/></circle></g>
+ <g transform="translate(220,48) skewX(-20)"><rect width="70" height="30" fill="#2F4F8F" stroke="#fff"/></g><circle cx="540" cy="50" r="26" fill="#F2A65A"/>${T(400, 252, 'Tiết kiệm điện mỗi ngày')}</svg>`,
+generator: `<svg viewBox="0 0 600 260">${BG()}<path d="M60 60 L170 60 L170 200 L60 200 L60 170 L140 170 L140 90 L60 90Z" fill="#D93A2B"/><path d="M430 60 L540 60 L540 90 L460 90 L460 170 L540 170 L540 200 L430 200Z" fill="#2F6FD6"/>${T(90, 82, 'N', 'fill="#fff"')}${T(500, 82, 'S', 'fill="#fff"')}
+ <g transform="translate(300,130)"><g><animateTransform attributeName="transform" type="scale" values="1 1;0.1 1;-1 1;0.1 1;1 1" dur="3s" repeatCount="indefinite"/><rect x="-110" y="-45" width="220" height="90" fill="none" stroke="#B87333" stroke-width="7"/></g></g>
+ <circle cx="300" cy="225" r="10" fill="none" stroke="#B87333" stroke-width="4"/><circle cx="300" cy="245" r="10" fill="none" stroke="#B87333" stroke-width="4"/>${T(320, 232, 'Vành khuyên + chổi quét')}
+ ${T(150, 30, 'Khung dây quay: số đường sức từ tăng, giảm luân phiên')}</svg>`,
+danger: `<svg viewBox="0 0 600 260">${BG()}<polygon points="140,30 40,210 240,210" fill="#F2D02F" stroke="#13324A" stroke-width="6" stroke-linejoin="round"/><polygon points="150,80 110,150 140,150 125,195 175,120 145,120 160,80" fill="#13324A"/>
+ ${T(300, 70, '✗ Không chạm vào ổ điện bằng tay ướt')}${T(300, 105, '✗ Không thả diều gần đường dây điện')}${T(300, 140, '✗ Không lại gần trạm biến thế')}${T(300, 175, '✓ Ngắt nguồn điện trước khi sửa chữa', 'fill="#23825A"')}${T(300, 210, '✓ Gọi 115 khi có người bị điện giật', 'fill="#23825A"')}</svg>`,
+chain: `<svg viewBox="0 0 600 260">${BG('#DDEFF7')}<circle cx="60" cy="70" r="38" fill="#F2A65A"/><rect y="200" width="600" height="60" fill="#7A9A6B"/>
+ <g transform="translate(200,170)">${[-20, -8, 4, 16].map(x => `<path d="M${x} 30 Q${x - 6} 0 ${x + 4} -30" stroke="#2E9E4A" stroke-width="6" fill="none"/>`).join('')}</g>
+ <g transform="translate(360,165)"><ellipse rx="45" ry="24" fill="#C9A27A"/><circle cx="48" cy="-14" r="16" fill="#C9A27A"/><rect x="-35" y="18" width="8" height="22" fill="#8A6A4A"/><rect x="25" y="18" width="8" height="22" fill="#8A6A4A"/></g>
+ <g transform="translate(520,160)"><ellipse rx="42" ry="22" fill="#EE8A2A"/><circle cx="-44" cy="-12" r="17" fill="#EE8A2A"/>${[-20, 0, 20].map(x => `<line x1="${x}" y1="-20" x2="${x + 6}" y2="18" stroke="#13324A" stroke-width="4"/>`).join('')}<rect x="-30" y="16" width="8" height="24" fill="#B85E1C"/><rect x="22" y="16" width="8" height="24" fill="#B85E1C"/></g>
+ ${ARROW(100, 90, 180, 140, '#A94F0C')}${ARROW(240, 160, 300, 160, '#A94F0C')}${ARROW(420, 160, 460, 160, '#A94F0C')}${T(20, 250, 'Mặt Trời → thực vật → động vật ăn cỏ → động vật ăn thịt', 'fill="#fff"')}</svg>`,
+fossil: `<svg viewBox="0 0 600 260">${BG()}${[['#C9A27A', 0], ['#B08A62', 50], ['#977452', 100], ['#7E5E42', 150], ['#2B2B2B', 200]].map(([c, y]) => `<rect x="0" y="${y + 10}" width="600" height="50" fill="${c}"/>`).join('')}
+ ${[80, 200, 330, 460].map(x => `<path d="M${x} 50 q10 -30 20 0" stroke="#2E9E4A" stroke-width="5" fill="none"/>`).join('')}${T(20, 40, 'Sinh vật cổ chết đi, bị vùi lấp', 'fill="#fff"')}${T(20, 140, 'Áp suất, nhiệt độ cao, hàng trăm triệu năm', 'fill="#fff"')}${T(20, 245, 'Than đá, dầu mỏ, khí thiên nhiên', 'fill="#F2D02F"')}
+ <polygon points="560,200 575,140 590,200" fill="#F2D02F" opacity=".8"><animate attributeName="opacity" values=".3;.9;.3" dur="2s" repeatCount="indefinite"/></polygon></svg>`,
+fuels: `<svg viewBox="0 0 600 260">${BG()}<g fill="#2B2B2B">${[[60, 150], [95, 160], [130, 148], [80, 120], [115, 125]].map(([x, y]) => `<polygon points="${x},${y} ${x + 24},${y - 14} ${x + 38},${y + 6} ${x + 10},${y + 18}"/>`).join('')}</g>
+ <g transform="translate(300,140)"><rect x="-26" y="-50" width="52" height="90" rx="8" fill="#2F4F8F"/><rect x="-14" y="-62" width="28" height="14" fill="#5F6B78"/><path d="M0 -20 C-12 0 -12 14 0 18 C12 14 12 0 0 -20Z" fill="#F2D02F"/></g>
+ <g transform="translate(480,140)"><rect x="-22" y="-60" width="44" height="100" rx="20" fill="#D93A2B"/><path d="M-10 -80 C-20 -60 0 -55 0 -68 C10 -55 20 -70 6 -84" fill="#2F86D6"><animate attributeName="opacity" values=".5;1;.5" dur="1.2s" repeatCount="indefinite"/></path></g>
+ ${T(55, 220, 'Than đá')}${T(260, 220, 'Dầu mỏ')}${T(420, 220, 'Khí thiên nhiên')}</svg>`,
+price: `<svg viewBox="0 0 600 260">${BG()}<line x1="60" y1="220" x2="560" y2="220" stroke="#13324A" stroke-width="2"/><line x1="60" y1="220" x2="60" y2="30" stroke="#13324A" stroke-width="2"/>
+ <polyline points="60,170 130,150 200,165 270,120 340,135 410,90 480,105 550,60" fill="none" stroke="#D2462D" stroke-width="4" stroke-dasharray="900" stroke-dashoffset="900"><animate attributeName="stroke-dashoffset" values="900;0;0" keyTimes="0;0.7;1" dur="4s" repeatCount="indefinite"/></polyline>
+ ${T(70, 40, 'Giá')}${T(480, 210, 'Thời gian')}${T(70, 252, 'Giá thay đổi theo cung – cầu, chi phí, chính sách, thị trường')}</svg>`,
+solar: `<svg viewBox="0 0 600 260">${BG('#DDEFF7')}<circle cx="80" cy="60" r="36" fill="#F2A65A"/><rect y="215" width="600" height="45" fill="#7A9A6B"/>
+ ${[180, 330].map(x => `<g transform="translate(${x},120) skewX(-25)"><rect width="140" height="70" fill="#2F4F8F" stroke="#fff" stroke-width="2"/>${[1, 2, 3].map(k => `<line x1="${k * 35}" y1="0" x2="${k * 35}" y2="70" stroke="#fff"/>`).join('')}<line x1="0" y1="35" x2="140" y2="35" stroke="#fff"/></g><rect x="${x + 30}" y="190" width="6" height="25" fill="#5F6B78"/>`).join('')}
+ ${[0, 0.6, 1.2].map(b => DOT('M110 80 L250 140', 1.8, b, '#FFD25A', 5) + DOT('M110 80 L400 140', 1.8, b + 0.3, '#FFD25A', 5)).join('')}${T(160, 250, 'Pin mặt trời: quang năng → điện năng', 'fill="#fff"')}</svg>`,
+wind: `<svg viewBox="0 0 600 260">${BG('#DDEFF7')}<rect y="180" width="600" height="80" fill="#3B82B5"/>
+ ${[120, 300, 480].map((x, k) => `<rect x="${x - 4}" y="70" width="8" height="140" fill="#fff" stroke="#9AA0A6"/><g transform="translate(${x},70)"><g><animateTransform attributeName="transform" type="rotate" from="${k * 40}" to="${k * 40 + 360}" dur="${2.5 + k * .4}s" repeatCount="indefinite"/>${[0, 120, 240].map(a => `<rect x="-4" y="-55" width="8" height="52" rx="4" fill="#fff" stroke="#9AA0A6" transform="rotate(${a})"/>`).join('')}</g><circle r="6" fill="#9AA0A6"/></g>`).join('')}
+ ${T(150, 245, 'Điện gió ngoài khơi: gió mạnh và ổn định hơn trên đất liền', 'fill="#fff"')}</svg>`,
+buoy: `<svg viewBox="0 0 600 260">${BG('#DDEFF7')}<path d="M0 170 Q50 150 100 170 T200 170 T300 170 T400 170 T500 170 T600 170 L600 260 L0 260Z" fill="#3B82B5"><animateTransform attributeName="transform" type="translate" values="0 0;0 -10;0 0" dur="2s" repeatCount="indefinite"/></path>
+ <rect x="150" y="60" width="300" height="20" fill="#7A9A6B"/><rect x="170" y="80" width="14" height="130" fill="#5F9EA0"/><rect x="416" y="80" width="14" height="130" fill="#5F9EA0"/>
+ <g><animateTransform attributeName="transform" type="translate" values="0 0;0 -10;0 0" dur="2s" repeatCount="indefinite"/><ellipse cx="300" cy="168" rx="30" ry="18" fill="#EE8A2A"/><rect x="296" y="70" width="8" height="90" fill="#6A3FB5"/></g>
+ <rect x="320" y="28" width="96" height="40" rx="6" fill="#D93A2B"/>${T(338, 55, 'Máy phát', 'fill="#fff"')}${T(200, 240, 'Phao nổi lên xuống theo sóng làm quay máy phát điện', 'fill="#fff"')}</svg>`,
+dam: `<svg viewBox="0 0 600 260">${BG('#DDEFF7')}<path d="M0 90 L250 90 L250 260 L0 260Z" fill="#3B82B5"/><path d="M240 60 L320 60 L360 260 L240 260Z" fill="#9AA0A6"/><path d="M360 220 L600 220 L600 260 L360 260Z" fill="#3B82B5"/>
+ <rect x="300" y="190" width="60" height="30" fill="#5F6B78"/><g transform="translate(330,205)"><g><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="1.2s" repeatCount="indefinite"/>${[0, 60, 120].map(a => `<rect x="-2" y="-12" width="4" height="24" fill="#F2D02F" transform="rotate(${a})"/>`).join('')}</g></g>
+ ${[0, 0.5, 1].map(b => DOT('M240 200 L300 205 L380 235 L560 240', 1.6, b, '#BFE0F5', 5)).join('')}${T(20, 80, 'Hồ chứa nước (thế năng)')}${T(380, 200, 'Tuabin → máy phát điện')}</svg>`,
+leds: `<svg viewBox="0 0 600 260">${BG('#1B2430')}<g transform="translate(160,110)"><circle r="60" fill="#F2D02F" opacity=".3"/><path d="M0 -50 C-34 -50 -42 -8 -20 16 C-12 26 -12 34 -12 42 L12 42 C12 34 12 26 20 16 C42 -8 34 -50 0 -50Z" fill="#FFF6C8" stroke="#fff" stroke-width="2"/><rect x="-12" y="42" width="24" height="20" fill="#9AA0A6"/>${[-30, 0, 30].map(x => `<path d="M${x} 80 q6 -10 0 -20" stroke="#EE8A2A" stroke-width="3" fill="none"><animate attributeName="opacity" values="0;1;0" dur="1.2s" repeatCount="indefinite"/></path>`).join('')}</g>
+ <g transform="translate(430,110)"><circle r="60" fill="#F2D02F" opacity=".3"/><path d="M-34 -10 Q-34 -50 0 -50 Q34 -50 34 -10 L28 30 L-28 30Z" fill="#FFFDF8" stroke="#fff" stroke-width="2"/><rect x="-20" y="30" width="40" height="30" fill="#9AA0A6"/></g>
+ ${T(80, 220, 'Sợi đốt 60 W: nóng, tốn điện', 'fill="#fff"')}${T(360, 220, 'LED 9 W: sáng tương đương', 'fill="#fff"')}${T(150, 250, 'Dùng ít năng lượng hơn cho cùng một công việc', 'fill="#F2D02F"')}</svg>`
+});
+Object.assign(PAGE_ART, {
+  'bai5-khai-niem': ['snell', 'Các quy ước trong hiện tượng khúc xạ (Hình 5.2).'], 'bai5-dinh-luat': ['snell', 'Tia khúc xạ nằm ở phía bên kia pháp tuyến.'], 'bai5-chiet-suat': ['speed', 'So sánh tốc độ ánh sáng trong các môi trường.'],
+  'bai6-dieu-kien': ['tir', 'Ba trường hợp: i < i_th, i ≈ i_th, i > i_th.'], 'bai6-bai-tap': ['tir', 'Khi góc tới vượt góc tới hạn, không còn tia khúc xạ.'],
+  'bai7-don-sac': ['mono', 'Ánh sáng đỏ qua lăng kính không bị tách màu.'], 'bai7-huong-duong': ['flower', 'Màu sắc của hoa và lá dưới ánh sáng trắng.'],
+  'bai8-khai-niem': ['lensparts', 'Quang tâm, trục chính, tiêu điểm, tiêu cự.'], 'bai8-dac-diem': ['candle', 'Ảnh thật của ngọn nến hứng được trên màn.'],
+  'bai9-bao-cao': ['bench', 'Ghi d, d′ khi ảnh rõ nét trên màn.'],
+  'bai10-cau-tao': ['magnifier', 'Kính lúp 5x có tiêu cự 5 cm.'], 'bai10-ti-le': ['grid', 'Sơ đồ tạo ảnh theo tỉ lệ (Hình 10.6).'],
+  'bai11-dinh-luat': ['ohmtri', 'Mẹo nhớ công thức định luật Ohm.'], 'bai11-rho': ['wire', 'Điện trở phụ thuộc chiều dài và tiết diện dây.'],
+  'bai12-noi-tiep': ['circuits', 'Đoạn mạch nối tiếp và song song.'], 'bai12-song-song': ['circuits', 'Trong mạch song song, dòng điện chia ra các nhánh.'],
+  'bai13-chuyen-hoa': ['devices', 'Điện năng chuyển hóa thành các dạng năng lượng khác.'], 'bai13-cong-suat': ['meter', 'Số ghi định mức trên bóng đèn.'], 'bai13-tien-dien': ['house', 'Điện năng gia đình tiêu thụ mỗi tháng.'],
+  'bai14-dieu-kien': ['coil', 'Dòng điện cảm ứng chỉ xuất hiện khi số đường sức từ biến thiên.'], 'bai14-nguyen-tac': ['generator', 'Khung dây quay trong từ trường của nam châm.'],
+  'bai15-phan-loai': ['effects', 'Bốn tác dụng của dòng điện xoay chiều.'], 'bai15-an-toan': ['danger', 'Quy tắc an toàn điện.'],
+  'bai16-khoi-dong': ['suncycle', 'Mặt Trời cung cấp năng lượng cho các quá trình tự nhiên.'], 'bai16-sinh-vat': ['chain', 'Năng lượng truyền qua chuỗi thức ăn.'], 'bai16-nguon-goc': ['fossil', 'Quá trình hình thành nhiên liệu hóa thạch.'], 'bai16-ung-dung': ['fuels', 'Ba loại nhiên liệu hóa thạch.'], 'bai16-gia': ['price', 'Giá nhiên liệu thay đổi theo thời gian.'], 'bai16-van-dung': ['house', 'Tiết kiệm năng lượng trong gia đình.'],
+  'bai17-mat-troi': ['solar', 'Pin mặt trời chuyển hóa quang năng thành điện năng.'], 'bai17-gio': ['wind', 'Tuabin gió lắp đặt ngoài khơi.'], 'bai17-song-bien': ['buoy', 'Mô hình máy phát điện từ sóng biển.'], 'bai17-dong-song': ['dam', 'Nhà máy thủy điện.'], 'bai17-hieu-qua': ['leds', 'Đèn sợi đốt và đèn LED.'], 'bai17-van-dung': ['house', 'Gia đình tiết kiệm năng lượng.']
+});
 
 /* =====================================================================
    DANH SÁCH BÀI HỌC – mỗi bài là một mục trong LESSONS.
