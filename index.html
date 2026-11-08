@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bài 16. Vòng năng lượng trên Trái Đất. Năng lượng hóa thạch – E-learning KHTN 9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#FAF6EE; --surface:#FFFDF8; --surface2:#E8F0EC; --warm:#FCE9D4;
+  --ink:#13324A; --text:#2E3D4C; --muted:#5F6B78; --line:#E2D9C6;
+  --acc:#E8892B; --acc-ink:#A94F0C; --teal:#1E6F6A;
+  --ok:#23825A; --ok-bg:#DDF2E6; --bad:#B23A32; --bad-bg:#F9DEDA;
+  --side:#13324A; --side-text:#E6EEF4; --side-muted:#9FB6C8; --side-acc:#F2A65A;
+  --shadow:0 1px 2px rgba(19,50,74,.08),0 6px 20px rgba(19,50,74,.06);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1E2B; --surface:#172A3A; --surface2:#1C3A3F; --warm:#3A2A1C;
+    --ink:#F2EDE3; --text:#D9E2EA; --muted:#9AA9B6; --line:#2C4356;
+    --acc:#F2A65A; --acc-ink:#F5B877; --teal:#6CC7BE;
+    --ok:#7FDCAA; --ok-bg:#1D3B2E; --bad:#F2928A; --bad-bg:#43211F;
+    --side:#0A1621; --side-text:#E6EEF4; --side-muted:#8EA3B5; --side-acc:#F2A65A;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+    --bg:#0F1E2B; --surface:#172A3A; --surface2:#1C3A3F; --warm:#3A2A1C;
+    --ink:#F2EDE3; --text:#D9E2EA; --muted:#9AA9B6; --line:#2C4356;
+    --acc:#F2A65A; --acc-ink:#F5B877; --teal:#6CC7BE;
+    --ok:#7FDCAA; --ok-bg:#1D3B2E; --bad:#F2928A; --bad-bg:#43211F;
+    --side:#0A1621; --side-text:#E6EEF4; --side-muted:#8EA3B5; --side-acc:#F2A65A;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+    color-scheme:dark;
+}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--text);font:400 18px/1.6 'Nunito Sans',Arial,sans-serif}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:'Be Vietnam Pro',Arial,sans-serif;color:var(--ink);line-height:1.25}
+button{font:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.app{display:grid;grid-template-columns:300px 1fr;height:100%}
+/* sidebar */
+.side{background:var(--side);color:var(--side-text);display:flex;flex-direction:column;min-height:0}
+.side-head{padding:24px 22px 16px}
+.side-head p{font-size:14px;color:var(--side-muted)}
+.side-head h1{color:#FAF6EE;font-size:19px;margin-top:4px}
+.prog{margin:12px 22px 8px;height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--side-acc);transition:width .4s}
+.prog-t{margin:0 22px 12px;font-size:14px;color:var(--side-muted)}
+nav{overflow:auto;padding:4px 12px 24px;flex:1}
+.grp{font:700 13px 'Nunito Sans',Arial,sans-serif;color:var(--side-acc);margin:16px 10px 6px}
+.nav-i{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;color:var(--side-text);padding:9px 10px;border-radius:10px;font-size:15.5px;line-height:1.35}
+.nav-i:hover{background:rgba(255,255,255,.07)}
+.nav-i.cur{background:rgba(242,166,90,.18);color:#FFF}
+.nav-i .dot{flex:none;width:20px;height:20px;border-radius:50%;border:2px solid var(--side-muted);margin-top:1px;display:grid;place-items:center;font-size:12px;font-weight:800}
+.nav-i.done .dot{background:var(--side-acc);border-color:var(--side-acc);color:#13324A}
+/* main */
+.main{display:flex;flex-direction:column;min-height:0;min-width:0}
+.top{display:flex;align-items:center;gap:12px;padding:14px 28px;border-bottom:1px solid var(--line);background:var(--bg);position:sticky;top:0;z-index:2}
+.top .crumb{font-size:15px;color:var(--muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu-btn{display:none;background:var(--ink);color:var(--bg);border:0;border-radius:10px;padding:8px 14px;font-weight:700}
+.theme-btn{background:none;border:1px solid var(--line);color:var(--text);border-radius:10px;padding:6px 12px;font-size:14px}
+.page-wrap{flex:1;overflow:auto}
+.page{max-width:920px;margin:0 auto;padding:36px 28px 40px;display:flex;flex-direction:column;gap:24px}
+.kicker{font:700 15px 'Nunito Sans',Arial,sans-serif;color:var(--acc-ink)}
+.page h2{font-size:clamp(28px,4vw,38px)}
+.lead{font-size:19px;color:var(--text);max-width:68ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px 24px;box-shadow:var(--shadow)}
+.card h3{font-size:20px;margin-bottom:8px}
+.task{border-left:6px solid var(--acc);background:var(--surface)}
+.task .tlabel{font:800 14px 'Nunito Sans',Arial,sans-serif;color:var(--acc-ink);margin-bottom:6px}
+.note{background:var(--surface2);border-radius:16px;padding:18px 22px;font-weight:600;color:var(--ink)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.foot{display:flex;justify-content:space-between;gap:12px;padding:14px 28px;border-top:1px solid var(--line);background:var(--bg)}
+.btn{border:0;border-radius:12px;padding:12px 22px;font-weight:800;background:var(--ink);color:var(--bg)}
+.btn.sec{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.btn.acc{background:var(--acc);color:#13324A}
+.btn[disabled]{opacity:.4;cursor:default}
+/* flip cards */
+.flip{background:var(--surface);border:2px dashed var(--line);border-radius:16px;padding:18px;text-align:left;color:var(--text);min-height:130px;display:flex;flex-direction:column;gap:8px}
+.flip b{font:700 18px 'Be Vietnam Pro',Arial,sans-serif;color:var(--ink)}
+.flip .hint{font-size:14px;color:var(--muted)}
+.flip.open{border-style:solid;border-color:var(--acc);background:var(--warm)}
+/* quiz */
+.q{display:flex;flex-direction:column;gap:12px}
+.q-t{font:700 19px/1.45 'Be Vietnam Pro',Arial,sans-serif;color:var(--ink)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 16px;color:var(--text)}
+.opt:hover:not([disabled]){border-color:var(--acc)}
+.opt .k{font-weight:800;color:var(--acc-ink);flex:none}
+.opt.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ink)}
+.opt.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--ink)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:12px;padding:12px 16px;font-weight:600;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-bg);color:var(--ink);border-left:5px solid var(--ok)}
+.fb.bad{background:var(--bad-bg);color:var(--ink);border-left:5px solid var(--bad)}
+/* tf / classify rows */
+.row{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.row p{flex:1}
+.seg{display:flex;gap:6px;flex:none}
+.seg button{border:2px solid var(--line);background:var(--bg);color:var(--text);border-radius:10px;padding:6px 12px;font-weight:700;font-size:15px}
+.seg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.row.ok{border-color:var(--ok);background:var(--ok-bg)}
+.row.bad{border-color:var(--bad);background:var(--bad-bg)}
+.mark{font-weight:800;font-size:14px;min-width:44px;text-align:right}
+/* order */
+.pool,.seq{display:flex;flex-wrap:wrap;gap:10px;min-height:56px;padding:12px;border-radius:14px}
+.pool{background:var(--surface2)}
+.seq{border:2px dashed var(--line)}
+.chip{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 16px;font-weight:700}
+.chip.n{background:var(--warm);border-color:var(--acc)}
+/* svg diagram */
+.diagram{width:100%;height:auto;display:block;border-radius:16px;background:linear-gradient(#DCEEF7,#F2F8FB)}
+:root[data-theme="dark"] .diagram{background:linear-gradient(#183247,#122636)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .diagram{background:linear-gradient(#183247,#122636)}}
+.diagram .part{transition:opacity .25s}
+.diagram.focus .part{opacity:.25}
+.diagram.focus .part.hl{opacity:1}
+.stages{display:flex;flex-wrap:wrap;gap:8px}
+.stage{border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 16px;font-weight:700}
+.stage.on{background:var(--acc);border-color:var(--acc);color:#13324A}
+.stage.seen::after{content:" ✓";color:var(--teal)}
+.stage.on.seen::after{color:#13324A}
+/* chain */
+.chain{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+.chain .flip{flex:1;min-width:150px;min-height:110px}
+.arrow{align-self:center;font-weight:800;color:var(--acc-ink);font-size:22px}
+/* stepper */
+.steps{display:flex;gap:8px}
+.steps span{flex:1;height:8px;border-radius:99px;background:var(--line)}
+.steps span.on{background:var(--acc)}
+/* simulator */
+.sim{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:stretch}
+.sim .card{display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+.sim .val{font:800 26px 'Be Vietnam Pro',Arial,sans-serif;color:var(--ink)}
+.sim .seg button{min-width:72px}
+.price{font:800 30px 'Be Vietnam Pro',Arial,sans-serif}
+.price.up{color:var(--bad)} .price.down{color:var(--ok)} .price.eq{color:var(--muted)}
+/* match */
+.match{display:flex;flex-direction:column;gap:10px}
+.match select{font:inherit;padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--text);max-width:100%}
+/* final test */
+.qnav{display:flex;flex-wrap:wrap;gap:6px}
+.qnav span{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--surface);border:2px solid var(--line);color:var(--muted)}
+.qnav span.cur{border-color:var(--acc);color:var(--ink)}
+.qnav span.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ink)}
+.qnav span.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--ink)}
+.result{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.result .big{font:800 64px 'Be Vietnam Pro',Arial,sans-serif;color:var(--ink)}
+.review{display:flex;flex-direction:column;gap:10px;text-align:left;width:100%}
+.review .row{flex-direction:column;align-items:flex-start;gap:4px}
+.hero{background:var(--side);color:#FAF6EE;border-radius:24px;padding:40px 36px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
+.hero h2{color:#FAF6EE;font-size:clamp(30px,5vw,46px);max-width:15ch}
+.hero p{color:#BFD3E0;max-width:52ch}
+.hero .sun{position:absolute;right:-90px;top:-90px;width:240px;height:240px;border-radius:50%;background:#F2A65A;opacity:.9}
+.hero .ring{position:absolute;right:-140px;top:-140px;width:340px;height:340px;border-radius:50%;border:2px solid #F2A65A;opacity:.4}
+.hero > *{position:relative}
+.done-badge{display:inline-block;background:var(--ok-bg);color:var(--ink);border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
+ul.clean{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.overlay{display:none}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:86%;max-width:330px;z-index:20;transform:translateX(-105%);transition:transform .25s;padding-top:env(safe-area-inset-top,0px)}
+  .side.open{transform:none}
+  .overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:15}
+  .menu-btn{display:inline-block}
+  .grid4{grid-template-columns:1fr 1fr}
+  .grid2,.opts,.sim{grid-template-columns:1fr}
+  .page{padding:24px 18px 32px}
+  .top,.foot{padding:12px 16px}
+  .row{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side" aria-label="Mục lục bài học">
+    <div class="side-head"><p>KHTN 9 · Phần Vật lí</p><h1>Bài 16. Vòng năng lượng trên Trái Đất. Năng lượng hóa thạch</h1></div>
+    <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
+    <p class="prog-t" id="progText">Đã hoàn thành 0/0 mục</p>
+    <nav id="nav"></nav>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+  <main class="main">
+    <div class="top">
+      <button class="menu-btn" id="menuBtn" aria-controls="side" aria-expanded="false">☰ Mục lục</button>
+      <p class="crumb" id="crumb"></p>
+      <button class="theme-btn" id="themeBtn" aria-label="Đổi giao diện sáng/tối">Sáng/Tối</button>
+    </div>
+    <div class="page-wrap" id="wrap"><div class="page" id="page"></div></div>
+    <div class="foot">
+      <button class="btn sec" id="prevBtn">‹ Trang trước</button>
+      <button class="btn" id="nextBtn">Trang sau ›</button>
+    </div>
+  </main>
+</div>
+<script>
+const FINAL = [{"q": "Nguồn năng lượng chủ yếu cung cấp cho các quá trình tự nhiên trên Trái Đất là gì?", "o": ["Năng lượng từ lòng đất", "Năng lượng Mặt Trời", "Năng lượng từ Mặt Trăng", "Năng lượng từ nhiên liệu hóa thạch"], "a": 1, "g": "Mặt Trời cung cấp năng lượng cho quang hợp, sự bay hơi của nước và nhiều quá trình tự nhiên."}, {"q": "Trong quá trình quang hợp, thực vật chuyển hóa năng lượng ánh sáng thành dạng năng lượng nào?", "o": ["Nhiệt năng", "Điện năng", "Hóa năng", "Động năng"], "a": 2, "g": "Quang hợp chuyển năng lượng ánh sáng thành hóa năng được tích lũy trong các chất hữu cơ."}, {"q": "Nguồn năng lượng nào sau đây là nhiên liệu hóa thạch?", "o": ["Than đá", "Ánh sáng Mặt Trời", "Gió", "Nước chảy"], "a": 0, "g": "Than đá được hình thành từ vật chất hữu cơ cổ qua thời gian địa chất rất dài."}, {"q": "Nhiên liệu hóa thạch được hình thành chủ yếu từ đâu?", "o": ["Các loại đá nóng chảy", "Nước biển bay hơi", "Ánh sáng Mặt Trời trực tiếp", "Xác sinh vật bị chôn vùi và biến đổi qua thời gian địa chất"], "a": 3, "g": "Xác sinh vật bị chôn vùi và biến đổi dưới điều kiện địa chất trong hàng triệu năm."}, {"q": "Nguồn năng lượng nào sau đây không phải là nhiên liệu hóa thạch?", "o": ["Dầu mỏ", "Khí thiên nhiên", "Năng lượng gió", "Than đá"], "a": 2, "g": "Gió là nguồn năng lượng tái tạo; dầu mỏ, khí thiên nhiên và than đá là nhiên liệu hóa thạch."}, {"q": "Trong vòng tuần hoàn nước, năng lượng Mặt Trời trực tiếp gây ra quá trình nào?", "o": ["Nước bốc hơi", "Nước ngầm chảy xuống", "Mưa rơi xuống đất", "Nước đóng băng ở nhiệt độ thấp"], "a": 0, "g": "Năng lượng Mặt Trời làm nóng nước và thúc đẩy quá trình bay hơi."}, {"q": "Vì sao năng lượng có thể truyền từ thực vật sang động vật ăn cỏ?", "o": ["Động vật hấp thụ ánh sáng trực tiếp như cây xanh", "Động vật lấy hóa năng từ thức ăn", "Động vật tạo ra năng lượng từ không khí", "Thực vật truyền điện năng cho động vật"], "a": 1, "g": "Động vật ăn thực vật và tiếp nhận hóa năng tích lũy trong các chất hữu cơ."}, {"q": "Vì sao nhiên liệu hóa thạch được coi là nguồn năng lượng không tái tạo?", "o": ["Vì không thể đốt cháy", "Vì không chứa năng lượng", "Vì chỉ có trong nước biển", "Vì hình thành rất chậm và có trữ lượng hữu hạn"], "a": 3, "g": "Tốc độ hình thành nhiên liệu hóa thạch chậm hơn rất nhiều so với tốc độ khai thác."}, {"q": "Đốt nhiều nhiên liệu hóa thạch làm gia tăng khí nào góp phần gây hiệu ứng nhà kính?", "o": ["Khí oxygen", "Khí nitrogen", "Khí carbon dioxide (CO₂)", "Khí helium"], "a": 2, "g": "CO₂ sinh ra từ quá trình đốt nhiên liệu hóa thạch góp phần làm tăng hiệu ứng nhà kính."}, {"q": "Yếu tố nào có thể khiến giá dầu mỏ tăng khi các điều kiện khác không đổi?", "o": ["Nguồn cung dầu mỏ giảm", "Nhu cầu dầu mỏ giảm", "Nguồn cung dầu mỏ tăng", "Chi phí khai thác giảm"], "a": 0, "g": "Khi nguồn cung giảm còn nhu cầu không đổi, giá dầu thường chịu áp lực tăng."}, {"q": "Nhận định nào đúng về việc sử dụng nhiên liệu hóa thạch?", "o": ["Không tạo ra chất gây ô nhiễm", "Cung cấp nhiều năng lượng nhưng có thể gây ô nhiễm môi trường", "Có thể tái tạo nhanh sau khi sử dụng", "Không ảnh hưởng đến khí hậu"], "a": 1, "g": "Nhiên liệu hóa thạch cung cấp nhiều năng lượng nhưng việc đốt có thể gây ô nhiễm và phát thải khí nhà kính."}, {"q": "Gia đình muốn giảm sử dụng điện sản xuất từ nhiên liệu hóa thạch. Biện pháp nào phù hợp nhất?", "o": ["Bật đèn cả ngày", "Dùng thêm thiết bị điện không cần thiết", "Để điều hòa hoạt động khi không có người", "Tắt thiết bị điện khi không sử dụng"], "a": 3, "g": "Tiết kiệm điện giúp giảm nhu cầu phát điện, từ đó có thể giảm nhiên liệu hóa thạch tiêu thụ."}, {"q": "Địa phương có nhiều nắng muốn giảm phụ thuộc nhiên liệu hóa thạch. Giải pháp phù hợp là gì?", "o": ["Tăng đốt than", "Tăng sử dụng máy phát điện chạy dầu", "Lắp đặt hệ thống điện Mặt Trời ở nơi phù hợp", "Ngừng sử dụng tất cả thiết bị điện"], "a": 2, "g": "Điện Mặt Trời khai thác năng lượng tái tạo, giúp thay thế một phần điện từ nhiên liệu hóa thạch."}, {"q": "Nhà máy điện than chuyển sang dùng năng lượng gió. Lợi ích môi trường trực tiếp là gì?", "o": ["Giảm phát thải CO₂ từ quá trình đốt than", "Tăng lượng khói bụi", "Làm than đá hình thành nhanh hơn", "Loại bỏ hoàn toàn mọi tác động môi trường"], "a": 0, "g": "Điện gió không cần đốt than khi phát điện nên giảm phát thải trực tiếp từ việc đốt than."}, {"q": "Nhu cầu xăng dầu tăng mạnh, lượng cung ứng không đổi. Giá xăng dầu có khả năng thế nào?", "o": ["Chắc chắn giảm về 0", "Có xu hướng tăng", "Không bao giờ thay đổi", "Luôn giảm một nửa"], "a": 1, "g": "Nhu cầu tăng khi cung không đổi thường gây áp lực tăng giá, dù giá thực tế còn chịu các yếu tố khác."}];
+const L = 'ABCD';
+const $ = (s, r = document) => r.querySelector(s);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+/* ---------- state ---------- */
+let done = new Set(), cur = 0;
+try { const s = JSON.parse(localStorage.getItem('b16-el') || '{}'); if (s.done) done = new Set(s.done); } catch (e) {}
+function save() { try { localStorage.setItem('b16-el', JSON.stringify({ done: [...done] })); } catch (e) {} }
+function complete(id) { if (!done.has(id)) { done.add(id); save(); renderNav(); } }
+
+/* ---------- reusable activities ---------- */
+function mcq(box, item, onRight) {
+  const w = el('div', 'q');
+  w.appendChild(el('p', 'q-t', item.q));
+  const os = el('div', 'opts'); const fb = el('div', 'fb');
+  item.o.forEach((t, i) => {
+    const b = el('button', 'opt', `<span class="k">${L[i]}.</span><span>${t}</span>`);
+    b.onclick = () => {
+      if (i === item.a) {
+        [...os.children].forEach(x => x.disabled = true);
+        b.classList.add('ok');
+        fb.className = 'fb show ok'; fb.innerHTML = '<b>Chính xác!</b> ' + (item.g || '');
+        onRight && onRight();
+      } else {
+        b.classList.add('bad'); b.disabled = true;
+        fb.className = 'fb show bad'; fb.innerHTML = '<b>Chưa đúng.</b> ' + (item.h || 'Em đọc lại câu hỏi và thử phương án khác nhé.');
+      }
+    };
+    os.appendChild(b);
+  });
+  w.append(os, fb); box.appendChild(w); return w;
+}
+function mcqSet(box, items, id) {
+  let right = 0;
+  items.forEach((it, k) => { const c = el('div', 'card'); mcq(c, it, () => { right++; if (right === items.length) complete(id); }); box.appendChild(c); });
+}
+function flips(box, items, id, cls = 'grid4') {
+  const g = el('div', cls); let opened = 0;
+  items.forEach(([t, d]) => {
+    const b = el('button', 'flip', `<b>${t}</b><span class="hint">Bấm để xem</span>`);
+    b.setAttribute('aria-expanded', 'false');
+    b.onclick = () => {
+      if (b.classList.contains('open')) return;
+      b.classList.add('open'); b.setAttribute('aria-expanded', 'true');
+      b.innerHTML = `<b>${t}</b><span>${d}</span>`;
+      if (++opened === items.length && id) complete(id);
+    };
+    g.appendChild(b);
+  });
+  box.appendChild(g); return g;
+}
+function choiceRows(box, rows, labels, id, okMsg) {
+  // rows: [text, correctIndex, explanation]
+  const wrap = el('div', 'q'); const picks = rows.map(() => null);
+  const rs = rows.map(([t], k) => {
+    const r = el('div', 'row'); r.appendChild(el('p', '', t));
+    const seg = el('div', 'seg');
+    labels.forEach((lb, j) => { const b = el('button', '', lb); b.onclick = () => { picks[k] = j; [...seg.children].forEach(x => x.classList.toggle('on', x === b)); r.classList.remove('ok', 'bad'); m.textContent = ''; }; seg.appendChild(b); });
+    const m = el('span', 'mark'); r.append(seg, m); wrap.appendChild(r); return { r, m };
+  });
+  const fb = el('div', 'fb'); const chk = el('button', 'btn', 'Kiểm tra');
+  chk.onclick = () => {
+    if (picks.includes(null)) { fb.className = 'fb show bad'; fb.textContent = 'Em hãy chọn đủ cho tất cả các ý rồi bấm Kiểm tra.'; return; }
+    let ok = 0;
+    rows.forEach(([t, c, ex], k) => { const good = picks[k] === c; ok += good; rs[k].r.classList.toggle('ok', good); rs[k].r.classList.toggle('bad', !good); rs[k].m.textContent = good ? '✓ Đúng' : '✗ Sai'; });
+    if (ok === rows.length) { fb.className = 'fb show ok'; fb.innerHTML = '<b>Tuyệt vời, em làm đúng hết!</b> ' + (okMsg || ''); complete(id); }
+    else { fb.className = 'fb show bad'; fb.innerHTML = `<b>Đúng ${ok}/${rows.length} ý.</b> Em sửa các ý được đánh dấu sai rồi kiểm tra lại.`; }
+  };
+  wrap.append(chk, fb); box.appendChild(wrap);
+}
+
+/* ---------- pages ---------- */
+const P = [];
+const page = (grp, id, title, build) => P.push({ grp, id, title, build });
+
+page('Bắt đầu', 'intro', 'Giới thiệu bài học', b => {
+  const h = el('div', 'hero', `<span class="ring"></span><span class="sun"></span>
+    <p>Khoa học tự nhiên 9 · Bài học E-learning</p>
+    <h2>Vòng năng lượng trên Trái Đất. Năng lượng hóa thạch</h2>
+    <p>Giáo viên: Huỳnh Đức Hòa · Trường THCS Hòa Trí</p>`);
+  b.appendChild(h);
+  const c = el('div', 'card', `<h3>Cách học bài này</h3><ul class="clean">
+    <li>Học lần lượt từng trang theo mục lục. Trang có hoạt động sẽ được đánh dấu ✓ khi em hoàn thành.</li>
+    <li>Bấm vào các thẻ, hình, nút để khám phá kiến thức. Làm sai thì cứ thử lại, mỗi lần sai đều có gợi ý.</li>
+    <li>Cuối bài có <b>Bài kiểm tra 15 câu</b> để em tự đánh giá.</li>
+    <li>Kết quả được lưu trên trình duyệt của máy em đang dùng.</li></ul>`);
+  b.appendChild(c); complete('intro');
+});
+page('Bắt đầu', 'muc-tieu', 'Mục tiêu bài học', b => {
+  b.appendChild(el('div', 'card', `<h3>Sau bài học, em sẽ:</h3><ul class="clean">
+  <li>Mô tả được năng lượng Mặt Trời truyền và chuyển hóa trong vòng tuần hoàn nước và qua các sinh vật.</li>
+  <li>Nêu được nguồn gốc, ví dụ, ưu điểm và hạn chế của nhiên liệu hóa thạch: than đá, dầu mỏ, khí thiên nhiên.</li>
+  <li>Giải thích được vì sao giá nhiên liệu thay đổi và đề xuất cách sử dụng năng lượng tiết kiệm.</li></ul>`));
+  complete('muc-tieu');
+});
+
+page('Phần 1. Vòng năng lượng', 'khoi-dong', 'Khởi động: năng lượng từ đâu?', b => {
+  b.appendChild(el('p', 'lead', 'Nắng chiếu, mây mưa, cây xanh lớn lên, động vật chạy nhảy… Bấm vào từng thẻ để xem điều gì đang xảy ra.'));
+  flips(b, [['Nắng chiếu', 'Ánh sáng Mặt Trời làm nóng mặt đất, mặt nước.'], ['Mây và mưa', 'Nước bay hơi lên cao, ngưng tụ thành mây rồi rơi xuống thành mưa.'], ['Cây xanh', 'Cây dùng ánh sáng để quang hợp, tạo chất hữu cơ và lớn lên.'], ['Động vật', 'Động vật ăn thức ăn để lấy năng lượng sống và vận động.']]);
+  const c = el('div', 'card task'); c.appendChild(el('p', 'tlabel', 'Câu hỏi'));
+  mcq(c, { q: 'Theo em, năng lượng cho cả bốn quá trình trên bắt nguồn chủ yếu từ đâu?', o: ['Lòng đất', 'Mặt Trời', 'Mặt Trăng', 'Gió'], a: 1, g: 'Mặt Trời là nguồn năng lượng chủ yếu chi phối các quá trình tự nhiên trên Trái Đất.', h: 'Gợi ý: cả bốn thẻ đều liên quan đến ánh sáng và sức nóng.' }, () => complete('khoi-dong'));
+  b.appendChild(c);
+});
+
+page('Phần 1. Vòng năng lượng', 'tuan-hoan-nuoc', 'Năng lượng trong vòng tuần hoàn nước', b => {
+  b.appendChild(el('p', 'lead', 'Bấm lần lượt vào 5 giai đoạn để xem năng lượng biến đổi thế nào.'));
+  const svg = el('div', '', `<svg class="diagram" viewBox="0 0 640 330" role="img" aria-label="Sơ đồ vòng tuần hoàn nước">
+   <g class="part" data-p="0"><circle cx="80" cy="70" r="38" fill="#F2A65A"/><g stroke="#F2A65A" stroke-width="5" stroke-linecap="round"><line x1="80" y1="12" x2="80" y2="22"/><line x1="22" y1="70" x2="32" y2="70"/><line x1="128" y1="70" x2="138" y2="70"/><line x1="40" y1="30" x2="47" y2="37"/><line x1="120" y1="30" x2="113" y2="37"/><line x1="40" y1="110" x2="47" y2="103"/></g><text x="80" y="76" text-anchor="middle" font-size="15" font-weight="700" fill="#13324A">Mặt Trời</text></g>
+   <rect x="0" y="262" width="300" height="68" fill="#3B82B5"/><text x="150" y="305" text-anchor="middle" font-size="16" font-weight="700" fill="#FFFFFF">Biển</text>
+   <path d="M300 330 L420 170 L520 240 L640 150 L640 330 Z" fill="#7A9A6B"/>
+   <g class="part" data-p="1" stroke="#1E6F6A" stroke-width="4" fill="none" stroke-linecap="round"><path d="M110 250 q10 -20 0 -40 q-10 -20 0 -40"/><path d="M160 250 q10 -20 0 -40 q-10 -20 0 -40"/><path d="M210 250 q10 -20 0 -40 q-10 -20 0 -40"/><path d="M152 160 l8 -12 l8 12" /><text x="236" y="210" font-size="15" font-weight="700" fill="#1E6F6A" stroke="none">Bay hơi</text></g>
+   <g class="part" data-p="2"><ellipse cx="330" cy="70" rx="70" ry="32" fill="#FFFFFF" stroke="#9FB6C8" stroke-width="2"/><ellipse cx="380" cy="58" rx="50" ry="28" fill="#FFFFFF" stroke="#9FB6C8" stroke-width="2"/><ellipse cx="350" cy="76" rx="75" ry="24" fill="#FFFFFF"/><text x="350" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#13324A">Mây</text></g>
+   <g class="part" data-p="3" stroke="#3B82B5" stroke-width="4" stroke-linecap="round"><line x1="430" y1="110" x2="422" y2="135"/><line x1="460" y1="110" x2="452" y2="135"/><line x1="490" y1="110" x2="482" y2="135"/><line x1="445" y1="145" x2="437" y2="170"/><line x1="475" y1="145" x2="467" y2="170"/><text x="508" y="140" font-size="15" font-weight="700" fill="#13324A" stroke="none">Mưa</text></g>
+   <g class="part" data-p="4"><path d="M560 200 C520 240 420 230 380 262 S320 290 300 300" stroke="#3B82B5" stroke-width="9" fill="none" stroke-linecap="round"/><text x="430" y="290" font-size="15" font-weight="700" fill="#FFFFFF">Dòng chảy</text></g>
+  </svg>`);
+  b.appendChild(svg);
+  const S = [['Mặt Trời', 'Mặt Trời chiếu sáng, cung cấp nhiệt làm nóng nước biển, sông, hồ.'],
+             ['Bay hơi', 'Nhận nhiệt từ Mặt Trời, nước bay hơi và bốc lên cao. Hơi nước ở trên cao có thế năng.'],
+             ['Ngưng tụ', 'Lên cao gặp lạnh, hơi nước ngưng tụ thành những giọt nước nhỏ tạo thành mây.'],
+             ['Mưa', 'Nước rơi xuống thành mưa: thế năng chuyển hóa thành động năng.'],
+             ['Dòng chảy', 'Nước chảy thành sông, ra biển, mang theo động năng. Con người khai thác năng lượng này ở nhà máy thủy điện.']];
+  const st = el('div', 'stages'), info = el('div', 'note', 'Chọn một giai đoạn bên trên.'); const seen = new Set();
+  const dg = svg.querySelector('svg');
+  S.forEach(([t, d], k) => { const btn = el('button', 'stage', (k + 1) + '. ' + t); btn.onclick = () => {
+      [...st.children].forEach(x => x.classList.remove('on')); btn.classList.add('on', 'seen'); seen.add(k);
+      dg.classList.add('focus'); dg.querySelectorAll('.part').forEach(p => p.classList.toggle('hl', +p.dataset.p === k));
+      info.innerHTML = `<b>${t}:</b> ${d}`; if (seen.size === S.length) { complete('tuan-hoan-nuoc'); kl.style.display = 'block'; } };
+    st.appendChild(btn); });
+  const kl = el('div', 'card task', '<p class="tlabel">Kết luận</p><p>Năng lượng Mặt Trời làm nước bay hơi và đưa nước lên cao. Khi nước rơi và chảy xuống, <b>thế năng chuyển hóa thành động năng</b>.</p>'); kl.style.display = done.has('tuan-hoan-nuoc') ? 'block' : 'none';
+  b.append(st, info, kl);
+});
+
+page('Phần 1. Vòng năng lượng', 'sap-xep', 'Hoạt động: sắp xếp vòng tuần hoàn nước', b => {
+  b.appendChild(el('p', 'lead', 'Bấm vào các giai đoạn theo đúng thứ tự, bắt đầu từ khi Mặt Trời làm nóng nước biển.'));
+  const right = ['Mặt Trời làm nóng nước', 'Nước bay hơi lên cao', 'Hơi nước ngưng tụ thành mây', 'Mưa rơi xuống', 'Nước chảy ra sông, biển'];
+  const pool = el('div', 'pool'), seq = el('div', 'seq'), fb = el('div', 'fb'); let picked = [];
+  const reset = () => { picked = []; seq.innerHTML = ''; pool.innerHTML = ''; fb.className = 'fb';
+    shuffle(right).forEach(t => { const c = el('button', 'chip', t); c.onclick = () => { picked.push(t); c.remove(); seq.appendChild(el('span', 'chip n', picked.length + '. ' + t)); if (picked.length === right.length) check(); }; pool.appendChild(c); }); };
+  const check = () => { const ok = picked.every((t, i) => t === right[i]);
+    fb.className = 'fb show ' + (ok ? 'ok' : 'bad');
+    fb.innerHTML = ok ? '<b>Chính xác!</b> Vòng tuần hoàn nước được Mặt Trời cung cấp năng lượng liên tục.' : '<b>Chưa đúng thứ tự.</b> Nhớ: nước phải bay hơi trước rồi mới ngưng tụ thành mây. Bấm “Làm lại” để thử tiếp.';
+    if (ok) complete('sap-xep'); };
+  const again = el('button', 'btn sec', 'Làm lại'); again.onclick = reset;
+  b.append(el('p', 'kicker', 'Các giai đoạn'), pool, el('p', 'kicker', 'Thứ tự của em'), seq, again, fb); reset();
+});
+
+page('Phần 1. Vòng năng lượng', 'sinh-vat', 'Năng lượng truyền qua các sinh vật', b => {
+  b.appendChild(el('p', 'lead', 'Bấm vào từng mắt xích để xem năng lượng đi từ Mặt Trời qua chuỗi thức ăn như thế nào.'));
+  const ch = el('div', 'chain');
+  const items = [['Mặt Trời', 'Cung cấp quang năng (năng lượng ánh sáng).'], ['Thực vật', 'Quang hợp: chuyển quang năng thành hóa năng, tích lũy trong chất hữu cơ.'], ['Động vật ăn cỏ', 'Ăn thực vật, nhận hóa năng từ thức ăn.'], ['Động vật ăn thịt', 'Ăn con mồi, nhận hóa năng từ con mồi.']];
+  let opened = 0;
+  items.forEach(([t, d], k) => { if (k) ch.appendChild(el('span', 'arrow', '→'));
+    const f = el('button', 'flip', `<b>${t}</b><span class="hint">Bấm để xem</span>`);
+    f.onclick = () => { if (f.classList.contains('open')) return; f.classList.add('open'); f.innerHTML = `<b>${t}</b><span>${d}</span>`; if (++opened === 4) { complete('sinh-vat'); nt.style.display = 'block'; } };
+    ch.appendChild(f); });
+  const nt = el('div', 'note', 'Ở mỗi mắt xích, một phần năng lượng chuyển thành <b>nhiệt</b> và tỏa ra môi trường. Năng lượng truyền <b>một chiều</b>, không quay lại Mặt Trời như nước quay lại biển.');
+  nt.style.display = done.has('sinh-vat') ? 'block' : 'none';
+  b.append(ch, nt);
+});
+
+page('Phần 1. Vòng năng lượng', 'dung-sai', 'Hoạt động: đúng hay sai?', b => {
+  b.appendChild(el('p', 'lead', 'Chọn Đúng hoặc Sai cho mỗi nhận định, rồi bấm Kiểm tra.'));
+  choiceRows(b, [
+    ['Năng lượng Mặt Trời làm nước bay hơi.', 0],
+    ['Trong quang hợp, quang năng chuyển hóa thành điện năng.', 1],
+    ['Động vật ăn cỏ nhận hóa năng từ thực vật.', 0],
+    ['Năng lượng tuần hoàn khép kín giống như nước trong tự nhiên.', 1],
+    ['Nước mưa rơi từ trên cao xuống: thế năng chuyển hóa thành động năng.', 0]
+  ], ['Đúng', 'Sai'], 'dung-sai', 'Nhớ: nước tuần hoàn khép kín, còn năng lượng truyền một chiều.');
+});
+
+page('Phần 1. Vòng năng lượng', 'luyen-tap-1', 'Luyện tập phần 1', b => {
+  b.appendChild(el('p', 'lead', 'Trả lời 3 câu hỏi. Làm đúng hết để hoàn thành phần 1.'));
+  mcqSet(b, [
+    { q: 'Nguồn năng lượng chủ yếu cho quá trình quang hợp là gì?', o: ['Nhiệt từ lòng đất', 'Ánh sáng Mặt Trời', 'Gió', 'Nước'], a: 1, g: 'Cây xanh dùng ánh sáng Mặt Trời để quang hợp.' },
+    { q: 'Trong quang hợp, quang năng chuyển thành dạng năng lượng nào?', o: ['Hóa năng', 'Động năng', 'Điện năng', 'Thế năng'], a: 0, g: 'Quang năng chuyển thành hóa năng, tích lũy trong chất hữu cơ.' },
+    { q: 'Vì sao động vật ăn cỏ nhận được năng lượng từ thực vật?', o: ['Vì hấp thụ ánh sáng như cây', 'Vì lấy năng lượng từ không khí', 'Vì thu nhận hóa năng từ thức ăn', 'Vì thực vật truyền điện cho động vật'], a: 2, g: 'Động vật ăn thực vật và thu nhận hóa năng tích lũy trong chất hữu cơ.' }
+  ], 'luyen-tap-1');
+});
+
+page('Phần 2. Năng lượng hóa thạch', 'nguon-goc', 'Nhiên liệu hóa thạch hình thành như thế nào?', b => {
+  b.appendChild(el('p', 'lead', 'Theo dõi 4 bước hình thành nhiên liệu hóa thạch. Bấm “Bước tiếp” để đi tiếp.'));
+  const S = [['Bước 1. Sinh vật cổ', 'Hàng trăm triệu năm trước, thực vật và sinh vật biển tích lũy hóa năng nhờ năng lượng Mặt Trời.'],
+             ['Bước 2. Bị chôn vùi', 'Khi chết đi, xác sinh vật bị vùi lấp dưới nhiều lớp bùn, đất đá.'],
+             ['Bước 3. Biến đổi', 'Dưới áp suất và nhiệt độ cao, qua thời gian địa chất rất dài, xác sinh vật biến đổi dần.'],
+             ['Bước 4. Nhiên liệu hóa thạch', 'Tạo thành than đá, dầu mỏ, khí thiên nhiên. Năng lượng trong chúng có nguồn gốc từ năng lượng Mặt Trời.']];
+  let k = 0; const bar = el('div', 'steps'); S.forEach(() => bar.appendChild(el('span')));
+  const c = el('div', 'card'); const nx = el('button', 'btn acc', 'Bước tiếp ›'); const bk = el('button', 'btn sec', '‹ Bước trước');
+  const ctl = el('div', '', ''); ctl.style.cssText = 'display:flex;gap:10px';
+  const draw = () => { [...bar.children].forEach((s, i) => s.classList.toggle('on', i <= k)); c.innerHTML = `<h3>${S[k][0]}</h3><p>${S[k][1]}</p>`; bk.disabled = k === 0; nx.disabled = k === S.length - 1; if (k === S.length - 1) complete('nguon-goc'); };
+  nx.onclick = () => { k++; draw(); }; bk.onclick = () => { k--; draw(); };
+  ctl.append(bk, nx); b.append(bar, c, ctl); draw();
+});
+
+page('Phần 2. Năng lượng hóa thạch', 'nhan-biet', 'Hoạt động: đâu là nhiên liệu hóa thạch?', b => {
+  b.appendChild(el('p', 'lead', 'Phân loại từng nguồn năng lượng, rồi bấm Kiểm tra.'));
+  choiceRows(b, [['Than đá', 0], ['Ánh sáng Mặt Trời', 1], ['Dầu mỏ', 0], ['Gió', 1], ['Khí thiên nhiên', 0], ['Nước chảy', 1]],
+    ['Hóa thạch', 'Không phải'], 'nhan-biet', 'Than đá, dầu mỏ, khí thiên nhiên là nhiên liệu hóa thạch.');
+});
+
+page('Phần 2. Năng lượng hóa thạch', 'ung-dung', 'Ba loại nhiên liệu hóa thạch', b => {
+  b.appendChild(el('p', 'lead', 'Bấm vào từng loại để xem nguồn gốc và ứng dụng.'));
+  flips(b, [['Than đá', '<b>Nguồn gốc:</b> xác thực vật bị chôn vùi, biến đổi hàng trăm triệu năm.<br><b>Ứng dụng:</b> nhiệt điện than, luyện kim, sản xuất xi măng.'],
+            ['Dầu mỏ', '<b>Nguồn gốc:</b> xác sinh vật, chủ yếu sinh vật biển, bị chôn vùi và biến đổi.<br><b>Ứng dụng:</b> xăng, dầu cho phương tiện, máy móc; nguyên liệu hóa dầu.'],
+            ['Khí thiên nhiên', '<b>Nguồn gốc:</b> hình thành cùng quá trình tạo dầu mỏ, tích tụ trong mỏ khí.<br><b>Ứng dụng:</b> nhiệt điện khí, đun nấu, sản xuất phân bón.']], null, 'grid2');
+  const c = el('div', 'card task'); c.appendChild(el('p', 'tlabel', 'Ghép nối: chọn loại nhiên liệu phù hợp với ứng dụng'));
+  const rows = [['Chạy xe máy, ô tô', 1], ['Nhà máy nhiệt điện than', 0], ['Bếp gas đun nấu', 2]];
+  const names = ['Than đá', 'Dầu mỏ (xăng, dầu)', 'Khí thiên nhiên'];
+  const m = el('div', 'match'); const sels = [];
+  rows.forEach(([t]) => { const r = el('div', 'row'); r.appendChild(el('p', '', t)); const s = el('select'); s.setAttribute('aria-label', 'Chọn nhiên liệu cho: ' + t);
+    s.innerHTML = '<option value="">– Chọn –</option>' + names.map((n, i) => `<option value="${i}">${n}</option>`).join(''); r.appendChild(s); sels.push([s, r]); m.appendChild(r); });
+  const fb = el('div', 'fb'); const chk = el('button', 'btn', 'Kiểm tra');
+  chk.onclick = () => { let ok = 0; sels.forEach(([s, r], k) => { const g = s.value !== '' && +s.value === rows[k][1]; ok += g; r.classList.toggle('ok', g); r.classList.toggle('bad', !g); });
+    fb.className = 'fb show ' + (ok === 3 ? 'ok' : 'bad'); fb.innerHTML = ok === 3 ? '<b>Chính xác!</b>' : `<b>Đúng ${ok}/3.</b> Xem lại các thẻ bên trên rồi thử lại.`; if (ok === 3) complete('ung-dung'); };
+  c.append(m, chk, fb); b.appendChild(c);
+});
+
+page('Phần 2. Năng lượng hóa thạch', 'uu-han-che', 'Ưu điểm hay hạn chế?', b => {
+  b.appendChild(el('p', 'lead', 'Xếp mỗi ý vào nhóm Ưu điểm hoặc Hạn chế của nhiên liệu hóa thạch.'));
+  choiceRows(b, [['Cung cấp nhiều năng lượng', 0], ['Hình thành rất chậm, trữ lượng có hạn', 1], ['Dễ vận chuyển, dễ sử dụng', 0], ['Khi đốt thải ra nhiều khí CO₂', 1], ['Khai thác, vận chuyển có thể gây tràn dầu, ô nhiễm', 1], ['Dùng được cho điện, giao thông, công nghiệp', 0]],
+    ['Ưu điểm', 'Hạn chế'], 'uu-han-che', 'Nhiên liệu hóa thạch rất hữu ích nhưng không tái tạo được và gây ô nhiễm, nên cần dùng tiết kiệm.');
+});
+
+page('Phần 3. Giá nhiên liệu và tiết kiệm năng lượng', 'gia', 'Vì sao giá nhiên liệu thay đổi?', b => {
+  b.appendChild(el('p', 'lead', 'Giá xăng dầu, than, khí thay đổi do nhiều yếu tố. Bấm vào từng yếu tố để tìm hiểu.'));
+  flips(b, [['Cung – cầu', 'Lượng nhiên liệu khai thác được so với nhu cầu sử dụng.'], ['Chi phí khai thác', 'Mỏ càng sâu, càng khó khai thác thì chi phí càng cao.'], ['Vận chuyển', 'Chi phí đưa nhiên liệu từ mỏ đến nơi sử dụng.'], ['Chính sách và thị trường', 'Thuế, quy định của nhà nước và biến động giá trên thế giới.']], 'gia');
+  const c = el('div', 'card task'); c.appendChild(el('p', 'tlabel', 'Thử nghiệm: điều chỉnh cung và cầu'));
+  c.appendChild(el('p', '', 'Chọn nguồn cung và nhu cầu, xem giá dầu có xu hướng thay đổi thế nào (khi các yếu tố khác không đổi).'));
+  const sim = el('div', 'sim'); const st = { s: 1, d: 1 }; const opts = ['Giảm', 'Không đổi', 'Tăng'];
+  const mk = (title, key) => { const k = el('div', 'card'); k.appendChild(el('h3', '', title)); const seg = el('div', 'seg');
+    opts.forEach((o, i) => { const bt = el('button', i === 1 ? 'on' : '', o); bt.onclick = () => { st[key] = i; [...seg.children].forEach(x => x.classList.toggle('on', x === bt)); upd(); }; seg.appendChild(bt); }); k.appendChild(seg); return k; };
+  const out = el('div', 'card'); out.appendChild(el('h3', '', 'Giá dầu')); const pv = el('p', 'price eq', '= Ổn định'); const pd = el('p', '', ''); out.append(pv, pd);
+  const upd = () => { const v = (st.d - 1) - (st.s - 1);
+    if (v > 0) { pv.className = 'price up'; pv.textContent = '↑ Có xu hướng tăng'; pd.textContent = 'Nhu cầu lớn hơn lượng cung ứng.'; }
+    else if (v < 0) { pv.className = 'price down'; pv.textContent = '↓ Có xu hướng giảm'; pd.textContent = 'Lượng cung ứng nhiều hơn nhu cầu.'; }
+    else { pv.className = 'price eq'; pv.textContent = '= Khó đoán / ổn định'; pd.textContent = (st.s === 1 ? 'Cung và cầu cân bằng.' : 'Cung và cầu cùng thay đổi, giá còn tùy mức thay đổi của mỗi bên.'); } };
+  sim.append(mk('Nguồn cung', 's'), mk('Nhu cầu', 'd'), out); c.appendChild(sim); upd(); b.appendChild(c);
+  const q = el('div', 'card'); mcq(q, { q: 'Nguồn cung dầu giảm nhưng nhu cầu giữ nguyên. Giá dầu có xu hướng thế nào?', o: ['Giảm', 'Tăng', 'Không bao giờ đổi', 'Giảm về 0'], a: 1, g: 'Cung giảm, cầu không đổi thường làm giá tăng; chi phí đi lại, sản xuất cũng tăng theo.', h: 'Gợi ý: dùng bảng thử nghiệm bên trên.' }); b.appendChild(q);
+});
+
+page('Phần 3. Giá nhiên liệu và tiết kiệm năng lượng', 'van-dung', 'Vận dụng: tiết kiệm năng lượng ở nhà', b => {
+  b.appendChild(el('p', 'lead', 'Gia đình em dùng nhiều điện và xăng dầu. Hành động nào giúp tiết kiệm năng lượng, giảm phát thải? Chọn Nên hoặc Không nên.'));
+  choiceRows(b, [['Tắt đèn, quạt, ti vi khi ra khỏi phòng', 0], ['Để điều hòa chạy khi không có ai trong phòng', 1], ['Mở rèm, tận dụng ánh sáng tự nhiên ban ngày', 0], ['Đi bộ, đi xe đạp hoặc đi chung xe khi đường gần', 0], ['Rút sạc điện thoại ra khi đã đầy pin', 0], ['Bật đèn cả ngày cho sáng nhà', 1]],
+    ['Nên', 'Không nên'], 'van-dung', 'Em hãy chọn 2 việc và thực hiện ngay ở nhà nhé!');
+});
+
+page('Kiểm tra', 'kiem-tra', 'Bài kiểm tra cuối bài (15 câu)', b => {
+  let order = [], k = 0, ans = [];
+  const box = el('div', 'q');
+  const start = () => { order = FINAL.map((_, i) => i); k = 0; ans = []; draw(); };
+  const draw = () => {
+    box.innerHTML = '';
+    if (k >= order.length) return result();
+    const nav = el('div', 'qnav'); order.forEach((_, i) => nav.appendChild(el('span', i < k ? (ans[i] ? 'ok' : 'bad') : i === k ? 'cur' : '', i + 1)));
+    const it = FINAL[order[k]]; const c = el('div', 'card q');
+    c.appendChild(el('p', 'kicker', `Câu ${k + 1}/${order.length}`)); c.appendChild(el('p', 'q-t', it.q));
+    const os = el('div', 'opts'); const fb = el('div', 'fb'); const nx = el('button', 'btn acc', k === order.length - 1 ? 'Xem kết quả' : 'Câu tiếp ›'); nx.style.display = 'none';
+    it.o.forEach((t, i) => { const bt = el('button', 'opt', `<span class="k">${L[i]}.</span><span>${t}</span>`);
+      bt.onclick = () => { [...os.children].forEach(x => x.disabled = true); const g = i === it.a; ans[k] = g;
+        os.children[it.a].classList.add('ok'); if (!g) bt.classList.add('bad');
+        fb.className = 'fb show ' + (g ? 'ok' : 'bad'); fb.innerHTML = (g ? '<b>Chính xác!</b> ' : `<b>Chưa đúng. Đáp án: ${L[it.a]}.</b> `) + it.g; nx.style.display = 'inline-block'; nx.focus(); };
+      os.appendChild(bt); });
+    nx.onclick = () => { k++; draw(); };
+    c.append(os, fb, nx); box.append(nav, c);
+  };
+  const result = () => {
+    const sc = ans.filter(Boolean).length; const ten = Math.round(sc / order.length * 100) / 10;
+    const msg = sc >= 13 ? 'Xuất sắc! Em đã nắm rất vững bài học.' : sc >= 10 ? 'Tốt lắm! Em xem lại các câu sai bên dưới nhé.' : sc >= 7 ? 'Khá! Em nên ôn lại những phần còn nhầm.' : 'Em nên học lại các trang trong mục lục rồi làm lại bài kiểm tra.';
+    const r = el('div', 'card result', `<p class="kicker">Kết quả của em</p><p class="big">${sc}/${order.length}</p><p>Quy ra điểm 10: <b>${String(ten).replace('.', ',')}</b></p><p>${msg}</p>`);
+    const again = el('button', 'btn', 'Làm lại bài kiểm tra'); again.onclick = start; r.appendChild(again);
+    const rv = el('div', 'review'); order.forEach((qi, i) => { if (!ans[i]) { const it = FINAL[qi]; rv.appendChild(el('div', 'row bad', `<p><b>Câu ${i + 1}.</b> ${it.q}</p><p>Đáp án đúng: <b>${L[it.a]}. ${it.o[it.a]}</b></p><p>${it.g}</p>`)); } });
+    box.appendChild(r); if (rv.children.length) { box.appendChild(el('h3', '', 'Các câu em làm chưa đúng')); box.appendChild(rv); }
+    complete('kiem-tra'); renderNav();
+  };
+  b.appendChild(el('p', 'lead', 'Mỗi câu chỉ được chọn một lần. Sau khi chọn, em sẽ thấy đáp án và lời giải thích.'));
+  b.appendChild(box); start();
+});
+
+page('Kiểm tra', 'tong-ket', 'Tổng kết và chuẩn bị bài sau', b => {
+  b.appendChild(el('div', 'grid2', '') );
+  const g = b.lastChild;
+  [['Mặt Trời', 'là nguồn năng lượng chủ yếu, vận hành vòng tuần hoàn nước và nuôi sống sinh vật. Năng lượng truyền một chiều.'],
+   ['Nhiên liệu hóa thạch', 'gồm than đá, dầu mỏ, khí thiên nhiên; hình thành rất chậm, trữ lượng hữu hạn; khi đốt thải CO₂.'],
+   ['Giá nhiên liệu', 'phụ thuộc cung – cầu, chi phí khai thác, vận chuyển, chính sách và thị trường.'],
+   ['Sử dụng hợp lí', 'tiết kiệm điện, xăng dầu và dần chuyển sang năng lượng tái tạo.']]
+   .forEach(([t, d]) => g.appendChild(el('div', 'card', `<h3>${t}</h3><p>${d}</p>`)));
+  b.appendChild(el('div', 'card task', '<p class="tlabel">Chuẩn bị bài sau</p><p>Đọc trước <b>Bài 17. Một số dạng năng lượng tái tạo</b>. Tìm hiểu xem địa phương em có nhà máy điện gió, điện mặt trời hoặc thủy điện nào không.</p>'));
+  complete('tong-ket');
+});
+
+/* ---------- shell ---------- */
+const nav = $('#nav');
+function renderNav() {
+  nav.innerHTML = ''; let g = null;
+  P.forEach((p, i) => {
+    if (p.grp !== g) { g = p.grp; nav.appendChild(el('p', 'grp', g)); }
+    const b = el('button', 'nav-i' + (i === cur ? ' cur' : '') + (done.has(p.id) ? ' done' : ''), `<span class="dot">${done.has(p.id) ? '✓' : ''}</span><span>${p.title}</span>`);
+    if (i === cur) b.setAttribute('aria-current', 'page');
+    b.onclick = () => { go(i); closeMenu(); }; nav.appendChild(b);
+  });
+  const n = P.filter(p => done.has(p.id)).length;
+  $('#progBar').style.width = (n / P.length * 100) + '%';
+  $('#progText').textContent = `Đã hoàn thành ${n}/${P.length} mục`;
+}
+function go(i) {
+  cur = Math.max(0, Math.min(P.length - 1, i)); const p = P[cur];
+  const pg = $('#page'); pg.innerHTML = '';
+  if (p.id !== 'intro') { pg.appendChild(el('p', 'kicker', p.grp)); pg.appendChild(el('h2', '', p.title)); }
+  p.build(pg);
+  $('#crumb').textContent = `${cur + 1}/${P.length} · ${p.title}`;
+  $('#prevBtn').disabled = cur === 0; $('#nextBtn').disabled = cur === P.length - 1;
+  $('#wrap').scrollTop = 0; renderNav();
+  if (location.hash !== '#' + p.id) history.replaceState(null, '', '#' + p.id);
+}
+$('#prevBtn').onclick = () => go(cur - 1);
+$('#nextBtn').onclick = () => go(cur + 1);
+const side = $('#side'), ov = $('#overlay'), mb = $('#menuBtn');
+function closeMenu() { side.classList.remove('open'); ov.classList.remove('show'); mb.setAttribute('aria-expanded', 'false'); }
+mb.onclick = () => { side.classList.add('open'); ov.classList.add('show'); mb.setAttribute('aria-expanded', 'true'); };
+ov.onclick = closeMenu;
+$('#themeBtn').onclick = () => { const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; r.dataset.theme = dark ? 'light' : 'dark'; };
+addEventListener('hashchange', () => { const i = P.findIndex(p => '#' + p.id === location.hash); if (i >= 0 && i !== cur) go(i); });
+const start = P.findIndex(p => '#' + p.id === location.hash);
+go(start >= 0 ? start : 0);
+</script>
+</body>
+</html>
