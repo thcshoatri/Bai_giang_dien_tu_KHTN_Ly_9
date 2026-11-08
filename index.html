@@ -2,8 +2,10 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
+<meta name="author" content="Huỳnh Đức Hòa – Trường THCS Hòa Trí">
+<meta name="copyright" content="© 2026 Trường THCS Hòa Trí. Bản quyền thuộc Trường THCS Hòa Trí.">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Bài 16. Vòng năng lượng trên Trái Đất. Năng lượng hóa thạch – E-learning KHTN 9</title>
+<title>Bài giảng điện tử KHTN 9 – Phần Vật lí – Trường THCS Hòa Trí</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@500;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap">
 <style>
@@ -105,7 +107,7 @@ nav{overflow:auto;padding:4px 12px 24px;flex:1}
 /* tf / classify rows */
 .row{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
 .row p{flex:1}
-.seg{display:flex;gap:6px;flex:none}
+.seg{display:flex;flex-wrap:wrap;gap:6px;flex:none}
 .seg button{border:2px solid var(--line);background:var(--bg);color:var(--text);border-radius:10px;padding:6px 12px;font-weight:700;font-size:15px}
 .seg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .row.ok{border-color:var(--ok);background:var(--ok-bg)}
@@ -166,6 +168,8 @@ nav{overflow:auto;padding:4px 12px 24px;flex:1}
 .done-badge{display:inline-block;background:var(--ok-bg);color:var(--ink);border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px}
 ul.clean{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 .overlay{display:none}
+.copy{padding:14px 22px 18px;border-top:1px solid rgba(255,255,255,.12);font-size:13px;line-height:1.5;color:var(--side-muted)}
+.copy-main{text-align:center;font-size:14px;color:var(--muted);padding-top:8px}
 @media (max-width:860px){
   .app{grid-template-columns:1fr}
   .side{position:fixed;inset:0 auto 0 0;width:86%;max-width:330px;z-index:20;transform:translateX(-105%);transition:transform .25s;padding-top:env(safe-area-inset-top,0px)}
@@ -179,22 +183,71 @@ ul.clean{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
   .row{flex-direction:column;align-items:flex-start}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.home{max-width:860px;margin:0 auto;padding:0 18px 40px;height:100%;overflow:auto}
+.home-hero{background:#13324A;color:#FAF6EE;border-radius:0 0 28px 28px;padding:36px 28px 34px;position:relative;overflow:hidden;margin:0 -18px 28px}
+.home-hero .sun{position:absolute;right:-70px;top:-70px;width:220px;height:220px;border-radius:50%;background:#F2A65A;opacity:.9}
+.home-hero .ring{position:absolute;right:-120px;top:-120px;width:320px;height:320px;border-radius:50%;border:2px solid #F2A65A;opacity:.4}
+.home-hero > *{position:relative}
+.home-hero .school{font-weight:700;color:#F2A65A;font-size:15px;max-width:70%}
+.home-hero h1{color:#FAF6EE;font-size:clamp(26px,6vw,38px);margin:6px 0 10px;max-width:16ch}
+.home-hero p.sub{color:#BFD3E0;max-width:46ch}
+.hbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.hbar h2{font-size:21px}
+.topic{font:800 14px 'Nunito Sans',Arial,sans-serif;color:var(--acc-ink);margin:18px 0 10px}
+.list{display:flex;flex-direction:column;gap:14px}
+.lesson{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px 20px;text-align:left;color:inherit;font:inherit;cursor:pointer;width:100%;transition:border-color .2s}
+.lesson:hover{border-color:var(--acc)}
+.num{width:64px;height:64px;border-radius:18px;background:var(--surface2);display:grid;place-items:center;text-align:center;line-height:1}
+.num small{display:block;font:700 12px 'Nunito Sans',Arial,sans-serif;color:var(--teal)}
+.num b{font:800 26px 'Be Vietnam Pro',Arial,sans-serif;color:var(--ink)}
+.lesson h3{font-size:18.5px}
+.lesson .desc{color:var(--muted);font-size:15px;margin-top:2px}
+.lp{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:14px;color:var(--muted);font-weight:600}
+.lp .t{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden;max-width:220px}
+.lp .t i{display:block;height:100%;background:var(--acc)}
+.lp .go{margin-left:auto;font-weight:800;color:var(--ink);white-space:nowrap}
+.lp.done .go{color:var(--teal)}
+.help{margin-top:26px;background:var(--surface2);border-radius:18px;padding:18px 20px;color:var(--ink);font-size:15.5px}
+.hfoot{margin-top:28px;text-align:center;font-size:14px;color:var(--muted)}
+.back{background:none;color:var(--ink);font-weight:800;font-size:15px;border:2px solid var(--line);border-radius:10px;padding:6px 12px;white-space:nowrap}
+.back:hover{border-color:var(--acc)}
+[hidden]{display:none!important}
+.top button{white-space:nowrap}
+.top .theme-btn{margin-left:auto}
+@media (max-width:520px){.top{gap:8px}.top .crumb{display:none}.menu-btn,.back{padding:7px 10px;font-size:14px}}
+@media (min-width:900px){.home-hero{margin:0 0 28px}}
+@media (max-width:520px){.home-hero .sun{right:-110px;top:-120px;width:200px;height:200px}.home-hero .ring{right:-150px;top:-160px}.lesson{grid-template-columns:1fr;gap:10px}.num{width:auto;height:auto;padding:6px 12px;border-radius:12px;justify-self:start;display:flex;gap:6px;align-items:baseline}.num small{display:inline}.num b{font-size:18px}}
 </style>
 </head>
 <body>
-<div class="app">
+<div class="home" id="home">
+  <header class="home-hero">
+    <span class="ring"></span><span class="sun"></span>
+    <p class="school">Trường THCS Hòa Trí · Tổ KHTN – GDTC</p>
+    <h1>Bài giảng điện tử KHTN 9 – Phần Vật lí</h1>
+    <p class="sub">Chọn bài để học. Tiến độ của em được lưu trên điện thoại hoặc máy tính em đang dùng.</p>
+  </header>
+  <div class="hbar"><h2>Danh sách bài học</h2><button class="theme-btn" data-theme-toggle>Sáng/Tối</button></div>
+  <div id="lessonList"></div>
+  <div class="help"><b>Cách học:</b> bấm vào một bài để mở. Trong bài, bấm <b>“‹ Danh sách bài”</b> ở góc trên để quay lại chọn bài khác. Em có thể thêm trang này vào màn hình chính điện thoại để mở nhanh.</div>
+  <p class="hfoot">© 2026 Trường THCS Hòa Trí. Bản quyền thuộc Trường THCS Hòa Trí.<br>Biên soạn: GV Huỳnh Đức Hòa.</p>
+</div>
+<div class="app" id="app" hidden>
   <aside class="side" id="side" aria-label="Mục lục bài học">
-    <div class="side-head"><p>KHTN 9 · Phần Vật lí</p><h1>Bài 16. Vòng năng lượng trên Trái Đất. Năng lượng hóa thạch</h1></div>
+    <div class="side-head"><p>KHTN 9 · Phần Vật lí</p><h1 id="lessonTitle"></h1></div>
     <div class="prog" aria-hidden="true"><i id="progBar"></i></div>
-    <p class="prog-t" id="progText">Đã hoàn thành 0/0 mục</p>
+    <p class="prog-t" id="progText"></p>
     <nav id="nav"></nav>
+    <p class="copy">© 2026 Trường THCS Hòa Trí. Bản quyền thuộc Trường THCS Hòa Trí.<br>Biên soạn: GV Huỳnh Đức Hòa.</p>
   </aside>
   <div class="overlay" id="overlay"></div>
   <main class="main">
     <div class="top">
+      <button class="back" id="backBtn">‹ Danh sách bài</button>
       <button class="menu-btn" id="menuBtn" aria-controls="side" aria-expanded="false">☰ Mục lục</button>
       <p class="crumb" id="crumb"></p>
-      <button class="theme-btn" id="themeBtn" aria-label="Đổi giao diện sáng/tối">Sáng/Tối</button>
+      <button class="theme-btn" data-theme-toggle aria-label="Đổi giao diện sáng/tối">Sáng/Tối</button>
     </div>
     <div class="page-wrap" id="wrap"><div class="page" id="page"></div></div>
     <div class="foot">
@@ -204,16 +257,16 @@ ul.clean{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
   </main>
 </div>
 <script>
-const FINAL = [{"q": "Nguồn năng lượng chủ yếu cung cấp cho các quá trình tự nhiên trên Trái Đất là gì?", "o": ["Năng lượng từ lòng đất", "Năng lượng Mặt Trời", "Năng lượng từ Mặt Trăng", "Năng lượng từ nhiên liệu hóa thạch"], "a": 1, "g": "Mặt Trời cung cấp năng lượng cho quang hợp, sự bay hơi của nước và nhiều quá trình tự nhiên."}, {"q": "Trong quá trình quang hợp, thực vật chuyển hóa năng lượng ánh sáng thành dạng năng lượng nào?", "o": ["Nhiệt năng", "Điện năng", "Hóa năng", "Động năng"], "a": 2, "g": "Quang hợp chuyển năng lượng ánh sáng thành hóa năng được tích lũy trong các chất hữu cơ."}, {"q": "Nguồn năng lượng nào sau đây là nhiên liệu hóa thạch?", "o": ["Than đá", "Ánh sáng Mặt Trời", "Gió", "Nước chảy"], "a": 0, "g": "Than đá được hình thành từ vật chất hữu cơ cổ qua thời gian địa chất rất dài."}, {"q": "Nhiên liệu hóa thạch được hình thành chủ yếu từ đâu?", "o": ["Các loại đá nóng chảy", "Nước biển bay hơi", "Ánh sáng Mặt Trời trực tiếp", "Xác sinh vật bị chôn vùi và biến đổi qua thời gian địa chất"], "a": 3, "g": "Xác sinh vật bị chôn vùi và biến đổi dưới điều kiện địa chất trong hàng triệu năm."}, {"q": "Nguồn năng lượng nào sau đây không phải là nhiên liệu hóa thạch?", "o": ["Dầu mỏ", "Khí thiên nhiên", "Năng lượng gió", "Than đá"], "a": 2, "g": "Gió là nguồn năng lượng tái tạo; dầu mỏ, khí thiên nhiên và than đá là nhiên liệu hóa thạch."}, {"q": "Trong vòng tuần hoàn nước, năng lượng Mặt Trời trực tiếp gây ra quá trình nào?", "o": ["Nước bốc hơi", "Nước ngầm chảy xuống", "Mưa rơi xuống đất", "Nước đóng băng ở nhiệt độ thấp"], "a": 0, "g": "Năng lượng Mặt Trời làm nóng nước và thúc đẩy quá trình bay hơi."}, {"q": "Vì sao năng lượng có thể truyền từ thực vật sang động vật ăn cỏ?", "o": ["Động vật hấp thụ ánh sáng trực tiếp như cây xanh", "Động vật lấy hóa năng từ thức ăn", "Động vật tạo ra năng lượng từ không khí", "Thực vật truyền điện năng cho động vật"], "a": 1, "g": "Động vật ăn thực vật và tiếp nhận hóa năng tích lũy trong các chất hữu cơ."}, {"q": "Vì sao nhiên liệu hóa thạch được coi là nguồn năng lượng không tái tạo?", "o": ["Vì không thể đốt cháy", "Vì không chứa năng lượng", "Vì chỉ có trong nước biển", "Vì hình thành rất chậm và có trữ lượng hữu hạn"], "a": 3, "g": "Tốc độ hình thành nhiên liệu hóa thạch chậm hơn rất nhiều so với tốc độ khai thác."}, {"q": "Đốt nhiều nhiên liệu hóa thạch làm gia tăng khí nào góp phần gây hiệu ứng nhà kính?", "o": ["Khí oxygen", "Khí nitrogen", "Khí carbon dioxide (CO₂)", "Khí helium"], "a": 2, "g": "CO₂ sinh ra từ quá trình đốt nhiên liệu hóa thạch góp phần làm tăng hiệu ứng nhà kính."}, {"q": "Yếu tố nào có thể khiến giá dầu mỏ tăng khi các điều kiện khác không đổi?", "o": ["Nguồn cung dầu mỏ giảm", "Nhu cầu dầu mỏ giảm", "Nguồn cung dầu mỏ tăng", "Chi phí khai thác giảm"], "a": 0, "g": "Khi nguồn cung giảm còn nhu cầu không đổi, giá dầu thường chịu áp lực tăng."}, {"q": "Nhận định nào đúng về việc sử dụng nhiên liệu hóa thạch?", "o": ["Không tạo ra chất gây ô nhiễm", "Cung cấp nhiều năng lượng nhưng có thể gây ô nhiễm môi trường", "Có thể tái tạo nhanh sau khi sử dụng", "Không ảnh hưởng đến khí hậu"], "a": 1, "g": "Nhiên liệu hóa thạch cung cấp nhiều năng lượng nhưng việc đốt có thể gây ô nhiễm và phát thải khí nhà kính."}, {"q": "Gia đình muốn giảm sử dụng điện sản xuất từ nhiên liệu hóa thạch. Biện pháp nào phù hợp nhất?", "o": ["Bật đèn cả ngày", "Dùng thêm thiết bị điện không cần thiết", "Để điều hòa hoạt động khi không có người", "Tắt thiết bị điện khi không sử dụng"], "a": 3, "g": "Tiết kiệm điện giúp giảm nhu cầu phát điện, từ đó có thể giảm nhiên liệu hóa thạch tiêu thụ."}, {"q": "Địa phương có nhiều nắng muốn giảm phụ thuộc nhiên liệu hóa thạch. Giải pháp phù hợp là gì?", "o": ["Tăng đốt than", "Tăng sử dụng máy phát điện chạy dầu", "Lắp đặt hệ thống điện Mặt Trời ở nơi phù hợp", "Ngừng sử dụng tất cả thiết bị điện"], "a": 2, "g": "Điện Mặt Trời khai thác năng lượng tái tạo, giúp thay thế một phần điện từ nhiên liệu hóa thạch."}, {"q": "Nhà máy điện than chuyển sang dùng năng lượng gió. Lợi ích môi trường trực tiếp là gì?", "o": ["Giảm phát thải CO₂ từ quá trình đốt than", "Tăng lượng khói bụi", "Làm than đá hình thành nhanh hơn", "Loại bỏ hoàn toàn mọi tác động môi trường"], "a": 0, "g": "Điện gió không cần đốt than khi phát điện nên giảm phát thải trực tiếp từ việc đốt than."}, {"q": "Nhu cầu xăng dầu tăng mạnh, lượng cung ứng không đổi. Giá xăng dầu có khả năng thế nào?", "o": ["Chắc chắn giảm về 0", "Có xu hướng tăng", "Không bao giờ thay đổi", "Luôn giảm một nửa"], "a": 1, "g": "Nhu cầu tăng khi cung không đổi thường gây áp lực tăng giá, dù giá thực tế còn chịu các yếu tố khác."}];
 const L = 'ABCD';
 const $ = (s, r = document) => r.querySelector(s);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const COPY = '© 2026 Trường THCS Hòa Trí. Bản quyền thuộc Trường THCS Hòa Trí.';
 
-/* ---------- state ---------- */
-let done = new Set(), cur = 0;
-try { const s = JSON.parse(localStorage.getItem('b16-el') || '{}'); if (s.done) done = new Set(s.done); } catch (e) {}
-function save() { try { localStorage.setItem('b16-el', JSON.stringify({ done: [...done] })); } catch (e) {} }
+/* ---------- state (theo từng bài) ---------- */
+let P = [], FINAL = [], done = new Set(), cur = 0, LES = null;
+function load(key) { try { const s = JSON.parse(localStorage.getItem(key) || '{}'); return { done: new Set(s.done || []), total: s.total || 0 }; } catch (e) { return { done: new Set(), total: 0 }; } }
+function save() { if (!LES) return; try { localStorage.setItem(LES.key, JSON.stringify({ done: [...done], total: P.length })); } catch (e) {} }
 function complete(id) { if (!done.has(id)) { done.add(id); save(); renderNav(); } }
 
 /* ---------- reusable activities ---------- */
@@ -277,9 +330,15 @@ function choiceRows(box, rows, labels, id, okMsg) {
   wrap.append(chk, fb); box.appendChild(wrap);
 }
 
-/* ---------- pages ---------- */
-const P = [];
-const page = (grp, id, title, build) => P.push({ grp, id, title, build });
+
+/* =====================================================================
+   DANH SÁCH BÀI HỌC – mỗi bài là một mục trong LESSONS.
+   ===================================================================== */
+const LESSONS = [
+  { id: 'bai16', so: 16, chuDe: 'Năng lượng với cuộc sống', ten: 'Vòng năng lượng trên Trái Đất. Năng lượng hóa thạch', moTa: 'Mặt Trời và vòng tuần hoàn nước, nhiên liệu hóa thạch, giá nhiên liệu.', key: 'b16-el',
+    final: [{"q": "Nguồn năng lượng chủ yếu cung cấp cho các quá trình tự nhiên trên Trái Đất là gì?", "o": ["Năng lượng từ lòng đất", "Năng lượng Mặt Trời", "Năng lượng từ Mặt Trăng", "Năng lượng từ nhiên liệu hóa thạch"], "a": 1, "g": "Mặt Trời cung cấp năng lượng cho quang hợp, sự bay hơi của nước và nhiều quá trình tự nhiên."}, {"q": "Trong quá trình quang hợp, thực vật chuyển hóa năng lượng ánh sáng thành dạng năng lượng nào?", "o": ["Nhiệt năng", "Điện năng", "Hóa năng", "Động năng"], "a": 2, "g": "Quang hợp chuyển năng lượng ánh sáng thành hóa năng được tích lũy trong các chất hữu cơ."}, {"q": "Nguồn năng lượng nào sau đây là nhiên liệu hóa thạch?", "o": ["Than đá", "Ánh sáng Mặt Trời", "Gió", "Nước chảy"], "a": 0, "g": "Than đá được hình thành từ vật chất hữu cơ cổ qua thời gian địa chất rất dài."}, {"q": "Nhiên liệu hóa thạch được hình thành chủ yếu từ đâu?", "o": ["Các loại đá nóng chảy", "Nước biển bay hơi", "Ánh sáng Mặt Trời trực tiếp", "Xác sinh vật bị chôn vùi và biến đổi qua thời gian địa chất"], "a": 3, "g": "Xác sinh vật bị chôn vùi và biến đổi dưới điều kiện địa chất trong hàng triệu năm."}, {"q": "Nguồn năng lượng nào sau đây không phải là nhiên liệu hóa thạch?", "o": ["Dầu mỏ", "Khí thiên nhiên", "Năng lượng gió", "Than đá"], "a": 2, "g": "Gió là nguồn năng lượng tái tạo; dầu mỏ, khí thiên nhiên và than đá là nhiên liệu hóa thạch."}, {"q": "Trong vòng tuần hoàn nước, năng lượng Mặt Trời trực tiếp gây ra quá trình nào?", "o": ["Nước bốc hơi", "Nước ngầm chảy xuống", "Mưa rơi xuống đất", "Nước đóng băng ở nhiệt độ thấp"], "a": 0, "g": "Năng lượng Mặt Trời làm nóng nước và thúc đẩy quá trình bay hơi."}, {"q": "Vì sao năng lượng có thể truyền từ thực vật sang động vật ăn cỏ?", "o": ["Động vật hấp thụ ánh sáng trực tiếp như cây xanh", "Động vật lấy hóa năng từ thức ăn", "Động vật tạo ra năng lượng từ không khí", "Thực vật truyền điện năng cho động vật"], "a": 1, "g": "Động vật ăn thực vật và tiếp nhận hóa năng tích lũy trong các chất hữu cơ."}, {"q": "Vì sao nhiên liệu hóa thạch được coi là nguồn năng lượng không tái tạo?", "o": ["Vì không thể đốt cháy", "Vì không chứa năng lượng", "Vì chỉ có trong nước biển", "Vì hình thành rất chậm và có trữ lượng hữu hạn"], "a": 3, "g": "Tốc độ hình thành nhiên liệu hóa thạch chậm hơn rất nhiều so với tốc độ khai thác."}, {"q": "Đốt nhiều nhiên liệu hóa thạch làm gia tăng khí nào góp phần gây hiệu ứng nhà kính?", "o": ["Khí oxygen", "Khí nitrogen", "Khí carbon dioxide (CO₂)", "Khí helium"], "a": 2, "g": "CO₂ sinh ra từ quá trình đốt nhiên liệu hóa thạch góp phần làm tăng hiệu ứng nhà kính."}, {"q": "Yếu tố nào có thể khiến giá dầu mỏ tăng khi các điều kiện khác không đổi?", "o": ["Nguồn cung dầu mỏ giảm", "Nhu cầu dầu mỏ giảm", "Nguồn cung dầu mỏ tăng", "Chi phí khai thác giảm"], "a": 0, "g": "Khi nguồn cung giảm còn nhu cầu không đổi, giá dầu thường chịu áp lực tăng."}, {"q": "Nhận định nào đúng về việc sử dụng nhiên liệu hóa thạch?", "o": ["Không tạo ra chất gây ô nhiễm", "Cung cấp nhiều năng lượng nhưng có thể gây ô nhiễm môi trường", "Có thể tái tạo nhanh sau khi sử dụng", "Không ảnh hưởng đến khí hậu"], "a": 1, "g": "Nhiên liệu hóa thạch cung cấp nhiều năng lượng nhưng việc đốt có thể gây ô nhiễm và phát thải khí nhà kính."}, {"q": "Gia đình muốn giảm sử dụng điện sản xuất từ nhiên liệu hóa thạch. Biện pháp nào phù hợp nhất?", "o": ["Bật đèn cả ngày", "Dùng thêm thiết bị điện không cần thiết", "Để điều hòa hoạt động khi không có người", "Tắt thiết bị điện khi không sử dụng"], "a": 3, "g": "Tiết kiệm điện giúp giảm nhu cầu phát điện, từ đó có thể giảm nhiên liệu hóa thạch tiêu thụ."}, {"q": "Địa phương có nhiều nắng muốn giảm phụ thuộc nhiên liệu hóa thạch. Giải pháp phù hợp là gì?", "o": ["Tăng đốt than", "Tăng sử dụng máy phát điện chạy dầu", "Lắp đặt hệ thống điện Mặt Trời ở nơi phù hợp", "Ngừng sử dụng tất cả thiết bị điện"], "a": 2, "g": "Điện Mặt Trời khai thác năng lượng tái tạo, giúp thay thế một phần điện từ nhiên liệu hóa thạch."}, {"q": "Nhà máy điện than chuyển sang dùng năng lượng gió. Lợi ích môi trường trực tiếp là gì?", "o": ["Giảm phát thải CO₂ từ quá trình đốt than", "Tăng lượng khói bụi", "Làm than đá hình thành nhanh hơn", "Loại bỏ hoàn toàn mọi tác động môi trường"], "a": 0, "g": "Điện gió không cần đốt than khi phát điện nên giảm phát thải trực tiếp từ việc đốt than."}, {"q": "Nhu cầu xăng dầu tăng mạnh, lượng cung ứng không đổi. Giá xăng dầu có khả năng thế nào?", "o": ["Chắc chắn giảm về 0", "Có xu hướng tăng", "Không bao giờ thay đổi", "Luôn giảm một nửa"], "a": 1, "g": "Nhu cầu tăng khi cung không đổi thường gây áp lực tăng giá, dù giá thực tế còn chịu các yếu tố khác."}],
+    build: function (page) {
+
 
 page('Bắt đầu', 'intro', 'Giới thiệu bài học', b => {
   const h = el('div', 'hero', `<span class="ring"></span><span class="sun"></span>
@@ -292,7 +351,7 @@ page('Bắt đầu', 'intro', 'Giới thiệu bài học', b => {
     <li>Bấm vào các thẻ, hình, nút để khám phá kiến thức. Làm sai thì cứ thử lại, mỗi lần sai đều có gợi ý.</li>
     <li>Cuối bài có <b>Bài kiểm tra 15 câu</b> để em tự đánh giá.</li>
     <li>Kết quả được lưu trên trình duyệt của máy em đang dùng.</li></ul>`);
-  b.appendChild(c); complete('intro');
+  b.appendChild(c); b.appendChild(el('p', 'copy-main', '© 2026 Trường THCS Hòa Trí. Bản quyền thuộc Trường THCS Hòa Trí. Biên soạn: GV Huỳnh Đức Hòa, Tổ KHTN – GDTC.')); complete('intro');
 });
 page('Bắt đầu', 'muc-tieu', 'Mục tiêu bài học', b => {
   b.appendChild(el('div', 'card', `<h3>Sau bài học, em sẽ:</h3><ul class="clean">
@@ -493,12 +552,227 @@ page('Kiểm tra', 'tong-ket', 'Tổng kết và chuẩn bị bài sau', b => {
    ['Sử dụng hợp lí', 'tiết kiệm điện, xăng dầu và dần chuyển sang năng lượng tái tạo.']]
    .forEach(([t, d]) => g.appendChild(el('div', 'card', `<h3>${t}</h3><p>${d}</p>`)));
   b.appendChild(el('div', 'card task', '<p class="tlabel">Chuẩn bị bài sau</p><p>Đọc trước <b>Bài 17. Một số dạng năng lượng tái tạo</b>. Tìm hiểu xem địa phương em có nhà máy điện gió, điện mặt trời hoặc thủy điện nào không.</p>'));
+  b.appendChild(el('p', 'copy-main', '© 2026 Trường THCS Hòa Trí. Bản quyền thuộc Trường THCS Hòa Trí.'));
   complete('tong-ket');
 });
 
-/* ---------- shell ---------- */
+
+    } },
+  { id: 'bai17', so: 17, chuDe: 'Năng lượng với cuộc sống', ten: 'Một số dạng năng lượng tái tạo', moTa: 'Năng lượng mặt trời, gió, sóng biển, dòng sông; sử dụng hiệu quả năng lượng.', key: 'b17-el',
+    final: [{"q": "Năng lượng tái tạo là gì?", "o": ["Năng lượng từ nhiên liệu hóa thạch", "Năng lượng từ các nguồn có sẵn trong thiên nhiên, liên tục được bổ sung qua các quá trình tự nhiên", "Năng lượng chỉ có ở biển", "Năng lượng do con người tạo ra trong nhà máy"], "a": 1, "g": "Đây là khái niệm năng lượng tái tạo trong SGK."}, {"q": "Dạng năng lượng nào sau đây không phải là năng lượng tái tạo?", "o": ["Năng lượng từ gió", "Năng lượng từ sóng biển", "Năng lượng từ dầu mỏ", "Năng lượng sinh khối"], "a": 2, "g": "Dầu mỏ là nhiên liệu hóa thạch, hình thành rất chậm, không được bổ sung liên tục."}, {"q": "Ưu điểm của việc sử dụng năng lượng mặt trời là gì?", "o": ["Không gây tiếng ồn, không phát thải khí nhà kính khi sử dụng", "Giá tấm pin mặt trời rất rẻ", "Hệ thống thu nhiệt có hiệu suất rất cao", "Không chiếm diện tích mặt đất"], "a": 0, "g": "Khi sử dụng, năng lượng mặt trời không gây tiếng ồn và không phát thải chất gây ô nhiễm không khí."}, {"q": "Tấm pin mặt trời có thời hạn sử dụng trung bình khoảng bao lâu trước khi trở thành rác thải điện tử?", "o": ["5 năm", "10 năm", "25 năm", "100 năm"], "a": 2, "g": "Theo SGK, tấm pin mặt trời hết hạn sử dụng sau trung bình 25 năm."}, {"q": "Vì sao năng lượng từ gió ngoài khơi có triển vọng phát triển lớn?", "o": ["Nước biển làm mát tuabin", "Tuabin trên biển không cần máy phát điện", "Trên biển không có chim", "Tốc độ gió trên đại dương ổn định và mạnh hơn trên đất liền"], "a": 3, "g": "Gió trên đại dương ổn định và mạnh hơn nên tuabin phát điện hiệu quả hơn."}, {"q": "Nhược điểm nào sau đây là của nhà máy điện gió?", "o": ["Phát thải nhiều khí CO₂", "Gây tiếng ồn, ảnh hưởng đến chim di cư và dơi", "Nguồn gió nhanh chóng cạn kiệt", "Tạo ra nhiều tro xỉ"], "a": 1, "g": "Tuabin gió gây tiếng ồn, có thể làm nhiễu tín hiệu phát thanh và ảnh hưởng đến chim, dơi."}, {"q": "Sóng biển được hình thành chủ yếu do tác động của yếu tố nào?", "o": ["Gió", "Mặt Trăng", "Động đất", "Tàu thuyền"], "a": 0, "g": "Tốc độ gió càng lớn, gió thổi càng lâu thì sóng biển càng lớn."}, {"q": "Theo SGK, vùng bờ biển nào của nước ta có tiềm năng năng lượng sóng biển lớn nhất?", "o": ["Từ Quảng Ninh đến Hải Phòng", "Từ Cà Mau đến Kiên Giang", "Từ Đà Nẵng đến Ninh Thuận", "Từ Thanh Hóa đến Nghệ An"], "a": 2, "g": "Vùng bờ biển miền Trung từ Đà Nẵng đến Ninh Thuận có tiềm năng năng lượng sóng biển lớn nhất."}, {"q": "Việc xây dựng đập thủy điện có thể gây ảnh hưởng nào đến môi trường?", "o": ["Làm tăng diện tích rừng", "Cản trở động vật di chuyển từ hạ nguồn lên thượng nguồn", "Làm tăng lượng khí thải từ đốt than", "Làm nước sông chảy mạnh hơn ở hạ nguồn quanh năm"], "a": 1, "g": "Đập ngăn dòng chảy khiến nhiều loài không di chuyển được lên thượng nguồn."}, {"q": "Việc làm nào sau đây là sử dụng hiệu quả năng lượng?", "o": ["Đặt điều hòa ở 18 °C vào mùa hè", "Mở tủ lạnh thật lâu khi lấy đồ", "Dùng đèn sợi đốt để chiếu sáng", "Thay đèn sợi đốt bằng đèn LED"], "a": 3, "g": "Đèn LED dùng ít điện hơn cho cùng độ sáng nên tiết kiệm năng lượng."}],
+    build: function (page) {
+
+
+page('Bắt đầu', 'intro', 'Giới thiệu bài học', b => {
+  b.appendChild(el('div', 'hero', `<span class="ring"></span><span class="sun"></span>
+    <p>Khoa học tự nhiên 9 · Bài học E-learning</p>
+    <h2>Bài 17. Một số dạng năng lượng tái tạo</h2>
+    <p>Giáo viên: Huỳnh Đức Hòa · Trường THCS Hòa Trí</p>`));
+  b.appendChild(el('div', 'card', `<h3>Cách học bài này</h3><ul class="clean">
+    <li>Học lần lượt từng trang theo mục lục. Trang có hoạt động sẽ được đánh dấu ✓ khi em hoàn thành.</li>
+    <li>Bấm vào các thẻ, nút, thanh trượt để khám phá kiến thức. Làm sai thì cứ thử lại, mỗi lần sai đều có gợi ý.</li>
+    <li>Cuối bài có <b>Bài kiểm tra 10 câu</b> để em tự đánh giá.</li>
+    <li>Kết quả được lưu trên trình duyệt của máy em đang dùng.</li></ul>`));
+  b.appendChild(el('p', 'copy-main', COPY + ' Biên soạn: GV Huỳnh Đức Hòa, Tổ KHTN – GDTC.'));
+  complete('intro');
+});
+page('Bắt đầu', 'muc-tieu', 'Mục tiêu bài học', b => {
+  b.appendChild(el('div', 'card', `<h3>Sau bài học, em sẽ:</h3><ul class="clean">
+  <li>Nêu được năng lượng tái tạo là gì và kể tên một số dạng năng lượng tái tạo.</li>
+  <li>Nêu được sơ lược ưu điểm và nhược điểm của năng lượng mặt trời, năng lượng từ gió, năng lượng từ sóng biển, năng lượng từ dòng sông.</li>
+  <li>Nêu được một số biện pháp sử dụng hiệu quả năng lượng và bảo vệ môi trường.</li></ul>`));
+  b.appendChild(el('div', 'note', 'Câu hỏi lớn của bài: Ở lớp 6 em đã biết năng lượng mặt trời, gió, sóng biển, dòng sông… là năng lượng tái tạo. Các dạng năng lượng này có ưu điểm và nhược điểm gì?'));
+  complete('muc-tieu');
+});
+
+/* ---- Phần 1 ---- */
+page('Phần 1. Năng lượng tái tạo', 'phan-loai', 'Khởi động: dạng năng lượng nào là tái tạo?', b => {
+  b.appendChild(el('p', 'lead', 'Đây là 8 dạng năng lượng trong Hình 17.1 (SGK). Em hãy phân loại từng dạng rồi bấm Kiểm tra.'));
+  choiceRows(b, [['a) Mặt Trời', 0], ['b) Than mỏ', 1], ['c) Năng lượng gió', 0], ['d) Năng lượng từ dòng chảy', 0], ['e) Năng lượng nhiệt trong lòng Trái Đất', 0], ['g) Năng lượng từ dầu mỏ', 1], ['h) Năng lượng sinh khối', 0], ['i) Năng lượng từ sóng biển', 0]],
+    ['Tái tạo', 'Không tái tạo'], 'phan-loai', 'Than mỏ và dầu mỏ là nhiên liệu hóa thạch: khi sử dụng tạo chất thải rắn, phát thải khí nhà kính, gây biến đổi khí hậu.');
+});
+page('Phần 1. Năng lượng tái tạo', 'khai-niem', 'Năng lượng tái tạo là gì?', b => {
+  b.appendChild(el('div', 'card task', '<p class="tlabel">Khái niệm</p><p><b>Năng lượng tái tạo</b> là năng lượng đến từ các nguồn năng lượng có sẵn trong thiên nhiên, liên tục được bổ sung thông qua các quá trình tự nhiên.</p>'));
+  b.appendChild(el('p', 'lead', 'Năng lượng tái tạo gồm: năng lượng mặt trời, gió, sóng biển, dòng sông, sinh khối, địa nhiệt… Vì sao cần tăng cường sử dụng chúng? Bấm để xem từng lí do.'));
+  flips(b, [['Không cạn kiệt', 'Có sẵn trong thiên nhiên và được bổ sung liên tục, khác với than, dầu có trữ lượng hữu hạn.'],
+            ['Ít gây ô nhiễm', 'Khai thác nhiều dạng năng lượng tái tạo không phát thải khí nhà kính, giúp bảo vệ môi trường.'],
+            ['Thay thế hóa thạch', 'Giảm khai thác, sử dụng nhiên liệu hóa thạch đang dần cạn kiệt.']], 'khai-niem', 'grid2');
+});
+
+/* ---- Phần 2 ---- */
+page('Phần 2. Ưu điểm và nhược điểm', 'mat-troi', 'Năng lượng mặt trời', b => {
+  b.appendChild(el('p', 'lead', 'Năng lượng mặt trời luôn có sẵn, khó cạn kiệt trong tương lai gần. Bấm vào 3 cách khai thác trong Hình 17.2 (SGK).'));
+  flips(b, [['Pin mặt trời trên đồi núi', 'Tấm pin chuyển hóa năng lượng ánh sáng thành năng lượng điện.'],
+            ['Nhiệt điện mặt trời trên sa mạc', 'Gương tập trung ánh sáng để thu nhiệt, chạy nhà máy nhiệt điện.'],
+            ['Thu nhiệt trên mái nhà', 'Ống thu nhiệt hấp thụ năng lượng mặt trời để làm nóng nước.']], null, 'grid2');
+  b.appendChild(el('div', 'note', 'Nước ta có tiềm năng năng lượng mặt trời rất lớn. Cường độ bức xạ cao nhất ở Tây Nguyên và Nam Bộ như Đắk Lắk, Gia Lai, Nha Trang, Ninh Thuận, Bình Thuận, Tây Ninh, Bình Phước.'));
+  const c = el('div', 'card task'); c.appendChild(el('p', 'tlabel', 'Hoạt động: xếp vào Ưu điểm hoặc Nhược điểm'));
+  choiceRows(c, [['Không gây tiếng ồn khi sử dụng', 0], ['Giá thành sản xuất tấm pin còn cao', 1], ['Không phát thải khí gây hiệu ứng nhà kính', 0], ['Tấm pin hết hạn (khoảng 25 năm) tạo rác thải điện tử', 1], ['Lắp quá nhiều tấm pin trong thành phố gây ô nhiễm ánh sáng', 1], ['Khai thác được cả trực tiếp và gián tiếp', 0]],
+    ['Ưu điểm', 'Nhược điểm'], 'mat-troi', 'Nhà máy điện mặt trời còn chiếm diện tích lớn, che phủ mặt đất, mặt nước, ảnh hưởng hệ sinh thái.');
+  b.appendChild(c);
+});
+page('Phần 2. Ưu điểm và nhược điểm', 'gio', 'Năng lượng từ gió', b => {
+  b.appendChild(el('p', 'lead', 'Năng lượng từ gió luôn có sẵn và không phát thải chất gây ô nhiễm. Đây là một trong những giải pháp quan trọng nhất để giảm biến đổi khí hậu toàn cầu.'));
+  const c = el('div', 'card'); mcq(c, { q: 'Vì sao năng lượng từ gió ngoài khơi (Hình 17.3) là nguồn có triển vọng phát triển lớn?', o: ['Nước biển làm mát tuabin', 'Tốc độ gió trên đại dương ổn định hơn và mạnh hơn trên đất liền', 'Ngoài khơi không có chim bay qua', 'Tuabin ngoài khơi không cần máy phát điện'], a: 1, g: 'Gió trên đại dương ổn định và mạnh hơn; có thể lắp trang trại gió trên vùng biển rộng. Nhiều vùng biển nước ta có tiềm năng nhưng chưa được khai thác.', h: 'Gợi ý: so sánh gió trên biển và gió trên đất liền.' }); b.appendChild(c);
+  const t = el('div', 'card task'); t.appendChild(el('p', 'tlabel', 'Hoạt động: xếp vào Ưu điểm hoặc Nhược điểm'));
+  choiceRows(t, [['Không phát thải khí gây hiệu ứng nhà kính', 0], ['Hiệu suất chuyển đổi năng lượng thấp', 1], ['Giá thành đầu tư ban đầu cao', 1], ['Công nghệ khai thác phát triển mạnh', 0], ['Phát ra tiếng ồn, ảnh hưởng chim di cư và dơi', 1], ['Có thể làm nhiễu tín hiệu phát thanh', 1]],
+    ['Ưu điểm', 'Nhược điểm'], 'gio', '');
+  b.appendChild(t);
+});
+page('Phần 2. Ưu điểm và nhược điểm', 'song-bien', 'Năng lượng từ sóng biển', b => {
+  b.appendChild(el('p', 'lead', 'Sóng biển hình thành chủ yếu do gió: gió càng mạnh, thổi càng lâu thì sóng càng lớn. Xem máy phát điện từ sóng biển (Hình 17.4a) hoạt động thế nào.'));
+  const S = [['1. Sóng biển nâng phao', 'Sóng biển làm phao nổi chuyển động lên xuống.'],
+             ['2. Thanh trượt chuyển động', 'Phao gắn với thanh trượt chuyển động lên xuống trong xilanh.'],
+             ['3. Tay quay, bánh đà quay', 'Chuyển động lên xuống được biến thành chuyển động quay nhờ tay quay và bánh đà.'],
+             ['4. Máy phát điện', 'Hộp tăng tốc làm quay tuabin của máy phát điện: năng lượng sóng biển chuyển hóa thành năng lượng điện.']];
+  let k = 0; const bar = el('div', 'steps'); S.forEach(() => bar.appendChild(el('span')));
+  const c = el('div', 'card'); const nx = el('button', 'btn acc', 'Bước tiếp ›'); const bk = el('button', 'btn sec', '‹ Bước trước');
+  const ctl = el('div'); ctl.style.cssText = 'display:flex;gap:10px';
+  const draw = () => { [...bar.children].forEach((s, i) => s.classList.toggle('on', i <= k)); c.innerHTML = `<h3>${S[k][0]}</h3><p>${S[k][1]}</p>`; bk.disabled = k === 0; nx.disabled = k === S.length - 1; };
+  nx.onclick = () => { k++; draw(); }; bk.onclick = () => { k--; draw(); }; ctl.append(bk, nx); b.append(bar, c, ctl); draw();
+  b.appendChild(el('div', 'note', 'Vùng bờ biển miền Trung từ Đà Nẵng đến Ninh Thuận có tiềm năng năng lượng sóng biển lớn nhất nước ta. Thời gian thuận lợi nhất để khai thác là mùa đông, khi gió mùa đông bắc tạo sóng khá mạnh.'));
+  const q = el('div', 'card task'); q.appendChild(el('p', 'tlabel', 'Câu hỏi'));
+  mcq(q, { q: 'Ý nào là nhược điểm của việc khai thác năng lượng từ sóng biển?', o: ['Tạo nhiều chất thải độc hại', 'Nhanh chóng cạn kiệt', 'Cần nhiều máy phát trong không gian rộng, phụ thuộc mùa, chịu ảnh hưởng thiên tai', 'Phát thải nhiều khí nhà kính'], a: 2, g: 'Năng lượng sóng biển luôn có sẵn, không tạo chất thải; nhưng cần không gian rộng, ảnh hưởng giao thông đường biển, hệ sinh thái, đầu tư cao, phụ thuộc mùa và thiên tai.', h: 'Gợi ý: năng lượng sóng biển không tạo chất thải và luôn có sẵn.' }, () => complete('song-bien'));
+  b.appendChild(q);
+});
+page('Phần 2. Ưu điểm và nhược điểm', 'dong-song', 'Năng lượng từ dòng sông', b => {
+  b.appendChild(el('p', 'lead', 'Nhà máy thủy điện (như thủy điện Hòa Bình, Hình 17.5) dùng đập, hồ tích nước của sông lớn để làm quay tuabin máy phát điện. Bấm vào từng tình huống để xem ảnh hưởng đến môi trường.'));
+  flips(b, [['Nếu vỡ đập thủy điện', 'Nước tràn xuống gây lũ quét, ngập lụt vùng hạ du, thiệt hại về người, tài sản và môi trường.'],
+            ['Nếu động vật không di chuyển được lên thượng nguồn', 'Nhiều loài không đến được nơi sinh sản, số lượng giảm, mất cân bằng sinh thái.'],
+            ['Nếu diện tích rừng thay đổi khi xây thủy điện', 'Rừng bị thu hẹp làm mất nơi sống của sinh vật, giảm đa dạng sinh học, tăng nguy cơ lũ, xói mòn.'],
+            ['Nếu phải di dời dân cư', 'Người dân rời nơi sinh sống, làm thay đổi văn hóa, tập quán sinh sống của họ.']], null, 'grid2');
+  const q = el('div', 'card task'); q.appendChild(el('p', 'tlabel', 'Câu hỏi'));
+  mcq(q, { q: 'Đâu là ưu điểm của việc khai thác năng lượng từ dòng sông?', o: ['Không ảnh hưởng gì đến sinh vật', 'Có sẵn trong thiên nhiên, ít tác động tiêu cực đến môi trường so với năng lượng hóa thạch', 'Không cần xây đập hay hồ chứa', 'Làm tăng diện tích rừng'], a: 1, g: 'Nước ta có lượng mưa lớn, địa hình đồi núi, sông ngòi dày đặc nên tiềm năng thủy điện tương đối lớn.' }, () => complete('dong-song'));
+  b.appendChild(q);
+});
+page('Phần 2. Ưu điểm và nhược điểm', 'nhan-dien', 'Luyện tập: nhược điểm này của dạng năng lượng nào?', b => {
+  b.appendChild(el('p', 'lead', 'Chọn dạng năng lượng tái tạo đúng với mỗi nhận định, rồi bấm Kiểm tra.'));
+  choiceRows(b, [['Tấm pin hết hạn sau khoảng 25 năm, tạo rác thải điện tử', 0], ['Ảnh hưởng vùng hoạt động của chim di cư và dơi', 1], ['Ảnh hưởng giao thông đường biển, phụ thuộc vào các mùa', 2], ['Cản trở cá di chuyển từ hạ nguồn lên thượng nguồn', 3], ['Phản xạ mạnh ánh sáng, gây ô nhiễm ánh sáng trong thành phố', 0], ['Gây áp lực lên địa chất, có thể gây nứt, gãy địa tầng', 3], ['Làm nhiễu tín hiệu phát thanh', 1]],
+    ['Mặt trời', 'Gió', 'Sóng biển', 'Dòng sông'], 'nhan-dien', 'Nhìn chung, năng lượng tái tạo còn có nhược điểm: công nghệ khai thác hiệu suất thấp, chi phí đầu tư ban đầu cao.');
+});
+
+/* ---- Phần 3 ---- */
+page('Phần 3. Sử dụng hiệu quả năng lượng', 'hieu-qua', 'Sử dụng hiệu quả năng lượng là gì?', b => {
+  b.appendChild(el('div', 'card task', '<p class="tlabel">Khái niệm</p><p><b>Sử dụng hiệu quả năng lượng</b> là dùng ít năng lượng hơn để thực hiện cùng một công việc hoặc cùng một chức năng của thiết bị, máy móc. Ví dụ: dùng đèn LED thay cho đèn huỳnh quang hoặc đèn sợi đốt.</p>'));
+  b.appendChild(el('p', 'lead', 'Thử nghiệm: so sánh điện năng tiêu thụ của hai bóng đèn cùng chiếu sáng một căn phòng trong 30 ngày. Kéo thanh trượt để chọn số giờ bật đèn mỗi ngày.'));
+  const c = el('div', 'card');
+  const lab = el('label', '', 'Số giờ bật đèn mỗi ngày: <b id="hv">5</b> giờ'); const r = el('input'); r.type = 'range'; r.min = 1; r.max = 12; r.value = 5; r.style.width = '100%'; r.setAttribute('aria-label', 'Số giờ bật đèn mỗi ngày');
+  const g = el('div', 'grid2');
+  const a1 = el('div', 'card'), a2 = el('div', 'card');
+  g.append(a1, a2); c.append(lab, r, g);
+  const upd = () => { const h = +r.value; lab.querySelector('#hv').textContent = h;
+    const e1 = 60 * h * 30 / 1000, e2 = 9 * h * 30 / 1000; const f = v => v.toFixed(1).replace('.', ',');
+    a1.innerHTML = `<h3>Đèn sợi đốt 60 W</h3><p class="price up">${f(e1)} kWh</p><p>A = 𝒫 · t = 60 W × ${h} h × 30 ngày</p>`;
+    a2.innerHTML = `<h3>Đèn LED 9 W</h3><p class="price down">${f(e2)} kWh</p><p>A = 𝒫 · t = 9 W × ${h} h × 30 ngày</p>`;
+    note.innerHTML = `Đèn LED tiết kiệm <b>${f(e1 - e2)} kWh</b> mỗi tháng (khoảng ${Math.round((1 - 9 / 60) * 100)}%) mà vẫn chiếu sáng tương đương.`; };
+  const note = el('div', 'note'); r.oninput = upd; b.append(c, note); upd();
+  b.appendChild(el('p', '', '<i>Số liệu công suất là ví dụ minh họa; công thức A = 𝒫 · t em đã học ở Bài 4.</i>'));
+  const q = el('div', 'card task'); q.appendChild(el('p', 'tlabel', 'Câu hỏi'));
+  mcq(q, { q: 'Tại sao sử dụng hiệu quả năng lượng góp phần bảo vệ môi trường?', o: ['Vì làm tăng lượng điện phải sản xuất', 'Vì giảm năng lượng hao phí, giảm khai thác nhiên liệu hóa thạch và khí thải', 'Vì làm thiết bị điện hỏng nhanh hơn', 'Vì không cần dùng năng lượng tái tạo nữa'], a: 1, g: 'Dùng ít năng lượng hơn thì cần sản xuất ít điện hơn, giảm đốt nhiên liệu hóa thạch, giảm khí thải gây ô nhiễm.' }, () => complete('hieu-qua'));
+  b.appendChild(q);
+});
+page('Phần 3. Sử dụng hiệu quả năng lượng', 'vi-sao', 'Vì sao những cách này tiết kiệm điện?', b => {
+  b.appendChild(el('p', 'lead', 'Bấm vào từng việc làm (câu 2 và câu 3 trong SGK) để xem giải thích.'));
+  flips(b, [['Tắt thiết bị điện khi không dùng', 'Thiết bị để chế độ chờ vẫn tiêu thụ điện.'],
+            ['Giảm độ sáng màn hình máy tính', 'Màn hình càng sáng càng tốn điện.'],
+            ['Để điều hòa trên 26 °C, dùng quạt khi có thể', 'Điều hòa đặt càng lạnh càng tốn điện; quạt tiêu thụ ít điện hơn nhiều.'],
+            ['Không để tủ lạnh quá lạnh, không mở lâu', 'Máy nén phải chạy nhiều hơn để bù nhiệt, gây tốn điện.'],
+            ['Bảo trì, vệ sinh thiết bị điện', 'Thiết bị chạy đúng công suất, ít hao phí, bền hơn.'],
+            ['Mở cửa đón gió tự nhiên', 'Nhà thông thoáng, mát hơn, giảm dùng quạt, điều hòa.'],
+            ['Kê bàn học gần nơi có ánh sáng tự nhiên', 'Giảm thời gian phải bật đèn.'],
+            ['Sơn phòng sáng màu', 'Tường sáng phản xạ ánh sáng tốt, phòng sáng hơn mà không cần thêm đèn.']], 'vi-sao', 'grid4');
+  b.appendChild(el('div', 'note', 'Trồng nhiều cây xanh quanh nhà, trường học giúp che nắng, làm mát, giảm dùng quạt, điều hòa; cây còn hấp thụ CO₂, cản bụi, giảm tiếng ồn.'));
+});
+page('Phần 3. Sử dụng hiệu quả năng lượng', 'van-dung', 'Vận dụng: gia đình em và năng lượng', b => {
+  b.appendChild(el('p', 'lead', 'Với mỗi việc làm, em chọn Nên hoặc Không nên để sử dụng hiệu quả năng lượng và bảo vệ môi trường.'));
+  choiceRows(b, [['Thay bóng đèn sợi đốt bằng đèn LED', 0], ['Đặt điều hòa ở 18 °C cho thật mát', 1], ['Đi xe buýt, xe đạp thay cho xe máy khi có thể', 0], ['Lắp pin mặt trời trên mái nhà ở nơi có nhiều nắng', 0], ['Để ti vi ở chế độ chờ suốt đêm', 1], ['Chọn sản phẩm tái chế, thân thiện với môi trường', 0], ['Đốt rơm rạ, rác thải ngoài trời', 1]],
+    ['Nên', 'Không nên'], 'van-dung', 'Em hãy chọn 2 việc “Nên” và thực hiện ngay ở nhà trong tuần này nhé!');
+});
+
+/* ---- Kiểm tra ---- */
+page('Kiểm tra', 'kiem-tra', 'Bài kiểm tra cuối bài (10 câu)', b => {
+  let order = [], k = 0, ans = [];
+  const box = el('div', 'q');
+  const start = () => { order = FINAL.map((_, i) => i); k = 0; ans = []; draw(); };
+  const draw = () => {
+    box.innerHTML = '';
+    if (k >= order.length) return result();
+    const nav = el('div', 'qnav'); order.forEach((_, i) => nav.appendChild(el('span', i < k ? (ans[i] ? 'ok' : 'bad') : i === k ? 'cur' : '', i + 1)));
+    const it = FINAL[order[k]]; const c = el('div', 'card q');
+    c.appendChild(el('p', 'kicker', `Câu ${k + 1}/${order.length}`)); c.appendChild(el('p', 'q-t', it.q));
+    const os = el('div', 'opts'); const fb = el('div', 'fb'); const nx = el('button', 'btn acc', k === order.length - 1 ? 'Xem kết quả' : 'Câu tiếp ›'); nx.style.display = 'none';
+    it.o.forEach((t, i) => { const bt = el('button', 'opt', `<span class="k">${L[i]}.</span><span>${t}</span>`);
+      bt.onclick = () => { [...os.children].forEach(x => x.disabled = true); const g = i === it.a; ans[k] = g;
+        os.children[it.a].classList.add('ok'); if (!g) bt.classList.add('bad');
+        fb.className = 'fb show ' + (g ? 'ok' : 'bad'); fb.innerHTML = (g ? '<b>Chính xác!</b> ' : `<b>Chưa đúng. Đáp án: ${L[it.a]}.</b> `) + it.g; nx.style.display = 'inline-block'; nx.focus(); };
+      os.appendChild(bt); });
+    nx.onclick = () => { k++; draw(); };
+    c.append(os, fb, nx); box.append(nav, c);
+  };
+  const result = () => {
+    const sc = ans.filter(Boolean).length; const ten = Math.round(sc / order.length * 100) / 10;
+    const msg = sc >= 9 ? 'Xuất sắc! Em đã nắm rất vững bài học.' : sc >= 7 ? 'Tốt lắm! Em xem lại các câu sai bên dưới nhé.' : sc >= 5 ? 'Khá! Em nên ôn lại những phần còn nhầm.' : 'Em nên học lại các trang trong mục lục rồi làm lại bài kiểm tra.';
+    const r = el('div', 'card result', `<p class="kicker">Kết quả của em</p><p class="big">${sc}/${order.length}</p><p>Quy ra điểm 10: <b>${String(ten).replace('.', ',')}</b></p><p>${msg}</p>`);
+    const again = el('button', 'btn', 'Làm lại bài kiểm tra'); again.onclick = start; r.appendChild(again);
+    const rv = el('div', 'review'); order.forEach((qi, i) => { if (!ans[i]) { const it = FINAL[qi]; rv.appendChild(el('div', 'row bad', `<p><b>Câu ${i + 1}.</b> ${it.q}</p><p>Đáp án đúng: <b>${L[it.a]}. ${it.o[it.a]}</b></p><p>${it.g}</p>`)); } });
+    box.appendChild(r); if (rv.children.length) { box.appendChild(el('h3', '', 'Các câu em làm chưa đúng')); box.appendChild(rv); }
+    complete('kiem-tra'); renderNav();
+  };
+  b.appendChild(el('p', 'lead', 'Mỗi câu chỉ được chọn một lần. Sau khi chọn, em sẽ thấy đáp án và lời giải thích.'));
+  b.appendChild(box); start();
+});
+page('Kiểm tra', 'tong-ket', 'Em đã học', b => {
+  const g = el('div', 'grid2'); b.appendChild(g);
+  [['Ưu điểm', 'Năng lượng tái tạo có sẵn trong thiên nhiên, liên tục được bổ sung. Khai thác và sử dụng một số dạng không phát thải khí nhà kính, giúp bảo vệ môi trường.'],
+   ['Nhược điểm', 'Công nghệ khai thác hiện nay có hiệu suất thấp, chi phí đầu tư ban đầu cao.'],
+   ['Sử dụng hiệu quả', 'Tiết kiệm năng lượng, tận dụng ánh sáng và gió tự nhiên, dùng thiết bị điện đúng cách giúp giảm hao phí.'],
+   ['Bảo vệ môi trường', 'Giảm khai thác tài nguyên, giảm khí thải; ưu tiên năng lượng tái tạo khi phù hợp.']]
+   .forEach(([t, d]) => g.appendChild(el('div', 'card', `<h3>${t}</h3><p>${d}</p>`)));
+  b.appendChild(el('div', 'card task', '<p class="tlabel">Nhiệm vụ tiếp theo</p><p>Cùng nhóm thiết kế <b>poster tuyên truyền năng lượng xanh</b> bằng công cụ số (Canva, PowerPoint…) theo hướng dẫn của thầy. Thực hiện ít nhất 2 biện pháp tiết kiệm điện ở nhà trong tuần này.</p>'));
+  b.appendChild(el('p', 'copy-main', COPY));
+  complete('tong-ket');
+});
+
+
+    } }
+];
+
+/* ---------- trang chọn bài ---------- */
+function renderHome() {
+  const box = $('#lessonList'); box.innerHTML = ''; let topic = null, list = null;
+  LESSONS.forEach(l => {
+    if (l.chuDe !== topic) { topic = l.chuDe; box.appendChild(el('p', 'topic', 'Chủ đề: ' + topic)); list = el('div', 'list'); box.appendChild(list); }
+    const s = load(l.key), n = s.done.size, total = s.total;
+    const fin = total && n >= total;
+    const status = !n ? 'Chưa bắt đầu' : fin ? 'Đã hoàn thành' : `Đã học ${n}/${total} mục`;
+    const go = !n ? 'Bắt đầu học ›' : fin ? 'Ôn lại ›' : 'Học tiếp ›';
+    const b = el('button', 'lesson', `<div class="num"><small>Bài</small><b>${l.so}</b></div>
+      <div><h3>${l.ten}</h3><p class="desc">${l.moTa}</p>
+      <div class="lp${fin ? ' done' : ''}">${total ? `<span class="t"><i style="width:${Math.round(n / total * 100)}%"></i></span>` : ''}<span>${status}</span><span class="go">${go}</span></div></div>`);
+    b.setAttribute('aria-label', `Bài ${l.so}. ${l.ten}. ${status}`);
+    b.onclick = () => openLesson(l.id);
+    list.appendChild(b);
+  });
+}
+function showHome() {
+  LES = null; $('#app').hidden = true; $('#home').hidden = false; renderHome(); document.title = 'Bài giảng điện tử KHTN 9 – Phần Vật lí – Trường THCS Hòa Trí';
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  $('#home').scrollTop = 0;
+}
+function openLesson(id, pageId) {
+  const l = LESSONS.find(x => x.id === id); if (!l) return showHome();
+  LES = l; P = []; l.build((grp, pid, title, build) => P.push({ grp, id: pid, title, build }));
+  FINAL = l.final; done = load(l.key).done; save();
+  $('#lessonTitle').textContent = `Bài ${l.so}. ${l.ten}`; document.title = `Bài ${l.so}. ${l.ten} – KHTN 9`;
+  $('#home').hidden = true; $('#app').hidden = false;
+  const i = P.findIndex(p => p.id === pageId);
+  go(i >= 0 ? i : 0);
+}
+
+/* ---------- khung bài học ---------- */
 const nav = $('#nav');
 function renderNav() {
+  if (!LES) return;
   nav.innerHTML = ''; let g = null;
   P.forEach((p, i) => {
     if (p.grp !== g) { g = p.grp; nav.appendChild(el('p', 'grp', g)); }
@@ -518,18 +792,24 @@ function go(i) {
   $('#crumb').textContent = `${cur + 1}/${P.length} · ${p.title}`;
   $('#prevBtn').disabled = cur === 0; $('#nextBtn').disabled = cur === P.length - 1;
   $('#wrap').scrollTop = 0; renderNav();
-  if (location.hash !== '#' + p.id) history.replaceState(null, '', '#' + p.id);
+  const h = '#' + LES.id + '-' + p.id; if (location.hash !== h) history.replaceState(null, '', h);
 }
 $('#prevBtn').onclick = () => go(cur - 1);
 $('#nextBtn').onclick = () => go(cur + 1);
+$('#backBtn').onclick = showHome;
 const side = $('#side'), ov = $('#overlay'), mb = $('#menuBtn');
 function closeMenu() { side.classList.remove('open'); ov.classList.remove('show'); mb.setAttribute('aria-expanded', 'false'); }
 mb.onclick = () => { side.classList.add('open'); ov.classList.add('show'); mb.setAttribute('aria-expanded', 'true'); };
 ov.onclick = closeMenu;
-$('#themeBtn').onclick = () => { const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; r.dataset.theme = dark ? 'light' : 'dark'; };
-addEventListener('hashchange', () => { const i = P.findIndex(p => '#' + p.id === location.hash); if (i >= 0 && i !== cur) go(i); });
-const start = P.findIndex(p => '#' + p.id === location.hash);
-go(start >= 0 ? start : 0);
+document.querySelectorAll('[data-theme-toggle]').forEach(b => b.onclick = () => { const r = document.documentElement; const dark = r.dataset.theme ? r.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; r.dataset.theme = dark ? 'light' : 'dark'; });
+function route() {
+  const m = location.hash.match(/^#(bai\d+)(?:-(.+))?$/);
+  if (!m) return showHome();
+  if (!LES || LES.id !== m[1]) return openLesson(m[1], m[2]);
+  const i = P.findIndex(p => p.id === m[2]); if (i >= 0 && i !== cur) go(i);
+}
+addEventListener('hashchange', route);
+route();
 </script>
 </body>
 </html>
