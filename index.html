@@ -213,6 +213,35 @@ ul.clean{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
 .back{background:none;color:var(--ink);font-weight:800;font-size:15px;border:2px solid var(--line);border-radius:10px;padding:6px 12px;white-space:nowrap}
 .back:hover{border-color:var(--acc)}
 [hidden]{display:none!important}
+.simrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.simlab{font-weight:700;color:var(--ink);font-size:15px}
+.sl label{display:block;font-weight:600}
+.sl input[type=range],.sim-card input[type=range]{width:100%;accent-color:var(--acc)}
+.sim-card{display:flex;flex-direction:column;gap:14px}
+.simsvg{width:100%;height:auto;display:block;background:#FBFDFE;border-radius:14px;border:1px solid var(--line)}
+.sim-card select,.simrow input{font:inherit;padding:7px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);color:var(--text);max-width:100%}
+.rainbow{height:42px;border-radius:10px;background:linear-gradient(90deg,#D93A2B,#EE8A2A,#F2D02F,#2E9E4A,#2F86D6,#3B3FA8,#8B3FC2)}
+.colorstage{position:relative;height:150px;border-radius:14px;background:#1B2430;overflow:hidden}
+.colorstage .lamp{position:absolute;left:24px;top:24px;width:44px;height:44px;border-radius:50%;box-shadow:0 0 24px rgba(255,255,255,.4)}
+.colorstage .beam{position:absolute;left:60px;top:58px;width:58%;height:10px;transform:rotate(18deg);transform-origin:left;opacity:.55}
+.colorstage .obj{position:absolute;right:40px;bottom:22px;width:120px;height:70px;border-radius:12px;border:2px solid #3A4656}
+.resistor{display:flex;align-items:center;justify-content:center;padding:10px 0}
+.resistor .lead-wire{width:60px;height:4px;background:#9AA0A6}
+.resistor .body{display:flex;gap:14px;align-items:center;background:#E9D7B4;border-radius:22px;padding:0 26px;height:46px}
+.resistor .body i{display:block;width:12px;height:46px;border:1px solid rgba(0,0,0,.15)}
+.resistor .body i:last-child{margin-left:18px}
+.circ{display:flex;align-items:center;flex-wrap:wrap;gap:0;padding:8px 0}
+.circ .cell,.circ .res{border:2px solid var(--ink);border-radius:10px;padding:6px 10px;font-weight:700;color:var(--ink);background:var(--surface)}
+.circ .cell{background:var(--warm)}
+.circ .wire{width:28px;height:3px;background:var(--ink)}
+.circ .par{display:flex;flex-direction:column;gap:8px;border-left:3px solid var(--ink);border-right:3px solid var(--ink);padding:0 10px}
+.tblwrap{overflow-x:auto}
+.datatbl{border-collapse:collapse;width:100%;min-width:440px}
+.datatbl th,.datatbl td{border:1px solid var(--line);padding:6px 8px;text-align:center}
+.datatbl th{background:var(--surface2);color:var(--ink)}
+.datatbl input{width:100%;min-width:60px;font:inherit;padding:5px 6px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);text-align:center}
+.hero h2{max-width:20ch}
+
 .top button{white-space:nowrap}
 .top .theme-btn{margin-left:auto}
 @media (max-width:520px){.top{gap:8px}.top .crumb{display:none}.menu-btn,.back{padding:7px 10px;font-size:14px}}
@@ -331,11 +360,723 @@ function choiceRows(box, rows, labels, id, okMsg) {
 }
 
 
+/* ---------- khung chung cho các bài 5–15 ---------- */
+const fmt = (v, d = 2) => (Math.round(v * 10 ** d) / 10 ** d).toString().replace('.', ',');
+const rad = x => x * Math.PI / 180, deg = x => x * 180 / Math.PI;
+function introPage(page, so, ten, chuong, mucTieu, moDau) {
+  page('Bắt đầu', 'intro', 'Giới thiệu bài học', b => {
+    b.appendChild(el('div', 'hero', `<span class="ring"></span><span class="sun"></span>
+      <p>KHTN 9 · ${chuong}</p><h2>Bài ${so}. ${ten}</h2><p>Giáo viên: Huỳnh Đức Hòa · Trường THCS Hòa Trí</p>`));
+    b.appendChild(el('div', 'card', '<h3>Mục tiêu bài học</h3><ul class="clean">' + mucTieu.map(m => `<li>${m}</li>`).join('') + '</ul>'));
+    b.appendChild(el('div', 'card task', `<p class="tlabel">Câu hỏi mở đầu</p><p>${moDau}</p><p class="hint" style="color:var(--muted);margin-top:6px">Em hãy suy nghĩ, câu trả lời sẽ có trong bài học.</p>`));
+    b.appendChild(el('p', 'copy-main', COPY + ' Biên soạn: GV Huỳnh Đức Hòa.'));
+    complete('intro');
+  });
+}
+function infoCard(b, label, html) { b.appendChild(el('div', 'card task', `<p class="tlabel">${label}</p>${html}`)); }
+function testPage(page) {
+  page('Kiểm tra', 'kiem-tra', `Bài kiểm tra cuối bài`, b => {
+    let k = 0, ans = []; const box = el('div', 'q');
+    const start = () => { k = 0; ans = []; draw(); };
+    const draw = () => {
+      box.innerHTML = '';
+      if (k >= FINAL.length) return result();
+      const nav = el('div', 'qnav'); FINAL.forEach((_, i) => nav.appendChild(el('span', i < k ? (ans[i] ? 'ok' : 'bad') : i === k ? 'cur' : '', i + 1)));
+      const it = FINAL[k]; const c = el('div', 'card q');
+      c.appendChild(el('p', 'kicker', `Câu ${k + 1}/${FINAL.length}`)); c.appendChild(el('p', 'q-t', it.q));
+      const os = el('div', 'opts'), fb = el('div', 'fb'), nx = el('button', 'btn acc', k === FINAL.length - 1 ? 'Xem kết quả' : 'Câu tiếp ›'); nx.style.display = 'none';
+      it.o.forEach((t, i) => { const bt = el('button', 'opt', `<span class="k">${L[i]}.</span><span>${t}</span>`);
+        bt.onclick = () => { [...os.children].forEach(x => x.disabled = true); const g = i === it.a; ans[k] = g;
+          os.children[it.a].classList.add('ok'); if (!g) bt.classList.add('bad');
+          fb.className = 'fb show ' + (g ? 'ok' : 'bad'); fb.innerHTML = (g ? '<b>Chính xác!</b> ' : `<b>Chưa đúng. Đáp án: ${L[it.a]}.</b> `) + it.g; nx.style.display = 'inline-block'; nx.focus(); };
+        os.appendChild(bt); });
+      nx.onclick = () => { k++; draw(); }; c.append(os, fb, nx); box.append(nav, c);
+    };
+    const result = () => {
+      const sc = ans.filter(Boolean).length, n = FINAL.length, ten = Math.round(sc / n * 100) / 10, r = sc / n;
+      const msg = r >= .9 ? 'Xuất sắc! Em đã nắm rất vững bài học.' : r >= .7 ? 'Tốt lắm! Em xem lại các câu sai bên dưới nhé.' : r >= .5 ? 'Khá! Em nên ôn lại những phần còn nhầm.' : 'Em nên học lại các trang trong mục lục rồi làm lại bài kiểm tra.';
+      const rc = el('div', 'card result', `<p class="kicker">Kết quả của em</p><p class="big">${sc}/${n}</p><p>Quy ra điểm 10: <b>${String(ten).replace('.', ',')}</b></p><p>${msg}</p>`);
+      const again = el('button', 'btn', 'Làm lại bài kiểm tra'); again.onclick = start; rc.appendChild(again);
+      const rv = el('div', 'review'); FINAL.forEach((it, i) => { if (!ans[i]) rv.appendChild(el('div', 'row bad', `<p><b>Câu ${i + 1}.</b> ${it.q}</p><p>Đáp án đúng: <b>${L[it.a]}. ${it.o[it.a]}</b></p><p>${it.g}</p>`)); });
+      box.appendChild(rc); if (rv.children.length) { box.appendChild(el('h3', '', 'Các câu em làm chưa đúng')); box.appendChild(rv); }
+      complete('kiem-tra');
+    };
+    b.appendChild(el('p', 'lead', 'Mỗi câu chỉ được chọn một lần. Sau khi chọn, em sẽ thấy đáp án và lời giải thích.'));
+    b.appendChild(box); start();
+  });
+}
+function sumPage(page, items, next) {
+  page('Kiểm tra', 'tong-ket', 'Em đã học', b => {
+    const g = el('div', 'grid2'); b.appendChild(g);
+    items.forEach(([t, d]) => g.appendChild(el('div', 'card', `<h3>${t}</h3><p>${d}</p>`)));
+    if (next) b.appendChild(el('div', 'card task', `<p class="tlabel">Em có thể</p><p>${next}</p>`));
+    b.appendChild(el('p', 'copy-main', COPY));
+    complete('tong-ket');
+  });
+}
+function orderTask(b, right, id, okMsg, badMsg) {
+  const pool = el('div', 'pool'), seq = el('div', 'seq'), fb = el('div', 'fb'); let picked = [];
+  const reset = () => { picked = []; seq.innerHTML = ''; pool.innerHTML = ''; fb.className = 'fb';
+    shuffle(right).forEach(t => { const c = el('button', 'chip', t); c.onclick = () => { picked.push(t); c.remove(); seq.appendChild(el('span', 'chip n', picked.length + '. ' + t)); if (picked.length === right.length) check(); }; pool.appendChild(c); }); };
+  const check = () => { const ok = picked.every((t, i) => t === right[i]); fb.className = 'fb show ' + (ok ? 'ok' : 'bad');
+    fb.innerHTML = ok ? '<b>Chính xác!</b> ' + (okMsg || '') : '<b>Chưa đúng thứ tự.</b> ' + (badMsg || 'Bấm “Làm lại” để thử tiếp.'); if (ok) complete(id); };
+  const again = el('button', 'btn sec', 'Làm lại'); again.onclick = reset;
+  b.append(el('p', 'kicker', 'Chọn lần lượt'), pool, el('p', 'kicker', 'Thứ tự của em'), seq, again, fb); reset();
+}
+function stepper(b, S, id) {
+  let k = 0; const bar = el('div', 'steps'); S.forEach(() => bar.appendChild(el('span')));
+  const c = el('div', 'card'), nx = el('button', 'btn acc', 'Bước tiếp ›'), bk = el('button', 'btn sec', '‹ Bước trước'), ctl = el('div'); ctl.style.cssText = 'display:flex;gap:10px';
+  const draw = () => { [...bar.children].forEach((s, i) => s.classList.toggle('on', i <= k)); c.innerHTML = `<h3>${S[k][0]}</h3><p>${S[k][1]}</p>`; bk.disabled = k === 0; nx.disabled = k === S.length - 1; if (k === S.length - 1 && id) complete(id); };
+  nx.onclick = () => { k++; draw(); }; bk.onclick = () => { k--; draw(); }; ctl.append(bk, nx); b.append(bar, c, ctl); draw();
+}
+function slider(label, min, max, step, val, unit, onInput) {
+  const w = el('div', 'sl'); const lab = el('label', '', `${label}: <b></b> ${unit}`); const r = el('input'); r.type = 'range'; r.min = min; r.max = max; r.step = step; r.value = val; r.setAttribute('aria-label', label);
+  const upd = () => { lab.querySelector('b').textContent = String(r.value).replace('.', ','); onInput && onInput(+r.value); };
+  r.oninput = upd; w.append(lab, r); w.get = () => +r.value; w.set = v => { r.value = v; upd(); }; setTimeout(upd); return w;
+}
+function segPick(opts, val, onPick) {
+  const seg = el('div', 'seg'); opts.forEach(([lab, v]) => { const b = el('button', v === val ? 'on' : '', lab); b.onclick = () => { [...seg.children].forEach(x => x.classList.toggle('on', x === b)); onPick(v); }; seg.appendChild(b); }); return seg;
+}
+const SVGNS = 'http://www.w3.org/2000/svg';
+function svgEl(tag, attrs) { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+
+/* ---- Mô phỏng khúc xạ / phản xạ toàn phần ---- */
+function refractSim(b, cfg) {
+  const st = { n1: cfg.n1[0][1], n2: cfg.n2[0][1], i: cfg.i || 40 };
+  const c = el('div', 'card sim-card');
+  const row1 = el('div', 'simrow'); row1.append(el('span', 'simlab', 'Môi trường tới (phía trên):'), segPick(cfg.n1, st.n1, v => { st.n1 = v; draw(); }));
+  const row2 = el('div', 'simrow'); row2.append(el('span', 'simlab', 'Môi trường khúc xạ (phía dưới):'), segPick(cfg.n2, st.n2, v => { st.n2 = v; draw(); }));
+  const sl = slider('Góc tới i', 0, 89, 1, st.i, '°', v => { st.i = v; draw(); });
+  const svg = svgEl('svg', { viewBox: '0 0 600 340', class: 'simsvg', role: 'img', 'aria-label': 'Mô phỏng đường truyền tia sáng' });
+  const out = el('div', 'note');
+  c.append(row1, row2, sl, svg, out); b.appendChild(c);
+  function draw() {
+    svg.innerHTML = '';
+    const cx = 300, cy = 170, L = 160;
+    svg.append(svgEl('rect', { x: 0, y: 0, width: 600, height: 170, fill: st.n1 > 1.01 ? '#CFE6F2' : '#F4F8FB' }), svgEl('rect', { x: 0, y: 170, width: 600, height: 170, fill: st.n2 > 1.01 ? '#CFE6F2' : '#F4F8FB' }));
+    svg.append(svgEl('line', { x1: 0, y1: cy, x2: 600, y2: cy, stroke: '#5F6B78', 'stroke-width': 2 }));
+    svg.append(svgEl('line', { x1: cx, y1: 10, x2: cx, y2: 330, stroke: '#5F6B78', 'stroke-width': 1.5, 'stroke-dasharray': '6 5' }));
+    const txt = (x, y, t, col = '#13324A', a = 'start') => { const e = svgEl('text', { x, y, 'font-size': 15, 'font-weight': 700, fill: col, 'text-anchor': a }); e.textContent = t; svg.append(e); };
+    txt(10, 24, cfg.name1(st.n1) + ' (n₁ = ' + fmt(st.n1, 3) + ')'); txt(10, 330, cfg.name2(st.n2) + ' (n₂ = ' + fmt(st.n2, 3) + ')');
+    const i = rad(st.i); const sx = cx - L * Math.sin(i), sy = cy - L * Math.cos(i);
+    const sinr = st.n1 * Math.sin(i) / st.n2; const tir = sinr > 1;
+    const arrow = (x1, y1, x2, y2, col, w, op = 1) => { svg.append(svgEl('line', { x1, y1, x2, y2, stroke: col, 'stroke-width': w, opacity: op, 'stroke-linecap': 'round' })); const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, ang = Math.atan2(y2 - y1, x2 - x1); const p = (a, r) => `${mx + r * Math.cos(ang + a)},${my + r * Math.sin(ang + a)}`; svg.append(svgEl('polygon', { points: `${mx + 9 * Math.cos(ang)},${my + 9 * Math.sin(ang)} ${p(2.5, 9)} ${p(-2.5, 9)}`, fill: col, opacity: op })); };
+    arrow(sx, sy, cx, cy, '#D2462D', 4);
+    const rx = cx + L * Math.sin(i), ry = cy - L * Math.cos(i);
+    arrow(cx, cy, rx, ry, '#D2462D', tir ? 4 : 2, tir ? 1 : 0.35);
+    let msg;
+    if (!tir) { const r = Math.asin(sinr); arrow(cx, cy, cx + L * Math.sin(r), cy + L * Math.cos(r), '#D2462D', 4); txt(cx + 8, cy + 40, 'r = ' + fmt(deg(r), 1) + '°', '#A94F0C');
+      msg = `Góc tới i = ${st.i}°, góc khúc xạ r ≈ <b>${fmt(deg(r), 1)}°</b>. ` + (st.n2 > st.n1 ? 'Ánh sáng đi vào môi trường chiết suất lớn hơn: <b>r &lt; i</b>, tia khúc xạ lệch lại gần pháp tuyến.' : st.n2 < st.n1 ? 'Ánh sáng đi vào môi trường chiết suất nhỏ hơn: <b>r &gt; i</b>, tia khúc xạ lệch xa pháp tuyến.' : 'Hai môi trường cùng chiết suất: tia sáng truyền thẳng.'); }
+    else msg = `<b>Phản xạ toàn phần!</b> Không còn tia khúc xạ, toàn bộ ánh sáng bị phản xạ trở lại môi trường tới.`;
+    txt(cx - 8, cy - 40, 'i = ' + st.i + '°', '#A94F0C', 'end');
+    if (st.n1 > st.n2) msg += ` Góc tới hạn: sin i<sub>th</sub> = n₂/n₁ ⇒ i<sub>th</sub> ≈ <b>${fmt(deg(Math.asin(st.n2 / st.n1)), 1)}°</b>.`;
+    out.innerHTML = msg; cfg.onDraw && cfg.onDraw(st, tir);
+  }
+  draw();
+}
+
+/* ---- Mô phỏng tạo ảnh qua thấu kính ---- */
+function lensSim(b, opt = {}) {
+  const st = { type: opt.type || 'ht', f: opt.f || 8, d: opt.d || 20 };
+  const c = el('div', 'card sim-card');
+  const r1 = el('div', 'simrow'); r1.append(el('span', 'simlab', 'Loại thấu kính:'), segPick([['Hội tụ', 'ht'], ['Phân kì', 'pk']], st.type, v => { st.type = v; draw(); }));
+  const sf = slider('Tiêu cự f', 4, 12, 1, st.f, 'cm', v => { st.f = v; draw(); });
+  const sd = slider('Khoảng cách vật – thấu kính d', 2, 30, 0.5, st.d, 'cm', v => { st.d = v; draw(); });
+  const svg = svgEl('svg', { viewBox: '0 0 640 300', class: 'simsvg', role: 'img', 'aria-label': 'Mô phỏng tạo ảnh qua thấu kính' });
+  const out = el('div', 'note'); c.append(r1, sf, sd, svg, out); b.appendChild(c);
+  function draw() {
+    svg.innerHTML = '';
+    const S = 10, ox = 340, oy = 150, h = 4;
+    const X = cm => ox + cm * S, Y = cm => oy - cm * S;
+    svg.append(svgEl('rect', { x: 0, y: 0, width: 640, height: 300, fill: 'transparent' }));
+    svg.append(svgEl('line', { x1: 0, y1: oy, x2: 640, y2: oy, stroke: '#5F6B78', 'stroke-width': 1.5 }));
+    const t = (x, y, s, col = '#13324A') => { const e = svgEl('text', { x, y, 'font-size': 14, 'font-weight': 700, fill: col, 'text-anchor': 'middle' }); e.textContent = s; svg.append(e); };
+    // lens
+    svg.append(svgEl('line', { x1: ox, y1: 30, x2: ox, y2: 270, stroke: '#1E6F6A', 'stroke-width': 3 }));
+    const head = (y, up) => st.type === 'ht' ? svgEl('polygon', { points: `${ox},${y} ${ox - 7},${y + (up ? 12 : -12)} ${ox + 7},${y + (up ? 12 : -12)}`, fill: '#1E6F6A' }) : svgEl('polygon', { points: `${ox},${y + (up ? 12 : -12)} ${ox - 7},${y} ${ox + 7},${y}`, fill: '#1E6F6A' });
+    svg.append(head(30, true), head(270, false));
+    const f = st.f, d = st.d;
+    [[-f, 'F'], [f, 'F′']].forEach(([p, n]) => { svg.append(svgEl('circle', { cx: X(p), cy: oy, r: 3.5, fill: '#13324A' })); t(X(p), oy + 20, n); });
+    t(ox + 12, oy + 20, 'O');
+    // object
+    const ax = X(-d); svg.append(svgEl('line', { x1: ax, y1: oy, x2: ax, y2: Y(h), stroke: '#D2462D', 'stroke-width': 4 }));
+    svg.append(svgEl('polygon', { points: `${ax},${Y(h) - 4} ${ax - 6},${Y(h) + 8} ${ax + 6},${Y(h) + 8}`, fill: '#D2462D' })); t(ax, oy + 20, 'A'); t(ax - 12, Y(h), 'B');
+    const ray = (x1, y1, x2, y2, dash) => svg.append(svgEl('line', { x1, y1, x2, y2, stroke: '#E8892B', 'stroke-width': 2, 'stroke-dasharray': dash ? '5 5' : 'none' }));
+    const ext = (x0, y0, x1, y1, toX) => { const k = (y1 - y0) / (x1 - x0); return [toX, y0 + k * (toX - x0)]; };
+    // ray 1: parallel then through F′ (ht) / away from F (pk)
+    ray(ax, Y(h), ox, Y(h));
+    let p = st.type === 'ht' ? ext(ox, Y(h), X(f), oy, 640) : ext(X(-f), oy, ox, Y(h), 640);
+    ray(ox, Y(h), p[0], p[1]);
+    // ray 2 through O
+    p = ext(ax, Y(h), ox, oy, 640); ray(ax, Y(h), p[0], p[1]);
+    let dp, msg;
+    if (st.type === 'ht' && Math.abs(d - f) < 1e-9) { msg = 'Vật đặt tại tiêu điểm (d = f): các tia ló song song, <b>ảnh ở rất xa (vô cực)</b>.'; }
+    else {
+      dp = st.type === 'ht' ? d * f / (d - f) : -d * f / (d + f);
+      const hp = -h * dp / d; const ix = X(dp);
+      const real = dp > 0;
+      if (!real) { // dashed back-extensions
+        if (st.type === 'ht') { ray(ox, Y(h), ix, Y(hp), true); ray(ox, oy, ix, Y(hp), true); }
+        else { ray(X(-f), oy, ox, Y(h), true); }
+      }
+      svg.append(svgEl('line', { x1: ix, y1: oy, x2: ix, y2: Y(hp), stroke: '#6A3FB5', 'stroke-width': 4, 'stroke-dasharray': real ? 'none' : '6 4' }));
+      t(ix, hp > 0 ? oy + 20 : oy - 8, 'A′'); t(ix + 14, Y(hp), 'B′', '#6A3FB5');
+      const k = Math.abs(hp / h);
+      msg = `d = ${fmt(d, 1)} cm, f = ${f} cm ⇒ ảnh cách thấu kính d′ ≈ <b>${fmt(Math.abs(dp), 1)} cm</b>, cao h′ ≈ ${fmt(Math.abs(hp), 1)} cm (vật cao ${h} cm).<br>Ảnh <b>${real ? 'thật' : 'ảo'}</b>, <b>${hp < 0 ? 'ngược chiều' : 'cùng chiều'}</b> với vật, <b>${k > 1.02 ? 'lớn hơn' : k < 0.98 ? 'nhỏ hơn' : 'bằng'}</b> vật.` + (real ? ' Hứng được trên màn.' : ' Không hứng được trên màn, nhìn qua thấu kính mới thấy.');
+    }
+    out.innerHTML = msg; opt.onDraw && opt.onDraw(st);
+  }
+  draw();
+}
+
 /* =====================================================================
    DANH SÁCH BÀI HỌC – mỗi bài là một mục trong LESSONS.
    ===================================================================== */
 const LESSONS = [
-  { id: 'bai16', so: 16, chuDe: 'Năng lượng với cuộc sống', ten: 'Vòng năng lượng trên Trái Đất. Năng lượng hóa thạch', moTa: 'Mặt Trời và vòng tuần hoàn nước, nhiên liệu hóa thạch, giá nhiên liệu.', key: 'b16-el',
+  { id: 'bai5', so: 5, chuDe: 'Chương II. Ánh sáng', ten: 'Khúc xạ ánh sáng', moTa: 'Hiện tượng khúc xạ, định luật khúc xạ ánh sáng, chiết suất của môi trường.', key: 'b5-el',
+    final: [
+      { q: 'Hiện tượng khúc xạ ánh sáng là hiện tượng tia sáng…', o: ['bị hắt trở lại môi trường cũ', 'bị gãy khúc tại mặt phân cách khi truyền từ môi trường trong suốt này sang môi trường trong suốt khác', 'truyền thẳng trong môi trường đồng tính', 'bị hấp thụ hoàn toàn'], a: 1, g: 'Đây là định nghĩa hiện tượng khúc xạ ánh sáng trong SGK.' },
+      { q: 'Theo định luật khúc xạ, tia khúc xạ nằm…', o: ['trong mặt phẳng tới và ở phía bên kia pháp tuyến so với tia tới', 'ngoài mặt phẳng tới', 'cùng phía pháp tuyến với tia tới', 'trùng với mặt phân cách'], a: 0, g: 'Tia khúc xạ nằm trong mặt phẳng tới và ở phía bên kia pháp tuyến so với tia tới.' },
+      { q: 'Tia sáng truyền từ không khí vào thủy tinh với góc tới i = 40°. Góc khúc xạ r có đặc điểm gì?', o: ['r = i', 'r > i', 'r < i', 'r = 90°'], a: 2, g: 'Thủy tinh có chiết suất lớn hơn không khí nên tia khúc xạ lệch lại gần pháp tuyến, r < i.' },
+      { q: 'Biểu thức nào đúng với định luật khúc xạ ánh sáng?', o: ['sin i · sin r = hằng số', 'sin i + sin r = hằng số', 'i/r = hằng số', 'sin i / sin r = hằng số'], a: 3, g: 'Với hai môi trường trong suốt nhất định, sin i / sin r = hằng số = n₂₁.' },
+      { q: 'Chiết suất tuyệt đối của một môi trường được tính bằng công thức nào?', o: ['n = v/c', 'n = c/v', 'n = c·v', 'n = c − v'], a: 1, g: 'n = c/v, với c là tốc độ ánh sáng trong chân không, v là tốc độ ánh sáng trong môi trường.' },
+      { q: 'Nước có chiết suất khoảng 1,333. Tốc độ ánh sáng trong nước xấp xỉ bằng bao nhiêu (c = 3.10⁸ m/s)?', o: ['4.10⁸ m/s', '3.10⁸ m/s', '2,25.10⁸ m/s', '1,33.10⁸ m/s'], a: 2, g: 'v = c/n = 3.10⁸ / 1,333 ≈ 2,25.10⁸ m/s.' },
+      { q: 'Khi n₂₁ < 1 thì tia khúc xạ…', o: ['lệch lại gần pháp tuyến hơn (r < i)', 'trùng với tia tới', 'không tồn tại trong mọi trường hợp', 'lệch xa pháp tuyến hơn (r > i)'], a: 3, g: 'n₂₁ < 1 thì r > i: tia khúc xạ bị lệch xa pháp tuyến hơn.' },
+      { q: 'Vì sao nhìn chiếc ống hút cắm nghiêng trong cốc nước ta thấy nó như bị gãy tại mặt nước?', o: ['Vì ánh sáng từ phần ống trong nước bị khúc xạ khi ra không khí', 'Vì ống hút bị nước làm cong', 'Vì nước hấp thụ hết ánh sáng', 'Vì ánh sáng truyền thẳng qua mặt nước'], a: 0, g: 'Ánh sáng từ phần ống hút trong nước bị khúc xạ tại mặt nước nên mắt thấy ảnh của phần đó ở vị trí cao hơn.' }],
+    build: function (page) {
+      introPage(page, 5, 'Khúc xạ ánh sáng', 'Chương II. Ánh sáng',
+        ['Chứng tỏ được tia sáng có thể bị khúc xạ khi truyền từ môi trường này sang môi trường khác.', 'Phát biểu được định luật khúc xạ ánh sáng; vận dụng được biểu thức n = sin i / sin r.', 'Nêu được chiết suất bằng tỉ số tốc độ ánh sáng trong không khí (chân không) với tốc độ ánh sáng trong môi trường.', 'Giải thích được một số hiện tượng khúc xạ thường gặp.'],
+        'Tại sao khi trong cốc không có nước thì ta không nhìn thấy đồng xu, còn khi rót nước vào cốc (giữ nguyên vị trí mắt và cốc) thì lại nhìn thấy đồng xu?');
+      page('Phần 1. Hiện tượng khúc xạ', 'khai-niem', 'Hiện tượng khúc xạ ánh sáng', b => {
+        b.appendChild(el('p', 'lead', 'Trong thí nghiệm Hình 5.1, chùm sáng truyền từ không khí vào bản bán trụ thủy tinh bị gãy khúc tại mặt phân cách. Bấm vào từng thẻ để nhớ các quy ước (Hình 5.2).'));
+        flips(b, [['I', 'Điểm tới.'], ['SI', 'Tia tới.'], ['IK', 'Tia khúc xạ.'], ['NN′', 'Pháp tuyến: vuông góc với mặt phân cách tại điểm tới.'], ['Góc SIN = i', 'Góc tới.'], ['Góc KIN′ = r', 'Góc khúc xạ.'], ['Mặt phẳng tới', 'Mặt phẳng chứa tia tới SI và pháp tuyến NN′.'], ['Khúc xạ ánh sáng', 'Tia sáng bị gãy khúc (lệch khỏi phương truyền ban đầu) tại mặt phân cách khi truyền từ môi trường trong suốt này sang môi trường trong suốt khác.']], 'khai-niem', 'grid4');
+      });
+      page('Phần 1. Hiện tượng khúc xạ', 'mo-phong', 'Thí nghiệm ảo: đường truyền tia sáng', b => {
+        b.appendChild(el('p', 'lead', 'Chọn môi trường và kéo thanh trượt để thay đổi góc tới. Quan sát tia khúc xạ (đậm) và tia phản xạ (mờ).'));
+        let seen = new Set();
+        refractSim(b, { n1: [['Không khí', 1], ['Nước', 1.333], ['Thủy tinh', 1.5]], n2: [['Nước', 1.333], ['Thủy tinh', 1.5], ['Kim cương', 2.419], ['Không khí', 1]], i: 40,
+          name1: n => n === 1 ? 'Không khí' : n === 1.333 ? 'Nước' : 'Thủy tinh', name2: n => ({ 1: 'Không khí', 1.333: 'Nước', 1.5: 'Thủy tinh', 2.419: 'Kim cương' })[n],
+          onDraw: s => { seen.add(s.i); if (seen.size >= 4) complete('mo-phong'); } });
+        b.appendChild(el('div', 'note', 'Gợi ý khám phá: giữ không khí ở trên, đổi môi trường dưới từ nước sang kim cương: góc khúc xạ thay đổi thế nào? Đặt góc tới 0°: tia sáng có bị gãy khúc không?'));
+      });
+      page('Phần 2. Định luật khúc xạ', 'bang-5-1', 'Xử lí số liệu Bảng 5.1', b => {
+        b.appendChild(el('p', 'lead', 'Kết quả thí nghiệm 2 (ánh sáng từ không khí vào thủy tinh). Bấm “Tính” để tính tỉ số sin i / sin r.'));
+        const data = [[20, 13], [40, 25], [60, 35], [80, 41]]; const t = el('div', 'match'); let n = 0;
+        data.forEach(([i, r]) => { const row = el('div', 'row'); row.appendChild(el('p', '', `i = ${i}°, r = ${r}°`)); const res = el('span', 'mark', ''); const bt = el('button', 'btn sec', 'Tính');
+          bt.onclick = () => { if (bt.disabled) return; bt.disabled = true; res.innerHTML = `sin ${i}° / sin ${r}° ≈ <b>${fmt(Math.sin(rad(i)) / Math.sin(rad(r)), 2)}</b>`; res.style.minWidth = '220px'; if (++n === 4) { q.style.display = 'block'; } };
+          row.append(bt, res); t.appendChild(row); });
+        b.appendChild(t);
+        const q = el('div', 'card task'); q.style.display = 'none'; q.appendChild(el('p', 'tlabel', 'Nhận xét'));
+        mcq(q, { q: 'Em có nhận xét gì về tỉ số sin i / sin r?', o: ['Tăng dần khi i tăng', 'Gần như không đổi (≈ 1,5)', 'Giảm dần khi i tăng', 'Luôn bằng 1'], a: 1, g: 'Với hai môi trường nhất định, sin i / sin r luôn không đổi. Ngoài ra r < i: tia khúc xạ ở phía bên kia pháp tuyến và lệch gần pháp tuyến.' }, () => complete('bang-5-1'));
+        b.appendChild(q);
+      });
+      page('Phần 2. Định luật khúc xạ', 'dinh-luat', 'Định luật khúc xạ ánh sáng', b => {
+        infoCard(b, 'Định luật khúc xạ ánh sáng', '<ul class="clean"><li>Tia khúc xạ nằm trong mặt phẳng tới và ở phía bên kia pháp tuyến so với tia tới.</li><li>Với hai môi trường trong suốt nhất định, tỉ số giữa sin góc tới và sin góc khúc xạ luôn không đổi: <b>sin i / sin r = hằng số</b>.</li></ul>');
+        b.appendChild(el('p', 'lead', 'Đúng hay sai?'));
+        choiceRows(b, [['Tia khúc xạ và tia tới nằm cùng phía so với pháp tuyến.', 1], ['Tia khúc xạ nằm trong mặt phẳng tới.', 0], ['Khi góc tới tăng thì tỉ số sin i / sin r tăng theo.', 1], ['Khi góc tới bằng 0° thì tia sáng truyền thẳng, không bị gãy khúc.', 0], ['Ánh sáng từ nước ra không khí (Hình 5.5) có góc khúc xạ lớn hơn góc tới.', 0]], ['Đúng', 'Sai'], 'dinh-luat', '');
+      });
+      page('Phần 2. Định luật khúc xạ', 'dong-xu', 'Giải thích hiện tượng đồng xu', b => {
+        b.appendChild(el('p', 'lead', 'Quay lại câu hỏi mở đầu. Sắp xếp các ý để giải thích vì sao rót nước vào cốc thì nhìn thấy đồng xu (Hình 5.6).'));
+        orderTask(b, ['Khi chưa có nước, ánh sáng từ đồng xu truyền thẳng, bị thành cốc chắn nên không tới mắt', 'Khi có nước, ánh sáng từ đồng xu đi trong nước tới mặt nước', 'Tại mặt nước, tia sáng bị khúc xạ, lệch xa pháp tuyến', 'Tia khúc xạ truyền tới mắt nên ta thấy đồng xu (ở vị trí cao hơn thực tế)'], 'dong-xu', 'Đó là lí do ta thấy đáy bể nước nông hơn thực tế.');
+      });
+      page('Phần 3. Chiết suất', 'chiet-suat', 'Chiết suất của môi trường', b => {
+        infoCard(b, 'Chiết suất tỉ đối', '<p>sin i / sin r = <b>n₂₁ = n₂ / n₁</b> (môi trường 2 chứa tia khúc xạ, môi trường 1 chứa tia tới).</p><ul class="clean"><li>n₂₁ &gt; 1 thì r &lt; i: tia khúc xạ lệch gần pháp tuyến hơn.</li><li>n₂₁ &lt; 1 thì r &gt; i: tia khúc xạ lệch xa pháp tuyến hơn.</li></ul>');
+        infoCard(b, 'Chiết suất tuyệt đối', '<p><b>n = c / v</b>, với c = 3.10⁸ m/s là tốc độ ánh sáng trong chân không, v là tốc độ ánh sáng trong môi trường. Chiết suất không khí ≈ 1,00029, thường lấy bằng 1.</p><p>Bảng 5.2: kim cương 2,419; nước 1,333; nước đá 1,309; muối ăn 1,544; ethylic alcohol 1,361.</p>');
+        const c = el('div', 'card'); c.appendChild(el('h3', '', 'Máy tính: tốc độ ánh sáng trong môi trường'));
+        const out = el('p', 'price eq', '');
+        c.appendChild(segPick([['Nước 1,333', 1.333], ['Thủy tinh 1,5', 1.5], ['Kim cương 2,419', 2.419], ['Nước đá 1,309', 1.309]], 1.333, v => out.innerHTML = `v = c/n = 3.10⁸ / ${fmt(v, 3)} ≈ ${fmt(3 / v, 2)}.10⁸ m/s`));
+        out.innerHTML = 'v = c/n = 3.10⁸ / 1,333 ≈ 2,25.10⁸ m/s'; c.appendChild(out); b.appendChild(c);
+        const q = el('div', 'card task'); q.appendChild(el('p', 'tlabel', 'Bài tập SGK'));
+        mcq(q, { q: 'Tia sáng truyền từ không khí vào nước với góc tới i = 60° thì góc khúc xạ r = 40°. Chiết suất của nước là bao nhiêu?', o: ['≈ 0,74', '≈ 1,50', '≈ 1,35', '≈ 2,00'], a: 2, g: 'n = sin 60° / sin 40° = 0,866 / 0,643 ≈ 1,35.', h: 'Gợi ý: n = sin i / sin r (không khí có n = 1).' }, () => complete('chiet-suat'));
+        b.appendChild(q);
+      });
+      testPage(page);
+      sumPage(page, [['Khúc xạ ánh sáng', 'Tia sáng bị gãy khúc tại mặt phân cách khi truyền từ môi trường trong suốt này sang môi trường trong suốt khác.'], ['Định luật khúc xạ', 'Tia khúc xạ nằm trong mặt phẳng tới, ở bên kia pháp tuyến; sin i / sin r = hằng số = n₂₁.'], ['Chiết suất tỉ đối', 'n₂₁ = n₂ / n₁.'], ['Chiết suất tuyệt đối', 'n = c / v, với c = 3.10⁸ m/s.']], 'Vẽ đường đi của tia sáng qua mặt phân cách; tính chiết suất tỉ đối; giải thích ống hút “gãy” trong cốc nước, đáy bể trông nông hơn thực tế.');
+    } },
+
+  { id: 'bai6', so: 6, chuDe: 'Chương II. Ánh sáng', ten: 'Phản xạ toàn phần', moTa: 'Điều kiện phản xạ toàn phần, góc tới hạn, ảo ảnh và cáp quang.', key: 'b6-el',
+    final: [
+      { q: 'Phản xạ toàn phần là hiện tượng…', o: ['ánh sáng truyền thẳng qua mặt phân cách', 'phản xạ toàn bộ tia tới, xảy ra ở mặt phân cách giữa hai môi trường trong suốt', 'ánh sáng bị hấp thụ hoàn toàn', 'ánh sáng bị tán sắc'], a: 1, g: 'Đây là định nghĩa phản xạ toàn phần trong SGK.' },
+      { q: 'Điều kiện để có phản xạ toàn phần là…', o: ['n₁ < n₂ và i ≥ i_th', 'n₁ > n₂ và i < i_th', 'n₁ > n₂ và i ≥ i_th', 'n₁ = n₂'], a: 2, g: 'Ánh sáng đi từ môi trường chiết suất lớn sang môi trường chiết suất nhỏ hơn và góc tới lớn hơn hoặc bằng góc tới hạn.' },
+      { q: 'Công thức tính góc tới hạn phản xạ toàn phần là…', o: ['sin i_th = n₂ / n₁', 'sin i_th = n₁ / n₂', 'sin i_th = n₁ · n₂', 'i_th = n₂ / n₁'], a: 0, g: 'Khi r = 90°: n₁ sin i_th = n₂ sin 90° ⇒ sin i_th = n₂ / n₁.' },
+      { q: 'Góc tới hạn khi ánh sáng đi từ thủy tinh (n = 1,5) ra không khí xấp xỉ bằng…', o: ['30°', '60°', '90°', '42°'], a: 3, g: 'sin i_th = 1/1,5 ≈ 0,667 ⇒ i_th ≈ 41,8° ≈ 42°.' },
+      { q: 'Ánh sáng đi từ nước (n = 4/3) ra không khí với góc tới 60°. Hiện tượng gì xảy ra?', o: ['Khúc xạ với r = 30°', 'Phản xạ toàn phần, không có tia khúc xạ', 'Khúc xạ với r = 60°', 'Ánh sáng truyền thẳng'], a: 1, g: '(4/3)·sin 60° ≈ 1,15 > 1 nên không có tia khúc xạ: phản xạ toàn phần (i_th ≈ 48,6°).' },
+      { q: 'Khi ánh sáng đi từ môi trường chiết suất lớn sang môi trường chiết suất nhỏ hơn thì…', o: ['r < i', 'r = i', 'r > i', 'không có tia khúc xạ trong mọi trường hợp'], a: 2, g: 'n₁ > n₂ ⇒ sin r > sin i ⇒ r > i: tia khúc xạ lệch xa pháp tuyến.' },
+      { q: 'Sợi quang dẫn được ánh sáng đi xa là nhờ hiện tượng nào?', o: ['Phản xạ toàn phần ở mặt tiếp xúc giữa lõi và vỏ', 'Tán sắc ánh sáng', 'Hấp thụ ánh sáng', 'Ánh sáng truyền thẳng trong lõi'], a: 0, g: 'Lõi có chiết suất lớn hơn vỏ; tia sáng bị phản xạ toàn phần liên tiếp nên truyền đi xa.' },
+      { q: 'Hiện tượng “vũng nước” trên mặt đường nhựa ngày nắng nóng được giải thích nhờ…', o: ['khúc xạ qua giọt nước mưa', 'mặt đường có nước thật', 'tán sắc ánh sáng', 'khúc xạ liên tiếp và phản xạ toàn phần ở lớp không khí nóng sát mặt đường'], a: 3, g: 'Lớp không khí sát mặt đường nóng, chiết suất nhỏ; tia sáng bị khúc xạ liên tiếp rồi phản xạ toàn phần, hắt lên mắt.' }],
+    build: function (page) {
+      introPage(page, 6, 'Phản xạ toàn phần', 'Chương II. Ánh sáng',
+        ['Rút ra được điều kiện xảy ra phản xạ toàn phần và xác định được góc tới hạn.', 'Vận dụng kiến thức về phản xạ toàn phần để giải thích một số hiện tượng thường gặp.'],
+        'Ánh sáng đi từ bán trụ thủy tinh ra không khí: khi góc tới bằng 41° thì góc khúc xạ gần bằng 90°. Khi góc tới tăng lên 60° thì tia sáng sẽ truyền như thế nào?');
+      page('Phần 1. Hiện tượng', 'thi-nghiem', 'Thí nghiệm ảo: tăng dần góc tới', b => {
+        b.appendChild(el('p', 'lead', 'Ánh sáng đi từ thủy tinh (hoặc nước) ra không khí. Kéo thanh trượt tăng dần góc tới và quan sát độ sáng của tia khúc xạ, tia phản xạ.'));
+        let hit = false;
+        refractSim(b, { n1: [['Thủy tinh', 1.5], ['Nước', 4 / 3], ['Kim cương', 2.419]], n2: [['Không khí', 1]], i: 20,
+          name1: n => n === 1.5 ? 'Thủy tinh' : n === 2.419 ? 'Kim cương' : 'Nước', name2: () => 'Không khí',
+          onDraw: (s, tir) => { if (tir && !hit) { hit = true; complete('thi-nghiem'); } } });
+        b.appendChild(el('div', 'note', 'Bảng 6.1: i nhỏ thì tia khúc xạ sáng giảm dần, tia phản xạ sáng tăng dần khi tăng i. Khi i = i<sub>th</sub>, tia khúc xạ bắt đầu không nhìn thấy. Khi i > i<sub>th</sub>, chỉ còn tia phản xạ rất sáng.'));
+      });
+      page('Phần 1. Hiện tượng', 'dieu-kien', 'Định nghĩa và điều kiện', b => {
+        infoCard(b, 'Phản xạ toàn phần', '<p>Là hiện tượng phản xạ toàn bộ tia tới, xảy ra ở mặt phân cách giữa hai môi trường trong suốt.</p><p><b>Điều kiện:</b> ánh sáng truyền từ môi trường chiết suất n₁ tới môi trường chiết suất n₂ với <b>n₁ &gt; n₂</b>, và góc tới <b>i ≥ i<sub>th</sub></b>, với <b>sin i<sub>th</sub> = n₂ / n₁</b>.</p>');
+        b.appendChild(el('p', 'lead', 'Trường hợp nào có thể xảy ra phản xạ toàn phần?'));
+        choiceRows(b, [['Ánh sáng từ không khí vào nước, góc tới 80°', 1], ['Ánh sáng từ nước ra không khí, góc tới 60°', 0], ['Ánh sáng từ thủy tinh (n = 1,5) ra không khí, góc tới 30°', 1], ['Ánh sáng từ kim cương ra không khí, góc tới 45°', 0], ['Ánh sáng từ không khí vào thủy tinh, góc tới 89°', 1]], ['Có', 'Không'], 'dieu-kien', 'Ánh sáng đi vào môi trường chiết suất lớn hơn thì không bao giờ có phản xạ toàn phần.');
+      });
+      page('Phần 1. Hiện tượng', 'bai-tap', 'Tính góc tới hạn', b => {
+        const c = el('div', 'card'); mcq(c, { q: 'Tính góc tới hạn khi tia sáng đi từ bán trụ thủy tinh (n₁ = 1,5) ra không khí (n₂ = 1).', o: ['≈ 30°', '≈ 41,8°', '≈ 48,6°', '≈ 60°'], a: 1, g: 'sin i_th = 1 / 1,5 ≈ 0,667 ⇒ i_th ≈ 41,8°. Điều này giải thích câu hỏi mở đầu: ở 41° tia khúc xạ gần sát mặt phân cách; ở 60° xảy ra phản xạ toàn phần.' }); b.appendChild(c);
+        const c2 = el('div', 'card'); mcq(c2, { q: 'Tia sáng từ nước (n₁ = 4/3) ra không khí với góc tới 30°. Góc khúc xạ bằng bao nhiêu?', o: ['≈ 22°', '≈ 30°', '≈ 41,8°', 'Không có tia khúc xạ'], a: 2, g: 'sin r = (4/3)·sin 30° = 0,667 ⇒ r ≈ 41,8°.' }); b.appendChild(c2);
+        const c3 = el('div', 'card'); mcq(c3, { q: 'Cũng tia sáng đó, nếu góc tới bằng 60° thì có tia khúc xạ không?', o: ['Có, r ≈ 41,8°', 'Có, r = 90°', 'Không, vì xảy ra phản xạ toàn phần', 'Có, r = 60°'], a: 2, g: 'i_th của nước: sin i_th = 3/4 ⇒ i_th ≈ 48,6°. Vì 60° > 48,6° nên xảy ra phản xạ toàn phần.' }, () => complete('bai-tap')); b.appendChild(c3);
+      });
+      page('Phần 2. Ứng dụng', 'ao-anh', 'Hiện tượng ảo ảnh trên đường nhựa', b => {
+        b.appendChild(el('p', 'lead', 'Ngày nắng nóng, nhìn xa trên mặt đường nhựa như có lớp nước. Theo dõi từng bước giải thích (Hình 6.3).'));
+        stepper(b, [['1. Không khí sát mặt đường nóng nhất', 'Lớp không khí càng gần mặt đường nhựa càng nóng, chiết suất càng nhỏ. Càng lên cao, chiết suất càng tăng.'], ['2. Tia sáng đi xiên xuống', 'Tia sáng từ ngọn cây (điểm A) đi xuống qua các lớp khí có chiết suất giảm dần, nên bị khúc xạ liên tiếp, góc khúc xạ lớn dần.'], ['3. Phản xạ toàn phần', 'Tới lớp khí sát mặt đường, góc tới lớn hơn góc tới hạn: tia sáng bị phản xạ toàn phần và hắt lên.'], ['4. Mắt thấy ảnh ảo', 'Tia sáng tới mắt như phát ra từ A′ đối xứng với A qua mặt đường, nên ta thấy bóng mờ của vật như phản chiếu trên mặt nước.']], 'ao-anh');
+        b.appendChild(el('div', 'note', 'Chỉ thấy ảo ảnh ở xa vì cần tia sáng tới gần sát mặt đường với góc tới rất lớn (≥ i<sub>th</sub>). Khi lại gần, tia sáng tới mắt có góc tới nhỏ nên không bị phản xạ toàn phần.'));
+      });
+      page('Phần 2. Ứng dụng', 'cap-quang', 'Cáp quang', b => {
+        b.appendChild(el('p', 'lead', 'Mỗi sợi quang gồm lõi chiết suất n₁ và lớp vỏ chiết suất n₂ nhỏ hơn n₁ (Hình 6.4). Bấm để xem từng ý.'));
+        flips(b, [['Đi vào sợi quang', 'Tia tới SI bị khúc xạ khi đi vào tiết diện MN của sợi quang.'], ['Phản xạ toàn phần', 'Tia khúc xạ tới mặt tiếp xúc lõi – vỏ tại I₁ với góc tới lớn hơn i_th nên bị phản xạ toàn phần.'], ['Lặp lại nhiều lần', 'Phản xạ toàn phần lặp lại liên tiếp tại I₂, … nên ánh sáng đi rất xa trong sợi quang.'], ['Ứng dụng', 'Truyền dữ liệu Internet, điện thoại trong công nghệ thông tin; nội soi trong y học.']], 'cap-quang', 'grid2');
+      });
+      testPage(page);
+      sumPage(page, [['Phản xạ toàn phần', 'Phản xạ toàn bộ tia tới, xảy ra ở mặt phân cách giữa hai môi trường trong suốt.'], ['Điều kiện', 'n₁ > n₂ và i ≥ i_th, với sin i_th = n₂ / n₁.'], ['Ảo ảnh', 'Do khúc xạ liên tiếp và phản xạ toàn phần ở các lớp không khí nóng.'], ['Cáp quang', 'Ánh sáng phản xạ toàn phần liên tiếp trong lõi sợi quang.']], 'Xác định góc tới hạn; giải thích ảo ảnh trên sa mạc, đường nhựa và nguyên tắc hoạt động của cáp quang.');
+    } },
+
+  { id: 'bai7', so: 7, chuDe: 'Chương II. Ánh sáng', ten: 'Lăng kính', moTa: 'Cấu tạo lăng kính, tán sắc ánh sáng, ánh sáng màu và màu sắc của vật.', key: 'b7-el',
+    final: [
+      { q: 'Lăng kính là một khối trong suốt, đồng chất, thường có dạng…', o: ['hình cầu', 'lăng trụ tam giác', 'hình lập phương', 'hình trụ tròn'], a: 1, g: 'Lăng kính được giới hạn bởi hai mặt phẳng không song song, thường có dạng lăng trụ tam giác.' },
+      { q: 'Góc hợp bởi hai mặt bên của lăng kính gọi là…', o: ['góc lệch', 'góc tới', 'góc chiết quang', 'góc khúc xạ'], a: 2, g: 'Góc A hợp bởi hai mặt bên là góc chiết quang (góc ở đỉnh).' },
+      { q: 'Chiếu chùm sáng trắng hẹp qua lăng kính, trên màn thu được…', o: ['dải màu từ đỏ đến tím', 'một vệt sáng trắng', 'chỉ một màu đỏ', 'vệt tối'], a: 0, g: 'Đó là quang phổ của ánh sáng trắng, hiện tượng tán sắc ánh sáng.' },
+      { q: 'Tia sáng màu nào bị lệch nhiều nhất khi qua lăng kính?', o: ['Đỏ', 'Vàng', 'Lục', 'Tím'], a: 3, g: 'Chiết suất của lăng kính lớn nhất với ánh sáng tím nên tia tím bị lệch nhiều nhất.' },
+      { q: 'Ánh sáng đơn sắc là ánh sáng…', o: ['có nhiều màu', 'có một màu nhất định và không bị tán sắc khi qua lăng kính', 'luôn là ánh sáng trắng', 'không truyền qua được lăng kính'], a: 1, g: 'Định nghĩa trong SGK.' },
+      { q: 'Tia ló ra khỏi lăng kính (đặt trong không khí) lệch về phía nào so với tia tới?', o: ['Phía đáy lăng kính', 'Phía đỉnh lăng kính', 'Không lệch', 'Ngẫu nhiên'], a: 0, g: 'Khi đi từ không khí qua lăng kính, tia ló lệch về phía đáy so với tia tới.' },
+      { q: 'Dưới ánh sáng trắng, chiếc lá có màu xanh lục vì lá…', o: ['hấp thụ ánh sáng lục', 'phát ra ánh sáng lục', 'phản xạ ánh sáng lục và hấp thụ các màu còn lại', 'hấp thụ tất cả ánh sáng'], a: 2, g: 'Vật có màu nào là do phản xạ ánh sáng màu đó vào mắt và hấp thụ các màu còn lại.' },
+      { q: 'Vật màu đen…', o: ['phản xạ tất cả ánh sáng màu', 'chỉ phản xạ ánh sáng đỏ', 'phát ra ánh sáng đen', 'hấp thụ tất cả các ánh sáng màu, không có ánh sáng phản xạ'], a: 3, g: 'Ta nhận ra vật đen vì nó đặt cạnh những vật có màu khác.' }],
+    build: function (page) {
+      introPage(page, 7, 'Lăng kính', 'Chương II. Ánh sáng',
+        ['Vẽ được đường truyền của tia sáng qua lăng kính.', 'Nêu được hiện tượng tán sắc, khái niệm ánh sáng màu.', 'Nêu được màu sắc của vật phụ thuộc vào màu của ánh sáng bị vật hấp thụ và phản xạ.'],
+        'Ánh sáng từ đèn sợi đốt sau khi đi qua lăng kính tạo thành chùm sáng có màu từ đỏ đến tím. Lăng kính có tác dụng gì trong hiện tượng này?');
+      page('Phần 1. Lăng kính và tán sắc', 'cau-tao', 'Cấu tạo của lăng kính', b => {
+        b.appendChild(el('p', 'lead', 'Bấm vào từng thẻ để tìm hiểu các phần tử của lăng kính (Hình 7.2, 7.3).'));
+        flips(b, [['Mặt bên', 'Hai mặt phẳng giới hạn không song song của lăng kính.'], ['Cạnh', 'Giao tuyến của hai mặt bên.'], ['Đáy', 'Mặt đối diện với cạnh.'], ['Góc chiết quang A', 'Góc hợp bởi hai mặt bên, còn gọi là góc ở đỉnh.'], ['Tiết diện chính', 'Mặt phẳng bất kì vuông góc với các cạnh.'], ['Đặc trưng quang học', 'Góc chiết quang A và chiết suất n của chất làm lăng kính.']], 'cau-tao', 'grid2');
+      });
+      page('Phần 1. Lăng kính và tán sắc', 'tan-sac', 'Hiện tượng tán sắc ánh sáng', b => {
+        b.appendChild(el('div', 'card', '<div class="rainbow" aria-hidden="true"></div><p style="margin-top:10px">Chiếu chùm sáng trắng hẹp qua lăng kính, ta thu được dải màu như cầu vồng: <b>quang phổ của ánh sáng trắng</b>. Lăng kính tách riêng các chùm sáng màu có sẵn trong chùm sáng trắng, cho mỗi chùm đi theo một phương khác nhau.</p>'));
+        b.appendChild(el('p', 'lead', 'Sắp xếp các màu trên màn theo thứ tự từ trên xuống (Hình 7.5).'));
+        orderTask(b, ['Đỏ', 'Da cam', 'Vàng', 'Lục', 'Lam', 'Chàm', 'Tím'], 'tan-sac', 'Tia đỏ lệch ít nhất, tia tím lệch nhiều nhất.', 'Mẹo nhớ: Đỏ – Cam – Vàng – Lục – Lam – Chàm – Tím.');
+      });
+      page('Phần 1. Lăng kính và tán sắc', 'don-sac', 'Ánh sáng đơn sắc và đường truyền qua lăng kính', b => {
+        const c = el('div', 'card'); mcq(c, { q: 'Thí nghiệm 2: chắn kính lọc màu đỏ trước khe sáng. Ánh sáng đỏ qua lăng kính có bị tách thành nhiều màu không?', o: ['Có, thành 7 màu', 'Không, vẫn là ánh sáng đỏ', 'Có, thành đỏ và tím', 'Bị lăng kính hấp thụ hết'], a: 1, g: 'Ánh sáng đơn sắc là ánh sáng có một màu nhất định, không bị tán sắc khi qua lăng kính.' }); b.appendChild(c);
+        const c2 = el('div', 'card'); mcq(c2, { q: 'So sánh góc lệch của tia đỏ và tia tím khi qua cùng một lăng kính.', o: ['Tia đỏ lệch nhiều hơn', 'Hai tia lệch như nhau', 'Tia tím lệch nhiều hơn', 'Không tia nào bị lệch'], a: 2, g: 'Chiết suất của lăng kính lớn nhất với tia tím, nhỏ nhất với tia đỏ nên tia tím lệch nhiều nhất. Vì vậy ánh sáng trắng bị tách thành dải màu.' }); b.appendChild(c2);
+        infoCard(b, 'Đường truyền qua lăng kính (Hình 7.6)', '<p>Tia SI khúc xạ tại mặt AB, lệch gần pháp tuyến (vào môi trường chiết suất lớn hơn); tới mặt AC lại khúc xạ, lệch xa pháp tuyến (ra không khí). Kết quả: <b>tia ló lệch về phía đáy</b> so với tia tới. Góc D giữa tia tới và tia ló là góc lệch.</p>');
+        const c3 = el('div', 'card'); mcq(c3, { q: 'Ánh sáng từ không khí vào lăng kính, vì sao tia khúc xạ IJ lệch gần pháp tuyến hơn tia tới SI?', o: ['Vì lăng kính có chiết suất lớn hơn không khí', 'Vì lăng kính có chiết suất nhỏ hơn không khí', 'Vì xảy ra phản xạ toàn phần', 'Vì ánh sáng truyền thẳng'], a: 0, g: 'n₂₁ > 1 nên r < i.' }, () => complete('don-sac')); b.appendChild(c3);
+      });
+      page('Phần 2. Màu sắc của vật', 'mau-vat', 'Thí nghiệm ảo: màu sắc của vật', b => {
+        b.appendChild(el('p', 'lead', 'Chọn màu ánh sáng chiếu tới và màu của vật (khi nhìn dưới ánh sáng trắng), rồi quan sát màu ta nhìn thấy.'));
+        const COL = { trang: ['trắng', '#FFFFFF'], do: ['đỏ', '#D93A2B'], luc: ['lục', '#2E9E4A'], lam: ['lam', '#2F6FD6'], den: ['đen', '#111111'], vang: ['vàng', '#F2C230'] };
+        const st = { light: 'trang', obj: 'do' }; let tries = new Set();
+        const c = el('div', 'card sim-card');
+        const r1 = el('div', 'simrow'); r1.append(el('span', 'simlab', 'Ánh sáng chiếu tới:'), segPick([['Trắng', 'trang'], ['Đỏ', 'do'], ['Lục', 'luc'], ['Lam', 'lam']], 'trang', v => { st.light = v; draw(); }));
+        const r2 = el('div', 'simrow'); r2.append(el('span', 'simlab', 'Vật (dưới ánh sáng trắng):'), segPick([['Trắng', 'trang'], ['Đỏ', 'do'], ['Lục', 'luc'], ['Lam', 'lam'], ['Đen', 'den']], 'do', v => { st.obj = v; draw(); }));
+        const stage = el('div', 'colorstage'); const out = el('div', 'note');
+        c.append(r1, r2, stage, out); b.appendChild(c);
+        function draw() {
+          let seen, why;
+          if (st.obj === 'den') { seen = 'den'; why = 'Vật đen hấp thụ tất cả ánh sáng màu, không có ánh sáng phản xạ.'; }
+          else if (st.obj === 'trang') { seen = st.light; why = 'Vật trắng phản xạ mọi ánh sáng màu chiếu tới nên có màu của ánh sáng chiếu vào.'; }
+          else if (st.light === 'trang' || st.light === st.obj) { seen = st.obj; why = `Vật phản xạ ánh sáng ${COL[st.obj][0]} vào mắt, hấp thụ các màu còn lại.`; }
+          else { seen = 'den'; why = `Vật ${COL[st.obj][0]} hấp thụ ánh sáng ${COL[st.light][0]}, không có ánh sáng phản xạ tới mắt nên trông gần như đen.`; }
+          stage.innerHTML = `<div class="lamp" style="background:${COL[st.light][1]}"></div><div class="beam" style="background:${COL[st.light][1]}"></div><div class="obj" style="background:${COL[seen][1]}"></div>`;
+          out.innerHTML = `Mắt nhìn thấy vật màu <b>${COL[seen][0]}</b>. ${why}`;
+          tries.add(st.light + st.obj); if (tries.size >= 4) complete('mau-vat');
+        }
+        draw();
+        b.appendChild(el('div', 'note', 'Tấm lọc màu nào thì hấp thụ ít ánh sáng màu đó nhưng hấp thụ mạnh ánh sáng màu khác (Hình 7.11).'));
+      });
+      page('Phần 2. Màu sắc của vật', 'huong-duong', 'Vận dụng: bông hoa hướng dương', b => {
+        b.appendChild(el('p', 'lead', 'Dưới ánh sáng Mặt Trời, vì sao ta thấy cánh hoa màu vàng, lá màu xanh, nhụy màu nâu (Hình 7.10)? Bấm để xem giải thích.'));
+        flips(b, [['Cánh hoa vàng', 'Cánh hoa phản xạ mạnh ánh sáng vàng vào mắt, hấp thụ các màu còn lại.'], ['Lá xanh', 'Lá phản xạ ánh sáng xanh lục, hấp thụ các màu còn lại.'], ['Nhụy nâu', 'Nhụy phản xạ một ít ánh sáng đỏ, vàng nên có màu nâu (sẫm), hấp thụ phần lớn ánh sáng.'], ['Ban đêm', 'Không có nguồn sáng, không có ánh sáng phản xạ tới mắt nên ta thấy mọi vật tối đen.']], 'huong-duong', 'grid2');
+        b.appendChild(el('div', 'note', 'Cầu vồng: các tia sáng Mặt Trời khúc xạ, phản xạ toàn phần và tán sắc trong những giọt nước li ti sau mưa. Muốn thấy cầu vồng, Mặt Trời phải ở sau lưng người quan sát.'));
+      });
+      testPage(page);
+      sumPage(page, [['Lăng kính', 'Khối trong suốt, đồng chất, thường có dạng lăng trụ tam giác; tạo được quang phổ của ánh sáng trắng.'], ['Tán sắc', 'Ánh sáng trắng qua lăng kính bị tách thành dải màu: đỏ, da cam, vàng, lục, lam, chàm, tím.'], ['Ánh sáng đơn sắc', 'Có một màu nhất định, không bị tán sắc khi qua lăng kính.'], ['Màu sắc của vật', 'Phụ thuộc màu ánh sáng bị vật hấp thụ và phản xạ. Vật đen hấp thụ tất cả ánh sáng màu.']], 'Vẽ đường truyền tia sáng qua lăng kính; giải thích màu sắc của vật; làm đĩa trộn màu 7 màu (Hình 7.12).');
+    } },
+
+  { id: 'bai8', so: 8, chuDe: 'Chương II. Ánh sáng', ten: 'Thấu kính', moTa: 'Thấu kính hội tụ, phân kì; quang tâm, tiêu điểm, tiêu cự; dựng ảnh qua thấu kính.', key: 'b8-el',
+    final: [
+      { q: 'Thấu kính rìa mỏng (phần rìa mỏng hơn phần giữa) là thấu kính…', o: ['phân kì', 'hội tụ', 'phẳng', 'không xác định'], a: 1, g: 'Chùm sáng song song qua thấu kính rìa mỏng cho chùm ló hội tụ.' },
+      { q: 'Tia sáng tới quang tâm O của thấu kính thì…', o: ['bị phản xạ', 'đi qua tiêu điểm', 'truyền thẳng', 'song song với trục chính'], a: 2, g: 'Mọi tia sáng tới quang tâm O đều truyền thẳng qua thấu kính.' },
+      { q: 'Tia tới song song với trục chính của thấu kính hội tụ cho tia ló…', o: ['đi qua tiêu điểm chính F′', 'song song với trục chính', 'đi qua quang tâm', 'bị phản xạ ngược lại'], a: 0, g: 'Chùm tia song song với trục chính hội tụ tại tiêu điểm chính.' },
+      { q: 'Tiêu cự của thấu kính là…', o: ['độ dày của thấu kính', 'khoảng cách từ vật đến thấu kính', 'khoảng cách giữa hai tiêu điểm', 'khoảng cách từ quang tâm đến tiêu điểm chính'], a: 3, g: 'OF = f là tiêu cự.' },
+      { q: 'Vật đặt ngoài khoảng tiêu cự của thấu kính hội tụ (d > f) cho ảnh…', o: ['ảo, cùng chiều', 'thật, ngược chiều với vật', 'ảo, nhỏ hơn vật', 'không có ảnh'], a: 1, g: 'd > f: ảnh thật, ngược chiều với vật, hứng được trên màn.' },
+      { q: 'Vật đặt trong khoảng tiêu cự của thấu kính hội tụ (d < f) cho ảnh…', o: ['thật, ngược chiều', 'thật, nhỏ hơn vật', 'ảo, cùng chiều, lớn hơn vật', 'ảo, ngược chiều'], a: 2, g: 'd < f: ảnh ảo, cùng chiều và lớn hơn vật.' },
+      { q: 'Vật đặt ở mọi vị trí trước thấu kính phân kì luôn cho ảnh…', o: ['ảo, cùng chiều, nhỏ hơn vật', 'thật, ngược chiều', 'ảo, lớn hơn vật', 'thật, bằng vật'], a: 0, g: 'Thấu kính phân kì luôn cho ảnh ảo, cùng chiều, nhỏ hơn vật.' },
+      { q: 'Ảnh thật là ảnh…', o: ['nhìn thấy trong gương phẳng', 'luôn cùng chiều với vật', 'luôn nhỏ hơn vật', 'hứng được trên màn chắn'], a: 3, g: 'Ảnh thật hứng được trên màn; ảnh ảo không hứng được trên màn.' }],
+    build: function (page) {
+      introPage(page, 8, 'Thấu kính', 'Chương II. Ánh sáng',
+        ['Nêu được các khái niệm: quang tâm, trục chính, tiêu điểm chính và tiêu cự của thấu kính.', 'Nêu được đường đi của tia qua quang tâm, tia song song với trục chính.', 'Vẽ được ảnh qua thấu kính; phân biệt ảnh thật, ảnh ảo.'],
+        'Thấu kính có trong ống nhòm, kính lúp, kính hiển vi và cả trong mắt chúng ta. Ánh sáng truyền qua thấu kính có thể tạo thành ảnh của các vật như thế nào?');
+      page('Phần 1. Thấu kính', 'phan-loai', 'Thấu kính hội tụ và thấu kính phân kì', b => {
+        infoCard(b, 'Phân loại', '<p>Thấu kính là khối đồng chất trong suốt, giới hạn bởi hai mặt cong hoặc một mặt cong và một mặt phẳng.</p><ul class="clean"><li><b>Rìa mỏng</b> (rìa mỏng hơn phần giữa): chùm song song qua cho chùm ló <b>hội tụ</b>.</li><li><b>Rìa dày</b> (rìa dày hơn phần giữa): chùm song song qua cho chùm ló <b>phân kì</b>.</li></ul>');
+        choiceRows(b, [['Kính lúp đọc sách', 0], ['Thấu kính có phần rìa dày hơn phần giữa', 1], ['Chai nhựa tròn chứa đầy nước', 0], ['Chùm sáng song song qua thấu kính bị loe rộng ra', 1], ['Chùm sáng song song qua thấu kính gặp nhau tại một điểm', 0]], ['Hội tụ', 'Phân kì'], 'phan-loai', '');
+      });
+      page('Phần 1. Thấu kính', 'khai-niem', 'Quang tâm, trục chính, tiêu điểm, tiêu cự', b => {
+        flips(b, [['Quang tâm O', 'Điểm của thấu kính mà mọi tia sáng tới đó đều truyền thẳng.'], ['Trục chính', 'Đường thẳng qua quang tâm O và vuông góc với tiết diện thẳng của thấu kính.'], ['Tiêu điểm chính F', 'Chùm tia tới song song với trục chính cho chùm tia ló (hoặc đường kéo dài của chùm tia ló) hội tụ tại F trên trục chính.'], ['Tiêu cự f', 'Khoảng cách từ quang tâm đến tiêu điểm chính: OF = f.']], 'khai-niem', 'grid2');
+        infoCard(b, 'Ba tia đặc biệt dùng để vẽ ảnh', '<ul class="clean"><li>Tia tới quang tâm O: truyền thẳng.</li><li>Tia tới song song trục chính: tia ló (hoặc đường kéo dài) đi qua tiêu điểm chính.</li><li>Giải thích: thấu kính như nhiều lăng kính nhỏ ghép lại, tia sáng qua lăng kính lệch về phía đáy. Tia gần rìa lệch nhiều hơn tia gần trục chính.</li></ul>');
+      });
+      page('Phần 2. Ảnh qua thấu kính', 'mo-phong', 'Thí nghiệm ảo: dựng ảnh qua thấu kính', b => {
+        b.appendChild(el('p', 'lead', 'Chọn loại thấu kính, kéo thanh trượt thay đổi tiêu cự và vị trí vật AB. Quan sát ảnh A′B′ (nét liền: ảnh thật, nét đứt: ảnh ảo).'));
+        const cases = new Set();
+        lensSim(b, { onDraw: s => { cases.add(s.type + (s.d > s.f ? '>' : '<')); if (cases.size >= 3) complete('mo-phong'); } });
+        b.appendChild(el('div', 'note', 'Nhiệm vụ: với thấu kính hội tụ, thử cả hai trường hợp d > f và d < f; sau đó chuyển sang thấu kính phân kì.'));
+      });
+      page('Phần 2. Ảnh qua thấu kính', 'dac-diem', 'Đặc điểm ảnh (Bảng 8.1, 8.2)', b => {
+        b.appendChild(el('p', 'lead', 'Dùng thí nghiệm ảo để kiểm tra, rồi chọn đặc điểm ảnh cho từng trường hợp.'));
+        choiceRows(b, [['TK hội tụ, d > f: ảnh thật hay ảo?', 0], ['TK hội tụ, d < f: ảnh thật hay ảo?', 1], ['TK phân kì, d > f: ảnh thật hay ảo?', 1], ['TK phân kì, d < f: ảnh thật hay ảo?', 1]], ['Thật', 'Ảo'], 'dac-diem', 'Ảnh ảo của thấu kính hội tụ lớn hơn vật; ảnh ảo của thấu kính phân kì nhỏ hơn vật.');
+        const c = el('div', 'card'); mcq(c, { q: 'Ảnh ảo tạo bởi thấu kính hội tụ và thấu kính phân kì khác nhau ở điểm nào?', o: ['Ảnh của TK hội tụ ngược chiều', 'Ảnh của TK hội tụ lớn hơn vật, của TK phân kì nhỏ hơn vật', 'Ảnh của TK phân kì hứng được trên màn', 'Không có gì khác'], a: 1, g: 'Cả hai đều là ảnh ảo, cùng chiều với vật; nhưng ảnh của TK hội tụ lớn hơn vật, của TK phân kì nhỏ hơn vật.' }); b.appendChild(c);
+      });
+      testPage(page);
+      sumPage(page, [['Thấu kính', 'Rìa mỏng là thấu kính hội tụ; rìa dày là thấu kính phân kì.'], ['Các khái niệm', 'Quang tâm O, trục chính, tiêu điểm chính F, tiêu cự f = OF.'], ['TK hội tụ', 'd > f: ảnh thật, ngược chiều. d < f: ảnh ảo, cùng chiều, lớn hơn vật.'], ['TK phân kì', 'Mọi vị trí của vật: ảnh ảo, cùng chiều, nhỏ hơn vật.']], 'Nhận biết thấu kính hội tụ, phân kì; vẽ ảnh qua thấu kính; chế tạo thấu kính hội tụ từ chai nhựa và nước.');
+    } },
+
+  { id: 'bai9', so: 9, chuDe: 'Chương II. Ánh sáng', ten: 'Thực hành đo tiêu cự của thấu kính hội tụ', moTa: 'Phương pháp Silbermann, xử lí số liệu, báo cáo thực hành.', key: 'b9-el',
+    final: [
+      { q: 'Trong phương pháp Silbermann, khi ảnh rõ nét và cao bằng vật thì…', o: ['d = f', 'd = d′ = 2f', 'd = 3f', 'd′ = f'], a: 1, g: 'Vật đặt cách thấu kính 2f thì ảnh cách thấu kính 2f, cao bằng vật.' },
+      { q: 'Công thức tính tiêu cự trong phương pháp Silbermann là…', o: ['f = (d + d′)/2', 'f = d · d′', 'f = (d + d′)/4', 'f = d − d′'], a: 2, g: 'd = d′ = 2f ⇒ d + d′ = 4f ⇒ f = (d + d′)/4.' },
+      { q: 'Đo được d = 20 cm, d′ = 20 cm. Tiêu cự thấu kính là…', o: ['10 cm', '20 cm', '40 cm', '5 cm'], a: 0, g: 'f = (20 + 20)/4 = 10 cm.' },
+      { q: 'Khi ảnh rõ nét trong phương pháp Silbermann, chiều cao ảnh h′ so với vật h là…', o: ['h′ = 2h', 'h′ = h/2', 'h′ = 4h', 'h′ = h'], a: 3, g: 'Ảnh thật, ngược chiều, cao bằng vật.' },
+      { q: 'Trong khi tiến hành, cần dịch chuyển vật và màn chắn như thế nào?', o: ['Đồng thời ra xa thấu kính những khoảng bằng nhau', 'Chỉ dịch chuyển màn', 'Chỉ dịch chuyển vật', 'Dịch chuyển thấu kính'], a: 0, g: 'Đặt vật và màn sát thấu kính, dịch đồng thời ra xa những khoảng bằng nhau đến khi ảnh rõ nét.' },
+      { q: 'Vì sao đo trực tiếp khoảng cách OF thường kém chính xác?', o: ['Vì không có thước', 'Vì khó xác định chính xác vị trí điểm hội tụ F của chùm tia', 'Vì thấu kính không có tiêu điểm', 'Vì ánh sáng không đi qua F'], a: 1, g: 'Điểm hội tụ của chùm sáng là một vùng nhỏ, khó xác định chính xác bằng mắt.' }],
+    build: function (page) {
+      introPage(page, 9, 'Thực hành đo tiêu cự của thấu kính hội tụ', 'Chương II. Ánh sáng',
+        ['Đo được tiêu cự của thấu kính hội tụ bằng dụng cụ thực hành.'],
+        'Chiếu chùm sáng song song với trục chính của thấu kính hội tụ thì chùm tia ló đi qua tiêu điểm chính. Có thể đo tiêu cự bằng cách đo trực tiếp khoảng cách OF không? Cách đo này có nhược điểm gì?');
+      page('Phần 1. Chuẩn bị', 'nguyen-ly', 'Cơ sở của phương pháp Silbermann', b => {
+        b.appendChild(el('p', 'lead', 'Đặt vật AB cách thấu kính hội tụ d = 2f. Theo dõi từng bước chứng minh.'));
+        stepper(b, [['1. Dựng ảnh', 'Vẽ tia từ B song song trục chính (ló qua F′) và tia qua quang tâm O. Giao điểm là B′.'], ['2. Hai tam giác bằng nhau', 'Tam giác ABO và A′B′O đồng dạng; với d = 2f, các tam giác ở hai bên tiêu điểm bằng nhau nên A′O = AO.'], ['3. Kết luận', 'd′ = d = 2f và ảnh cao bằng vật (h′ = h), ngược chiều.'], ['4. Công thức', 'd + d′ = 4f ⇒ <b>f = (d + d′)/4</b>.']], 'nguyen-ly');
+        b.appendChild(el('div', 'note', 'Kiểm tra bằng mô phỏng: chọn f = 8 cm, đặt d = 16 cm. Ảnh có cách thấu kính 16 cm và cao bằng vật không?'));
+        lensSim(b, { f: 8, d: 16 });
+      });
+      page('Phần 2. Tiến hành', 'cac-buoc', 'Các bước tiến hành', b => {
+        b.appendChild(el('p', 'lead', 'Sắp xếp các bước tiến hành thí nghiệm theo đúng thứ tự.'));
+        orderTask(b, ['Đo chiều cao h của vật hình chữ F', 'Đặt vật và màn chắn sát thấu kính', 'Dịch đồng thời vật và màn ra xa thấu kính những khoảng bằng nhau', 'Khi ảnh rõ nét, ghi d, d′ và đo chiều cao h′ của ảnh', 'Lặp lại thêm hai lần, tính giá trị trung bình'], 'cac-buoc', '');
+      });
+      page('Phần 3. Kết quả', 'bao-cao', 'Xử lí số liệu (Bảng 9.1)', b => {
+        b.appendChild(el('p', 'lead', 'Nhập số liệu ba lần đo của nhóm em (đơn vị mm). Trang sẽ tự tính giá trị trung bình và tiêu cự.'));
+        const tbl = el('div', 'card'); const tb = el('table', 'datatbl');
+        tb.innerHTML = '<thead><tr><th>Lần đo</th><th>d (mm)</th><th>d′ (mm)</th><th>h (mm)</th><th>h′ (mm)</th></tr></thead>';
+        const body = el('tbody'); const inputs = [];
+        const sample = [[198, 202, 20, 20], [200, 201, 20, 19], [199, 200, 20, 20]];
+        for (let i = 0; i < 3; i++) { const tr = el('tr'); tr.appendChild(el('td', '', String(i + 1))); const rowIn = [];
+          for (let j = 0; j < 4; j++) { const td = el('td'); const inp = el('input'); inp.type = 'number'; inp.inputMode = 'decimal'; inp.value = sample[i][j]; inp.setAttribute('aria-label', `Lần ${i + 1}, cột ${j + 1}`); inp.oninput = calc; td.appendChild(inp); tr.appendChild(td); rowIn.push(inp); }
+          inputs.push(rowIn); body.appendChild(tr); }
+        const avg = el('tr'); avg.innerHTML = '<td><b>TB</b></td><td></td><td></td><td></td><td></td>'; body.appendChild(avg); tb.appendChild(body);
+        const wrap = el('div', 'tblwrap'); wrap.appendChild(tb); tbl.appendChild(wrap);
+        const out = el('div', 'note'); tbl.appendChild(out); b.appendChild(tbl);
+        function calc() {
+          const m = [0, 1, 2, 3].map(j => inputs.reduce((s, r) => s + (+r[j].value || 0), 0) / 3);
+          [...avg.children].slice(1).forEach((td, j) => td.innerHTML = '<b>' + fmt(m[j], 1) + '</b>');
+          out.innerHTML = `Tiêu cự trung bình: f = (d̄ + d̄′)/4 = (${fmt(m[0], 1)} + ${fmt(m[1], 1)})/4 ≈ <b>${fmt((m[0] + m[1]) / 4, 1)} mm</b>. ` + (Math.abs(m[2] - m[3]) <= 0.1 * m[2] ? 'Chiều cao ảnh xấp xỉ chiều cao vật: phù hợp lí thuyết.' : 'Chiều cao ảnh khác nhiều so với vật: em kiểm tra lại vị trí ảnh rõ nét.');
+          complete('bao-cao');
+        }
+        calc();
+        b.appendChild(el('p', '', '<i>Số liệu có sẵn chỉ là ví dụ; em thay bằng số liệu nhóm em đo được, rồi so sánh f với số ghi trên thấu kính.</i>'));
+        infoCard(b, 'Mở rộng: phương pháp Bessel', '<p>Giữ cố định vật và màn cách nhau L, dịch thấu kính tìm hai vị trí cho ảnh rõ nét cách nhau l. Khi đó <b>f = (L² − l²) / 4L</b>.</p>');
+      });
+      testPage(page);
+      sumPage(page, [['Phương pháp Silbermann', 'Dịch đồng thời vật và màn ra xa thấu kính những khoảng bằng nhau đến khi ảnh rõ nét, cao bằng vật.'], ['Công thức', 'Khi đó d = d′ = 2f nên f = (d + d′)/4; lấy trung bình 3 lần đo.']], 'Đo được tiêu cự của thấu kính hội tụ theo những phương pháp khác nhau.');
+    } },
+
+  { id: 'bai10', so: 10, chuDe: 'Chương II. Ánh sáng', ten: 'Kính lúp. Bài tập thấu kính', moTa: 'Cấu tạo, cách dùng kính lúp; vẽ sơ đồ tạo ảnh theo tỉ lệ.', key: 'b10-el',
+    final: [
+      { q: 'Kính lúp là…', o: ['thấu kính phân kì', 'gương cầu lõm', 'thấu kính hội tụ có tiêu cự ngắn', 'lăng kính'], a: 2, g: 'Kính lúp là thấu kính hội tụ có tiêu cự nhỏ (f < 25 cm), dùng quan sát vật nhỏ.' },
+      { q: 'Số bội giác của kính lúp được tính theo quy ước nào (f đo bằng cm)?', o: ['G = 25/f', 'G = f/25', 'G = 25·f', 'G = f − 25'], a: 0, g: 'G = 25/f.' },
+      { q: 'Kính lúp có ghi 5x thì tiêu cự là…', o: ['25 cm', '5 cm', '125 cm', '0,2 cm'], a: 1, g: 'f = 25/G = 25/5 = 5 cm.' },
+      { q: 'Muốn quan sát vật qua kính lúp, phải đặt vật…', o: ['ngoài khoảng 2f', 'tại đúng 2f', 'rất xa kính', 'trong khoảng tiêu cự của kính'], a: 3, g: 'Vật đặt trong khoảng từ quang tâm O đến tiêu điểm F cho ảnh ảo, lớn hơn vật.' },
+      { q: 'Ảnh của vật quan sát qua kính lúp là…', o: ['ảnh ảo, cùng chiều, lớn hơn vật', 'ảnh thật, ngược chiều', 'ảnh ảo, nhỏ hơn vật', 'ảnh thật, lớn hơn vật'], a: 0, g: 'Vật trong khoảng tiêu cự của thấu kính hội tụ cho ảnh ảo, cùng chiều, lớn hơn vật.' },
+      { q: 'Vật AB cao 2 cm, cách thấu kính hội tụ 7,5 cm, f = 5 cm (Hình 10.6). Ảnh cách thấu kính bao nhiêu?', o: ['5 cm', '7,5 cm', '15 cm', '2,5 cm'], a: 2, g: 'Vẽ theo tỉ lệ (hoặc tính): d′ = 7,5·5/(7,5 − 5) = 15 cm; ảnh thật, ngược chiều, cao 4 cm.' },
+      { q: 'Vật cao 3 cm đặt cách thấu kính hội tụ (f = 5 cm) một khoảng d = 2f. Chiều cao ảnh là…', o: ['1,5 cm', '6 cm', '5 cm', '3 cm'], a: 3, g: 'd = 2f ⇒ d′ = 2f = 10 cm, ảnh cao bằng vật: h′ = 3 cm.' }],
+    build: function (page) {
+      introPage(page, 10, 'Kính lúp. Bài tập thấu kính', 'Chương II. Ánh sáng',
+        ['Mô tả được cấu tạo và sử dụng được kính lúp.', 'Vẽ được sơ đồ tỉ lệ để giải các bài tập đơn giản về thấu kính hội tụ.'],
+        'Tại sao người thợ sửa đồng hồ lại phải sử dụng kính lúp khi làm việc?');
+      page('Phần 1. Kính lúp', 'cau-tao', 'Cấu tạo và số bội giác', b => {
+        infoCard(b, 'Kính lúp', '<p>Là dụng cụ quang bổ trợ cho mắt để quan sát vật nhỏ: một <b>thấu kính hội tụ có tiêu cự nhỏ</b> (cỡ vài cm), có khung, tay cầm hoặc đeo vào mắt. Số bội giác ghi trên kính: 2x, 5x, 10x…, tính theo quy ước <b>G = 25/f</b> (f tính bằng cm). G càng lớn thì quan sát được vật càng nhỏ.</p>');
+        const c = el('div', 'card'); c.appendChild(el('h3', '', 'Máy tính số bội giác')); const out = el('p', 'price eq');
+        c.append(slider('Tiêu cự f', 1, 20, 0.5, 5, 'cm', v => out.innerHTML = `G = 25 / ${String(v).replace('.', ',')} = ${fmt(25 / v, 1)}x`), out); b.appendChild(c);
+        const q = el('div', 'card task'); q.appendChild(el('p', 'tlabel', 'Câu hỏi'));
+        mcq(q, { q: 'Vì sao thợ sửa đồng hồ dùng kính lúp?', o: ['Để nhìn xa hơn', 'Để tạo ảnh ảo lớn hơn vật, nhìn rõ các chi tiết rất nhỏ', 'Để tạo ảnh thật trên màn', 'Để làm sáng đồng hồ'], a: 1, g: 'Các chi tiết đồng hồ rất nhỏ; kính lúp tạo ảnh ảo cùng chiều, lớn hơn vật giúp mắt nhìn rõ. Ứng dụng khác: đọc chữ nhỏ, xem linh kiện điện tử, quan sát mẫu vật…' }, () => complete('cau-tao'));
+        b.appendChild(q);
+      });
+      page('Phần 1. Kính lúp', 'quan-sat', 'Cách quan sát vật nhỏ qua kính lúp', b => {
+        b.appendChild(el('p', 'lead', 'Đặt vật trong khoảng tiêu cự (d < f) để có ảnh ảo lớn hơn vật. Kéo thanh d trong mô phỏng: ảnh lớn dần khi vật tiến gần tiêu điểm.'));
+        lensSim(b, { f: 6, d: 4, onDraw: s => { if (s.type === 'ht' && s.d < s.f) complete('quan-sat'); } });
+        b.appendChild(el('div', 'note', 'Cách dùng: đặt kính sát vật rồi từ từ đưa kính ra xa đến khi nhìn rõ vật. Khi d = f, ảnh ở rất xa (ngắm chừng ở vô cực); số bội giác ghi trên kính ứng với trường hợp này.'));
+      });
+      page('Phần 2. Bài tập thấu kính', 'ti-le', 'Vẽ sơ đồ tạo ảnh theo tỉ lệ', b => {
+        b.appendChild(el('p', 'lead', 'Các bước vẽ sơ đồ theo tỉ lệ xích:'));
+        orderTask(b, ['Chọn tỉ lệ xích thích hợp', 'Xác định f, d, h theo cùng tỉ lệ xích đã chọn', 'Vẽ sơ đồ tạo ảnh của vật', 'Đo d′, h′ trên hình rồi đổi ra kích thước thật'], 'ti-le', '');
+        const c = el('div', 'card'); mcq(c, { q: 'Bài tập Hình 10.6: AB = 2 cm, d = 7,5 cm, f = 5 cm (1 ô = 1 cm). Ảnh A′B′ có đặc điểm gì?', o: ['Ảnh ảo, cùng chiều, cách thấu kính 15 cm', 'Ảnh thật, ngược chiều, cách thấu kính 15 cm, cao 4 cm', 'Ảnh thật, cùng chiều, cao 2 cm', 'Ảnh ảo, cao 1 cm'], a: 1, g: 'Vẽ đúng tỉ lệ thấy A′ cách thấu kính 15 ô = 15 cm, A′B′ = 4 ô = 4 cm, ảnh thật ngược chiều.' }); b.appendChild(c);
+        b.appendChild(el('p', 'lead', 'Kiểm tra lại bằng mô phỏng (vật cao 4 cm trong mô phỏng): f = 5 cm, d = 7,5 cm.'));
+        lensSim(b, { f: 5, d: 7.5 });
+        const c2 = el('div', 'card task'); c2.appendChild(el('p', 'tlabel', 'Bài tập SGK'));
+        mcq(c2, { q: 'Vật AB cao h = 3 cm, đặt trước thấu kính hội tụ f = 5 cm, d = 2f. Tính h′ và d′.', o: ['h′ = 6 cm, d′ = 5 cm', 'h′ = 1,5 cm, d′ = 20 cm', 'h′ = 3 cm, d′ = 10 cm', 'h′ = 3 cm, d′ = 5 cm'], a: 2, g: 'Với d = 2f, hai tam giác đồng dạng bằng nhau: d′ = d = 10 cm, h′ = h = 3 cm.' }, () => complete('ti-le'));
+        b.appendChild(c2);
+      });
+      testPage(page);
+      sumPage(page, [['Kính lúp', 'Thấu kính hội tụ có tiêu cự ngắn (f < 25 cm), G = 25/f.'], ['Cách dùng', 'Đặt vật trong khoảng tiêu cự để có ảnh ảo lớn hơn vật, nằm trong khoảng nhìn rõ của mắt.'], ['Vẽ theo tỉ lệ', 'Chọn tỉ lệ xích → xác định f, d, h → vẽ ảnh → đo và đổi ra kích thước thật.']], 'Sử dụng kính lúp quan sát vật nhỏ; vẽ ảnh qua thấu kính hội tụ đúng tỉ lệ để giải bài tập.');
+    } },
+  { id: 'bai11', so: 11, chuDe: 'Chương III. Điện', ten: 'Điện trở. Định luật Ohm', moTa: 'Điện trở, sự phụ thuộc của I vào U, định luật Ohm, công thức R = ρl/S.', key: 'b11-el',
+    final: [
+      { q: 'Điện trở có tác dụng gì đối với dòng điện?', o: ['Làm tăng dòng điện', 'Cản trở dòng điện', 'Tạo ra dòng điện', 'Đổi chiều dòng điện'], a: 1, g: 'Điện trở có tác dụng cản trở dòng điện; điện trở khác nhau cản trở dòng điện khác nhau.' },
+      { q: 'Đồ thị biểu diễn sự phụ thuộc của I vào U đối với một dây dẫn là…', o: ['đường cong', 'đường thẳng không qua gốc tọa độ', 'đường thẳng đi qua gốc tọa độ', 'đường nằm ngang'], a: 2, g: 'I tỉ lệ thuận với U nên đồ thị là đường thẳng qua gốc tọa độ.' },
+      { q: 'Biểu thức của định luật Ohm là…', o: ['I = U/R', 'I = R/U', 'I = U·R', 'U = I/R'], a: 0, g: 'I = U/R: cường độ dòng điện tỉ lệ thuận với U, tỉ lệ nghịch với R.' },
+      { q: 'Bóng đèn có điện trở 12 Ω, dòng điện qua đèn 0,5 A. Hiệu điện thế giữa hai đầu đèn là…', o: ['24 V', '0,04 V', '12,5 V', '6 V'], a: 3, g: 'U = I·R = 0,5 · 12 = 6 V.' },
+      { q: 'U = 2 V thì I = 0,4 A. Muốn I = 0,8 A thì hiệu điện thế phải bằng…', o: ['4 V', '1 V', '0,8 V', '8 V'], a: 0, g: 'R = 2/0,4 = 5 Ω ⇒ U = 0,8·5 = 4 V (I tăng gấp đôi thì U tăng gấp đôi).' },
+      { q: '1 kΩ bằng bao nhiêu ôm?', o: ['10 Ω', '100 Ω', '1 000 Ω', '1 000 000 Ω'], a: 2, g: '1 kΩ = 1 000 Ω; 1 MΩ = 1 000 000 Ω; 1 mΩ = 0,001 Ω.' },
+      { q: 'Điện trở của dây dẫn được tính bằng công thức…', o: ['R = ρS/l', 'R = ρl/S', 'R = lS/ρ', 'R = ρlS'], a: 1, g: 'R tỉ lệ thuận với chiều dài l, tỉ lệ nghịch với tiết diện S, phụ thuộc điện trở suất ρ.' },
+      { q: 'Dây đồng dài 150 m, tiết diện 2 mm², ρ = 1,7.10⁻⁸ Ωm. Điện trở của dây là…', o: ['1,275 Ω', '12,75 Ω', '0,1275 Ω', '127,5 Ω'], a: 0, g: 'R = 1,7.10⁻⁸ · 150 / (2.10⁻⁶) = 1,275 Ω.' }],
+    build: function (page) {
+      introPage(page, 11, 'Điện trở. Định luật Ohm', 'Chương III. Điện',
+        ['Nêu được điện trở có tác dụng cản trở dòng điện trong mạch.', 'Phát biểu được định luật Ohm.', 'Nêu được và sử dụng công thức tính điện trở của đoạn dây dẫn R = ρl/S.'],
+        'Thay lần lượt các điện trở khác nhau trong mạch điện thì số chỉ ampe kế có thay đổi không? Thay nguồn điện khác nhau thì cường độ dòng điện qua điện trở có thay đổi không?');
+      page('Phần 1. Điện trở', 'dien-tro', 'Tính chất của điện trở', b => {
+        b.appendChild(el('p', 'lead', 'Thí nghiệm Hình 11.1: lần lượt mắc R₁, R₂, R₃ nối tiếp với bóng đèn. Độ sáng của đèn khác nhau.'));
+        const c = el('div', 'card'); mcq(c, { q: 'Khi thay điện trở trong mạch thì độ sáng của đèn và số chỉ ampe kế thay đổi. Điều đó cho thấy gì?', o: ['Điện trở tạo ra dòng điện', 'Điện trở có tác dụng cản trở dòng điện; điện trở khác nhau cản trở khác nhau', 'Điện trở không ảnh hưởng đến dòng điện', 'Bóng đèn bị hỏng'], a: 1, g: 'Điện trở có tác dụng cản trở dòng điện. Vì vậy thay điện trở khác thì số chỉ ampe kế thay đổi.' }, () => complete('dien-tro')); b.appendChild(c);
+      });
+      page('Phần 2. Định luật Ohm', 'ohm', 'Thí nghiệm ảo: I phụ thuộc U và R', b => {
+        b.appendChild(el('p', 'lead', 'Kéo thanh trượt hiệu điện thế U và điện trở R. Quan sát số chỉ ampe kế và đồ thị I – U.'));
+        const st = { U: 6, R: 6 }; const c = el('div', 'card sim-card');
+        const out = el('p', 'price eq'); const svg = svgEl('svg', { viewBox: '0 0 420 260', class: 'simsvg', role: 'img', 'aria-label': 'Đồ thị I theo U' });
+        c.append(slider('Hiệu điện thế U', 0, 12, 0.5, 6, 'V', v => { st.U = v; draw(); }), slider('Điện trở R', 2, 24, 1, 6, 'Ω', v => { st.R = v; draw(); }), out, svg); b.appendChild(c);
+        const seen = new Set();
+        function draw() {
+          const I = st.U / st.R; out.innerHTML = `I = U / R = ${fmt(st.U, 1)} / ${st.R} ≈ <b>${fmt(I, 2)} A</b>`;
+          svg.innerHTML = ''; const x0 = 50, y0 = 220, W = 340, H = 190, Imax = 6;
+          const X = u => x0 + u / 12 * W, Y = i => y0 - Math.min(i, Imax) / Imax * H;
+          for (let u = 0; u <= 12; u += 3) { svg.append(svgEl('line', { x1: X(u), y1: y0, x2: X(u), y2: y0 - H, stroke: '#E2D9C6' })); const t = svgEl('text', { x: X(u), y: y0 + 18, 'font-size': 12, 'text-anchor': 'middle', fill: '#5F6B78' }); t.textContent = u; svg.append(t); }
+          for (let i = 0; i <= Imax; i += 1) { svg.append(svgEl('line', { x1: x0, y1: Y(i), x2: x0 + W, y2: Y(i), stroke: '#E2D9C6' })); const t = svgEl('text', { x: x0 - 8, y: Y(i) + 4, 'font-size': 12, 'text-anchor': 'end', fill: '#5F6B78' }); t.textContent = i; svg.append(t); }
+          svg.append(svgEl('line', { x1: x0, y1: y0, x2: x0 + W, y2: y0, stroke: '#13324A', 'stroke-width': 2 }), svgEl('line', { x1: x0, y1: y0, x2: x0, y2: y0 - H, stroke: '#13324A', 'stroke-width': 2 }));
+          const uEnd = Math.min(12, Imax * st.R); svg.append(svgEl('line', { x1: X(0), y1: Y(0), x2: X(uEnd), y2: Y(uEnd / st.R), stroke: '#E8892B', 'stroke-width': 3 }));
+          if (I <= Imax) svg.append(svgEl('circle', { cx: X(st.U), cy: Y(I), r: 6, fill: '#D2462D' }));
+          const tu = svgEl('text', { x: x0 + W, y: y0 + 36, 'font-size': 13, 'text-anchor': 'end', fill: '#13324A', 'font-weight': 700 }); tu.textContent = 'U (V)'; svg.append(tu);
+          const ti = svgEl('text', { x: x0 + 4, y: y0 - H - 6, 'font-size': 13, fill: '#13324A', 'font-weight': 700 }); ti.textContent = 'I (A)'; svg.append(ti);
+          seen.add(st.U + '|' + st.R); if (seen.size >= 5) complete('ohm');
+        }
+        draw();
+        const q = el('div', 'card task'); q.appendChild(el('p', 'tlabel', 'Bảng 11.2'));
+        mcq(q, { q: 'Bảng 11.2: U = 3 V thì I = 0,5 A; U = 9 V thì I = 1,5 A. Dự đoán I khi U = 6 V và U = 12 V.', o: ['0,75 A và 1,0 A', '1,0 A và 2,0 A', '1,0 A và 3,0 A', '2,0 A và 4,0 A'], a: 1, g: 'I tỉ lệ thuận với U; thương số U/I = 6 không đổi ⇒ I = 1,0 A và 2,0 A.' });
+        b.appendChild(q);
+      });
+      page('Phần 2. Định luật Ohm', 'dinh-luat', 'Định luật Ohm', b => {
+        infoCard(b, 'Định luật Ohm', '<p>Cường độ dòng điện chạy qua một đoạn dây dẫn tỉ lệ thuận với hiệu điện thế giữa hai đầu đoạn dây và tỉ lệ nghịch với điện trở của nó: <b>I = U / R</b>.</p><p>R = U/I là điện trở. Đơn vị: ôm (Ω), 1 Ω = 1 V / 1 A; 1 mΩ = 0,001 Ω; 1 kΩ = 1 000 Ω; 1 MΩ = 1 000 000 Ω.</p>');
+        mcqSet(b, [{ q: 'Bóng đèn xe máy lúc sáng có điện trở 12 Ω, dòng điện qua dây tóc 0,5 A. Hiệu điện thế giữa hai đầu dây tóc?', o: ['24 V', '6 V', '12,5 V', '0,04 V'], a: 1, g: 'U = I·R = 0,5 · 12 = 6 V.' },
+          { q: 'U = 2 V thì I = 0,4 A. Hiệu điện thế phải bằng bao nhiêu để I = 0,8 A?', o: ['1 V', '2,4 V', '4 V', '8 V'], a: 2, g: 'R = 2/0,4 = 5 Ω ⇒ U = 0,8 · 5 = 4 V.' }], 'dinh-luat');
+      });
+      page('Phần 3. Điện trở dây dẫn', 'rho', 'Điện trở phụ thuộc kích thước và chất làm dây', b => {
+        infoCard(b, 'Công thức', '<p><b>R = ρ · l / S</b>: R (Ω), ρ điện trở suất (Ωm), l chiều dài (m), S tiết diện (m²). Bảng 11.3: bạc 1,47.10⁻⁸; đồng 1,70.10⁻⁸; nhôm 2,80.10⁻⁸; nicrom 110.10⁻⁸ Ωm.</p>');
+        const st = { rho: 1.7e-8, l: 150, S: 2 }; const c = el('div', 'card sim-card'); const out = el('p', 'price eq');
+        const r = el('div', 'simrow'); r.append(el('span', 'simlab', 'Chất làm dây:'), segPick([['Bạc', 1.47e-8], ['Đồng', 1.7e-8], ['Nhôm', 2.8e-8], ['Nicrom', 110e-8]], 1.7e-8, v => { st.rho = v; draw(); }));
+        c.append(r, slider('Chiều dài l', 1, 300, 1, 150, 'm', v => { st.l = v; draw(); }), slider('Tiết diện S', 0.5, 5, 0.5, 2, 'mm²', v => { st.S = v; draw(); }), out); b.appendChild(c);
+        function draw() { out.innerHTML = `R = ρl/S = ${fmt(st.rho * 1e8, 2)}.10⁻⁸ × ${st.l} / (${fmt(st.S, 1)}.10⁻⁶) ≈ <b>${fmt(st.rho * st.l / (st.S * 1e-6), 3)} Ω</b>`; }
+        draw();
+        mcqSet(b, [{ q: 'Hai dây đồng: dây 1 dài bằng nửa dây 2 nhưng tiết diện gấp đôi dây 2. So sánh điện trở.', o: ['R₁ = R₂', 'R₁ = 2R₂', 'R₁ = R₂/2', 'R₁ = R₂/4'], a: 3, g: 'l giảm 2 lần làm R giảm 2 lần; S tăng 2 lần làm R giảm thêm 2 lần ⇒ R₁ = R₂/4.' },
+          { q: 'Vì sao dây dẫn điện trong gia đình thường làm bằng đồng?', o: ['Vì đồng có điện trở suất nhỏ, dẫn điện tốt', 'Vì đồng có điện trở suất lớn', 'Vì đồng không dẫn điện', 'Vì đồng nặng hơn nhôm'], a: 0, g: 'Đồng có điện trở suất nhỏ (chỉ sau bạc) nên ít hao phí. Dây cao thế dùng nhôm vì nhẹ và rẻ hơn.' }], 'rho');
+      });
+      page('Phần 3. Điện trở dây dẫn', 'vong-mau', 'Đọc trị số điện trở theo vòng màu', b => {
+        b.appendChild(el('p', 'lead', 'Chọn màu 4 vòng (Bảng 11.4). Giá trị = [vòng 1][vòng 2] × 10^(vòng 3) ± [vòng 4]. Thử với ví dụ Hình 11.4: vàng – tím – đen – vàng ánh kim.'));
+        const C = [['Đen', '#111111', 0], ['Nâu', '#7B4A2A', 1], ['Đỏ', '#D93A2B', 2], ['Da cam', '#EE8A2A', 3], ['Vàng', '#F2D02F', 4], ['Lục', '#2E9E4A', 5], ['Lam', '#2F6FD6', 6], ['Tím', '#8B3FC2', 7], ['Xám', '#9AA0A6', 8], ['Trắng', '#FFFFFF', 9]];
+        const MUL = C.slice(0, 9).map(([n, c, v]) => [n, c, 10 ** v]).concat([['Vàng ánh kim', '#C9A23A', 0.1], ['Bạc', '#C0C0C0', 0.01]]);
+        const TOL = [['Vàng ánh kim', '#C9A23A', 5], ['Bạc', '#C0C0C0', 10]];
+        const st = [4, 7, 0, 0]; const c = el('div', 'card sim-card'); const res = el('div', 'resistor'); const out = el('p', 'price eq');
+        const mk = (label, list, k) => { const s = el('select'); s.setAttribute('aria-label', label); list.forEach(([n], i) => { const o = el('option', '', n); o.value = i; s.appendChild(o); }); s.value = st[k]; s.onchange = () => { st[k] = +s.value; draw(); }; const w = el('div', 'simrow'); w.append(el('span', 'simlab', label + ':'), s); return w; };
+        c.append(res, mk('Vòng 1', C, 0), mk('Vòng 2', C, 1), mk('Vòng 3 (nhân)', MUL, 2), mk('Vòng 4 (sai số)', TOL, 3), out); b.appendChild(c);
+        const unit = v => v >= 1e6 ? fmt(v / 1e6, 2) + ' MΩ' : v >= 1e3 ? fmt(v / 1e3, 2) + ' kΩ' : fmt(v, 2) + ' Ω';
+        function draw() {
+          const cols = [C[st[0]][1], C[st[1]][1], MUL[st[2]][1], TOL[st[3]][1]];
+          res.innerHTML = '<span class="lead-wire"></span><span class="body">' + cols.map(x => `<i style="background:${x}"></i>`).join('') + '</span><span class="lead-wire"></span>';
+          const v = (C[st[0]][2] * 10 + C[st[1]][2]) * MUL[st[2]][2];
+          out.innerHTML = `R = ${C[st[0]][2]}${C[st[1]][2]} × ${MUL[st[2]][2] >= 1 ? '10' + '⁰¹²³⁴⁵⁶⁷⁸'[Math.round(Math.log10(MUL[st[2]][2]))] : fmt(MUL[st[2]][2], 2)} = <b>${unit(v)} ± ${TOL[st[3]][2]}%</b>`;
+          if (st.join() !== '4,7,0,0') complete('vong-mau');
+        }
+        draw();
+      });
+      testPage(page);
+      sumPage(page, [['Điện trở', 'R = U/I, đặc trưng cho sự cản trở dòng điện của đoạn dây dẫn. Đơn vị: ôm (Ω).'], ['Định luật Ohm', 'I = U/R: I tỉ lệ thuận với U, tỉ lệ nghịch với R.'], ['Đồ thị I – U', 'Đường thẳng đi qua gốc tọa độ.'], ['Điện trở dây dẫn', 'R = ρl/S: tỉ lệ thuận với chiều dài, tỉ lệ nghịch với tiết diện, phụ thuộc chất làm dây.']], 'Giải thích vì sao dây điện trong nhà làm bằng đồng, dây cao thế làm bằng nhôm; giải thích nguyên nhân và cách phòng hỏa hoạn do chập điện.');
+    } },
+
+  { id: 'bai12', so: 12, chuDe: 'Chương III. Điện', ten: 'Đoạn mạch nối tiếp, song song', moTa: 'Cường độ dòng điện, điện trở tương đương của đoạn mạch nối tiếp, song song.', key: 'b12-el',
+    final: [
+      { q: 'Trong đoạn mạch gồm R₁, R₂ mắc nối tiếp, cường độ dòng điện…', o: ['I = I₁ + I₂', 'I = I₁ = I₂', 'I₁ > I₂', 'I = I₁ − I₂'], a: 1, g: 'Đoạn mạch nối tiếp: cường độ dòng điện như nhau tại mọi điểm.' },
+      { q: 'Điện trở tương đương của đoạn mạch gồm R₁, R₂ mắc nối tiếp là…', o: ['R₁ + R₂', 'R₁ · R₂', 'R₁R₂/(R₁ + R₂)', 'R₁ − R₂'], a: 0, g: 'R_tđ = R₁ + R₂.' },
+      { q: 'Trong đoạn mạch song song, cường độ dòng điện mạch chính…', o: ['bằng cường độ mỗi nhánh', 'nhỏ hơn mỗi nhánh', 'bằng tổng cường độ các mạch nhánh', 'bằng 0'], a: 2, g: 'I = I₁ + I₂.' },
+      { q: 'Công thức điện trở tương đương của hai điện trở mắc song song là…', o: ['R_tđ = R₁ + R₂', 'R_tđ = R₁ − R₂', 'R_tđ = R₁ · R₂', '1/R_tđ = 1/R₁ + 1/R₂'], a: 3, g: '1/R_tđ = 1/R₁ + 1/R₂.' },
+      { q: 'R₁ = 2 Ω, R₂ = 3 Ω mắc nối tiếp, dòng điện qua R₁ là 1 A. Hiệu điện thế hai đầu đoạn mạch là…', o: ['5 V', '1 V', '6 V', '2 V'], a: 0, g: 'R_tđ = 5 Ω; U = I·R_tđ = 1·5 = 5 V (U₁ = 2 V, U₂ = 3 V).' },
+      { q: 'Hai điện trở 20 Ω và 40 Ω mắc song song. Điện trở tương đương là…', o: ['60 Ω', '30 Ω', '≈ 13,3 Ω', '20 Ω'], a: 2, g: '1/R = 1/20 + 1/40 = 3/40 ⇒ R = 40/3 ≈ 13,3 Ω.' },
+      { q: 'Hai điện trở 20 Ω và 40 Ω mắc song song vào hiệu điện thế 24 V. Cường độ dòng điện mạch chính là…', o: ['0,4 A', '1,8 A', '1,2 A', '0,6 A'], a: 1, g: 'I₁ = 24/20 = 1,2 A; I₂ = 24/40 = 0,6 A; I = 1,8 A.' },
+      { q: 'Vì sao các thiết bị điện trong gia đình được mắc song song?', o: ['Để tiết kiệm dây', 'Để dòng điện qua các thiết bị bằng nhau', 'Để điện trở tương đương lớn hơn', 'Để mỗi thiết bị đều dùng đúng hiệu điện thế 220 V và hoạt động độc lập'], a: 3, g: 'Mắc song song thì các thiết bị có cùng hiệu điện thế định mức, một thiết bị hỏng không làm các thiết bị khác ngừng hoạt động.' }],
+    build: function (page) {
+      introPage(page, 12, 'Đoạn mạch nối tiếp, song song', 'Chương III. Điện',
+        ['Rút ra được: đoạn mạch nối tiếp có cường độ dòng điện như nhau tại mọi điểm; đoạn mạch song song có tổng cường độ các nhánh bằng cường độ mạch chính.', 'Nêu và sử dụng được công thức điện trở tương đương của đoạn mạch nối tiếp, song song.', 'Tính được cường độ dòng điện trong một số trường hợp đơn giản.'],
+        'Có hai bóng đèn, dây nối và nguồn điện. Mắc các đèn như thế nào để khi một đèn bị cháy thì đèn kia vẫn sáng?');
+      page('Phần 1. Nối tiếp', 'noi-tiep', 'Đoạn mạch nối tiếp', b => {
+        infoCard(b, 'Đặc điểm', '<ul class="clean"><li>Cường độ dòng điện: <b>I = I₁ = I₂ = … = Iₙ</b>.</li><li>Điện trở tương đương: <b>R<sub>tđ</sub> = R₁ + R₂ + … + Rₙ</b> (lớn hơn mỗi điện trở thành phần).</li><li>Hiệu điện thế: U = U₁ + U₂ + … + Uₙ.</li></ul>');
+        const c = el('div', 'card'); mcq(c, { q: 'Bảng 12.1: với R₁ và R₂ nối tiếp, hai ampe kế A₁, A₂ đều chỉ 0,75 A. Kết luận gì?', o: ['Dòng điện giảm dần qua mỗi điện trở', 'Cường độ dòng điện như nhau tại mọi điểm', 'A₂ bị hỏng', 'Dòng qua R₁ lớn hơn'], a: 1, g: 'Trong đoạn mạch nối tiếp, I = I₁ = I₂.' }); b.appendChild(c);
+        mcqSet(b, [{ q: 'R₁ = 2 Ω, R₂ = 3 Ω mắc nối tiếp. Điện trở tương đương?', o: ['1,2 Ω', '5 Ω', '6 Ω', '1 Ω'], a: 1, g: 'R_tđ = 2 + 3 = 5 Ω.' }, { q: 'Dòng qua R₁ là 1 A. Hiệu điện thế hai đầu mỗi điện trở?', o: ['U₁ = 3 V, U₂ = 2 V', 'U₁ = U₂ = 1 V', 'U₁ = 2 V, U₂ = 3 V', 'U₁ = U₂ = 5 V'], a: 2, g: 'I = 1 A qua cả hai: U₁ = 1·2 = 2 V; U₂ = 1·3 = 3 V; U = 5 V.' }], 'noi-tiep');
+      });
+      page('Phần 2. Song song', 'song-song', 'Đoạn mạch song song', b => {
+        infoCard(b, 'Đặc điểm', '<ul class="clean"><li>Cường độ mạch chính: <b>I = I₁ + I₂ + … + Iₙ</b>.</li><li>Điện trở tương đương: <b>1/R<sub>tđ</sub> = 1/R₁ + 1/R₂ + … + 1/Rₙ</b> (nhỏ hơn mỗi điện trở thành phần).</li><li>Hiệu điện thế: U = U₁ = U₂ = … = Uₙ.</li></ul>');
+        const c = el('div', 'card'); mcq(c, { q: 'Bảng 12.2: A₁ chỉ 1,60 A; A₂ chỉ 0,60 A; A₃ chỉ 1,00 A. Nhận xét gì?', o: ['I = I₁ + I₂', 'I = I₁ = I₂', 'I = I₁ − I₂', 'Không có quy luật'], a: 0, g: '1,60 = 0,60 + 1,00: cường độ mạch chính bằng tổng cường độ các mạch nhánh.' }); b.appendChild(c);
+        mcqSet(b, [{ q: 'Hai điện trở 20 Ω và 40 Ω mắc song song vào U = 24 V. Điện trở tương đương?', o: ['60 Ω', '≈ 13,3 Ω', '30 Ω', '800 Ω'], a: 1, g: 'R_tđ = 20·40/(20 + 40) = 40/3 ≈ 13,3 Ω.' }, { q: 'Cường độ dòng điện mạch chính?', o: ['0,4 A', '1,2 A', '1,8 A', '3,6 A'], a: 2, g: 'I = U/R_tđ = 24/(40/3) = 1,8 A (= 1,2 A + 0,6 A).' }], 'song-song');
+      });
+      page('Phần 3. Luyện tập', 'mach-ao', 'Mạch điện ảo: so sánh nối tiếp và song song', b => {
+        b.appendChild(el('p', 'lead', 'Chọn cách mắc, thay đổi R₁, R₂ và U. Quan sát cường độ dòng điện và hiệu điện thế.'));
+        const st = { m: 'nt', R1: 10, R2: 6, U: 12 }; const c = el('div', 'card sim-card'); const out = el('div', 'note'); const diag = el('div', 'circ');
+        const r = el('div', 'simrow'); r.append(el('span', 'simlab', 'Cách mắc:'), segPick([['Nối tiếp', 'nt'], ['Song song', 'ss']], 'nt', v => { st.m = v; draw(); }));
+        c.append(r, slider('R₁', 1, 30, 1, 10, 'Ω', v => { st.R1 = v; draw(); }), slider('R₂', 1, 30, 1, 6, 'Ω', v => { st.R2 = v; draw(); }), slider('U', 1, 24, 1, 12, 'V', v => { st.U = v; draw(); }), diag, out); b.appendChild(c);
+        const seen = new Set();
+        function draw() {
+          const { R1, R2, U } = st;
+          if (st.m === 'nt') { const R = R1 + R2, I = U / R; diag.innerHTML = `<span class="cell">U = ${U} V</span><span class="wire"></span><span class="res">R₁ ${R1} Ω</span><span class="wire"></span><span class="res">R₂ ${R2} Ω</span>`;
+            out.innerHTML = `R<sub>tđ</sub> = ${R1} + ${R2} = <b>${R} Ω</b>; I = I₁ = I₂ = ${U}/${R} ≈ <b>${fmt(I, 2)} A</b>; U₁ ≈ ${fmt(I * R1, 2)} V, U₂ ≈ ${fmt(I * R2, 2)} V (U₁ + U₂ = ${U} V).`; }
+          else { const R = R1 * R2 / (R1 + R2), I1 = U / R1, I2 = U / R2; diag.innerHTML = `<span class="cell">U = ${U} V</span><span class="wire"></span><span class="par"><span class="res">R₁ ${R1} Ω</span><span class="res">R₂ ${R2} Ω</span></span>`;
+            out.innerHTML = `R<sub>tđ</sub> = ${R1}·${R2}/(${R1} + ${R2}) ≈ <b>${fmt(R, 2)} Ω</b>; U₁ = U₂ = ${U} V; I₁ ≈ ${fmt(I1, 2)} A, I₂ ≈ ${fmt(I2, 2)} A; I = I₁ + I₂ ≈ <b>${fmt(I1 + I2, 2)} A</b>.`; }
+          seen.add(st.m); if (seen.size === 2) complete('mach-ao');
+        }
+        draw();
+        const q = el('div', 'card task'); q.appendChild(el('p', 'tlabel', 'Trở lại câu hỏi mở đầu'));
+        mcq(q, { q: 'Muốn một đèn cháy mà đèn kia vẫn sáng, phải mắc hai đèn như thế nào?', o: ['Nối tiếp', 'Song song', 'Mắc thế nào cũng được', 'Không thể'], a: 1, g: 'Mắc song song: mỗi đèn nằm trên một nhánh riêng nối với hai cực nguồn, đèn này hỏng thì nhánh kia vẫn kín mạch. Đó cũng là lí do thiết bị trong nhà được mắc song song.' });
+        b.appendChild(q);
+      });
+      testPage(page);
+      sumPage(page, [['Nối tiếp', 'I = I₁ = I₂ = … ; R_tđ = R₁ + R₂ + … ; U = U₁ + U₂ + …'], ['Song song', 'I = I₁ + I₂ + … ; 1/R_tđ = 1/R₁ + 1/R₂ + … ; U = U₁ = U₂ = …']], 'Giải thích vì sao thiết bị điện trong gia đình được mắc song song; thiết kế mạch đèn trang trí “cành đào, cành mai ngày Tết”.');
+    } },
+
+  { id: 'bai13', so: 13, chuDe: 'Chương III. Điện', ten: 'Năng lượng của dòng điện và công suất điện', moTa: 'Năng lượng điện W = UIt, công suất điện 𝒫 = UI, công suất định mức.', key: 'b13-el',
+    final: [
+      { q: 'Năng lượng điện trên một đoạn mạch được tính bằng công thức…', o: ['W = UI', 'W = U/I', 'W = UIt', 'W = It/U'], a: 2, g: 'W = UIt, với t tính bằng giây thì W tính bằng jun (J).' },
+      { q: 'Công suất điện được tính bằng công thức…', o: ['𝒫 = UI', '𝒫 = U/I', '𝒫 = UIt', '𝒫 = I/U'], a: 0, g: '𝒫 = UI, đơn vị oát (W).' },
+      { q: 'Bóng đèn ghi 220 V – 60 W. Số 60 W cho biết…', o: ['hiệu điện thế định mức', 'công suất của đèn khi hoạt động bình thường ở 220 V', 'cường độ dòng điện qua đèn', 'điện năng tiêu thụ trong 1 giờ là 60 J'], a: 1, g: 'Công suất định mức là công suất thiết bị tiêu thụ khi hoạt động bình thường.' },
+      { q: 'Động cơ một chiều hoạt động ở 12 V, 0,5 A trong 30 phút tiêu thụ năng lượng điện là…', o: ['180 J', '6 J', '360 J', '10 800 J'], a: 3, g: 'W = 12 · 0,5 · 1 800 = 10 800 J.' },
+      { q: 'Bóng đèn 220 V, dòng điện 0,3 A. Công suất điện của đèn là…', o: ['66 W', '73,3 W', '0,0014 W', '220,3 W'], a: 0, g: '𝒫 = UI = 220 · 0,3 = 66 W.' },
+      { q: 'Bóng đèn 220 V – 60 W dùng đúng định mức trong 4 giờ tiêu thụ điện năng là…', o: ['15 Wh', '240 kWh', '0,24 kWh', '60 kWh'], a: 2, g: 'W = 𝒫t = 60 W · 4 h = 240 Wh = 0,24 kWh.' },
+      { q: '1 kWh bằng bao nhiêu jun?', o: ['1 000 J', '3,6.10⁶ J', '3 600 J', '3,6.10³ J'], a: 1, g: '1 kWh = 1 000 W · 3 600 s = 3,6.10⁶ J. Mỗi số đếm của công tơ điện là 1 kWh.' },
+      { q: 'Bàn là điện hoạt động chủ yếu chuyển hóa điện năng thành…', o: ['quang năng', 'cơ năng', 'hóa năng', 'nhiệt năng'], a: 3, g: 'Bàn là, nồi cơm điện chuyển hóa điện năng chủ yếu thành nhiệt năng.' }],
+    build: function (page) {
+      introPage(page, 13, 'Năng lượng của dòng điện và công suất điện', 'Chương III. Điện',
+        ['Lấy được ví dụ chứng tỏ dòng điện có năng lượng.', 'Nêu được công suất điện định mức của dụng cụ điện.', 'Tính được năng lượng của dòng điện và công suất điện trong trường hợp đơn giản.'],
+        'Gia đình em thường dùng những loại bóng đèn nào để thắp sáng? Em có biết ý nghĩa các số liệu ghi trên nhãn bóng đèn không?');
+      page('Phần 1. Năng lượng điện', 'chuyen-hoa', 'Dòng điện có năng lượng', b => {
+        b.appendChild(el('p', 'lead', 'Điện năng chuyển hóa chủ yếu thành dạng năng lượng nào trong mỗi thiết bị?'));
+        choiceRows(b, [['Bàn là điện', 0], ['Đèn huỳnh quang (đèn ống)', 1], ['Quạt điện', 2], ['Nồi cơm điện', 0], ['Đèn dây tóc', 1]], ['Nhiệt năng', 'Quang năng', 'Cơ năng'], 'chuyen-hoa', 'Đèn dây tóc và quạt điện cũng tỏa nhiệt một phần.');
+        infoCard(b, 'Công thức', '<p><b>W = UIt</b>: W năng lượng điện (J), U hiệu điện thế (V), I cường độ dòng điện (A), t thời gian (s).</p>');
+        mcqSet(b, [{ q: 'Động cơ điện một chiều: U = 12 V, I = 0,5 A, dùng trong 30 phút. Năng lượng điện tiêu thụ?', o: ['180 J', '10 800 J', '360 J', '6 J'], a: 1, g: 't = 30 phút = 1 800 s; W = 12 · 0,5 · 1 800 = 10 800 J.' },
+          { q: 'Dây tóc bóng đèn: U = 3,5 V, R = 12 Ω. Năng lượng điện tiêu thụ trong 4 phút?', o: ['≈ 245 J', '≈ 70 J', '≈ 1,02 J', '≈ 4 200 J'], a: 0, g: 'I = U/R ≈ 0,292 A; W = UIt = 3,5 · 0,292 · 240 ≈ 245 J.' }], 'chuyen-hoa');
+      });
+      page('Phần 2. Công suất điện', 'cong-suat', 'Công suất điện và công suất định mức', b => {
+        infoCard(b, 'Công suất điện', '<p>Năng lượng của dòng điện chạy qua đoạn mạch trong một đơn vị thời gian: <b>𝒫 = UI</b> (W). Công suất định mức là công suất thiết bị tiêu thụ khi hoạt động bình thường, ví dụ 220 V – 60 W.</p>');
+        flips(b, [['Đèn pin 2,5 V – 2,5 W', 'Dùng ở 2,5 V thì đèn sáng bình thường với công suất 2,5 W.'], ['Bàn là 220 V – 1 000 W', 'Dùng ở 220 V thì bàn là có công suất 1 000 W.'], ['Đèn sợi đốt 110 V – 100 W', 'Dùng ở 110 V thì đèn có công suất 100 W; mắc vào 220 V đèn sẽ hỏng.']], null, 'grid2');
+        mcqSet(b, [{ q: 'Bóng đèn 220 V, I = 0,3 A. Công suất và năng lượng tiêu thụ trong 3 h?', o: ['66 W; 198 Wh', '66 W; 22 Wh', '220 W; 660 Wh', '0,3 W; 0,9 Wh'], a: 0, g: '𝒫 = 220 · 0,3 = 66 W; W = 66 · 3 = 198 Wh ≈ 0,2 kWh (≈ 712 800 J).' },
+          { q: 'Đèn 220 V – 60 W dùng đúng định mức. Cường độ dòng điện qua dây tóc?', o: ['≈ 3,67 A', '≈ 0,27 A', '≈ 13 200 A', '60 A'], a: 1, g: 'I = 𝒫/U = 60/220 ≈ 0,27 A. Trong 4 giờ, đèn tiêu thụ 0,24 kWh.' }], 'cong-suat');
+      });
+      page('Phần 3. Vận dụng', 'tien-dien', 'Tính điện năng gia đình em dùng', b => {
+        b.appendChild(el('p', 'lead', 'Nhập công suất và số giờ dùng mỗi ngày của các thiết bị (sửa số liệu cho đúng với nhà em). Nhập giá điện nếu em biết.'));
+        const dev = [['Bóng đèn LED', 9, 6], ['Quạt điện', 45, 8], ['Ti vi', 100, 4], ['Tủ lạnh', 120, 24], ['Nồi cơm điện', 600, 1]];
+        const c = el('div', 'card'); const tb = el('table', 'datatbl'); tb.innerHTML = '<thead><tr><th>Thiết bị</th><th>Công suất (W)</th><th>Giờ/ngày</th><th>kWh/tháng</th></tr></thead>';
+        const body = el('tbody'); const rows = [];
+        dev.forEach(([n, p, h]) => { const tr = el('tr'); const name = el('input'); name.value = n; name.setAttribute('aria-label', 'Tên thiết bị'); const pi = el('input'); pi.type = 'number'; pi.value = p; pi.setAttribute('aria-label', 'Công suất ' + n); const hi = el('input'); hi.type = 'number'; hi.value = h; hi.setAttribute('aria-label', 'Số giờ ' + n); const out = el('td');
+          [name, pi, hi].forEach(x => { const td = el('td'); td.appendChild(x); tr.appendChild(td); x.oninput = calc; }); tr.appendChild(out); body.appendChild(tr); rows.push([pi, hi, out]); });
+        tb.appendChild(body); const wrap = el('div', 'tblwrap'); wrap.appendChild(tb);
+        const price = el('input'); price.type = 'number'; price.placeholder = 'đồng/kWh'; price.setAttribute('aria-label', 'Giá điện đồng mỗi kWh'); price.oninput = calc;
+        const pr = el('div', 'simrow'); pr.append(el('span', 'simlab', 'Giá điện (đồng/kWh, không bắt buộc):'), price);
+        const out = el('div', 'note'); c.append(wrap, pr, out); b.appendChild(c);
+        function calc() { let tot = 0; rows.forEach(([p, h, o]) => { const k = (+p.value || 0) * (+h.value || 0) * 30 / 1000; tot += k; o.textContent = fmt(k, 1); });
+          out.innerHTML = `Tổng điện năng mỗi tháng (30 ngày): W = 𝒫·t ≈ <b>${fmt(tot, 1)} kWh</b> ≈ ${fmt(tot * 3.6, 1)}.10⁶ J.` + (+price.value > 0 ? ` Tiền điện ước tính: <b>${Math.round(tot * price.value).toLocaleString('vi-VN')} đồng</b>.` : ' Mỗi số đếm của công tơ điện là 1 kWh.'); complete('tien-dien'); }
+        calc();
+        b.appendChild(el('p', '', '<i>Số liệu có sẵn chỉ là ví dụ. Thực tế giá điện sinh hoạt tính theo bậc thang; em có thể hỏi người thân hoặc xem hóa đơn tiền điện.</i>'));
+      });
+      testPage(page);
+      sumPage(page, [['Năng lượng điện', 'Dòng điện có năng lượng, chuyển hóa thành nhiệt năng, quang năng, cơ năng, hóa năng… W = UIt (J).'], ['Công suất điện', 'Năng lượng dòng điện trong một đơn vị thời gian: 𝒫 = UI (W).'], ['Công suất định mức', 'Công suất thiết bị tiêu thụ khi hoạt động bình thường.'], ['Công tơ điện', 'Đo năng lượng điện; 1 số = 1 kWh = 3,6.10⁶ J.']], 'Tính được năng lượng điện mà thiết bị trong gia đình tiêu thụ hằng tháng và số tiền phải trả.');
+    } },
+
+  { id: 'bai14', so: 14, chuDe: 'Chương IV. Điện từ', ten: 'Cảm ứng điện từ. Nguyên tắc tạo ra dòng điện xoay chiều', moTa: 'Dòng điện cảm ứng, hiện tượng cảm ứng điện từ, dòng điện xoay chiều.', key: 'b14-el',
+    final: [
+      { q: 'Dòng điện cảm ứng xuất hiện trong cuộn dây dẫn kín khi…', o: ['nam châm đứng yên trong cuộn dây', 'số đường sức từ xuyên qua tiết diện cuộn dây biến thiên', 'cuộn dây được nối với pin', 'cuộn dây rất dài'], a: 1, g: 'Đây là điều kiện xuất hiện dòng điện cảm ứng.' },
+      { q: 'Hiện tượng xuất hiện dòng điện cảm ứng gọi là…', o: ['hiện tượng cảm ứng điện từ', 'hiện tượng nhiễm từ', 'hiện tượng tán sắc', 'hiện tượng khúc xạ'], a: 0, g: 'Hiện tượng xuất hiện dòng điện cảm ứng được gọi là hiện tượng cảm ứng điện từ.' },
+      { q: 'Trường hợp nào KHÔNG xuất hiện dòng điện cảm ứng trong cuộn dây kín?', o: ['Đưa nam châm lại gần cuộn dây', 'Đưa nam châm ra xa cuộn dây', 'Để nam châm nằm yên trong lòng cuộn dây', 'Bóp mạnh làm cuộn dây giảm tiết diện'], a: 2, g: 'Nam châm đứng yên thì số đường sức từ không biến thiên nên không có dòng điện cảm ứng.' },
+      { q: 'Dòng điện xoay chiều là dòng điện…', o: ['có chiều không đổi', 'có cường độ luôn không đổi', 'chỉ chạy trong pin', 'có cường độ và chiều luân phiên thay đổi theo thời gian'], a: 3, g: 'Dòng điện xoay chiều có cường độ tăng, giảm và chiều luân phiên thay đổi theo thời gian.' },
+      { q: 'Dòng điện xoay chiều 50 Hz đổi chiều bao nhiêu lần trong 1 giây?', o: ['50 lần', '25 lần', '100 lần', '200 lần'], a: 2, g: 'Mỗi chu kì đổi chiều 2 lần nên 50 Hz đổi chiều 100 lần trong 1 giây.' },
+      { q: 'Nguyên tắc tạo ra dòng điện xoay chiều dựa trên hiện tượng…', o: ['cảm ứng điện từ', 'phản xạ toàn phần', 'nhiễm điện do cọ xát', 'tác dụng nhiệt của dòng điện'], a: 0, g: 'Số đường sức từ qua cuộn dây kín tăng, giảm luân phiên thì trong cuộn dây xuất hiện dòng điện xoay chiều.' },
+      { q: 'Trong mô hình máy phát điện xoay chiều Hình 14.8, khi quay cuộn dây thì hai đèn LED mắc song song ngược cực…', o: ['luôn tắt', 'chỉ một đèn sáng liên tục', 'cùng sáng liên tục', 'sáng, tối luân phiên'], a: 3, g: 'Dòng điện đổi chiều luân phiên nên hai đèn LED ngược cực sáng luân phiên.' },
+      { q: 'Bộ phận nào giúp đưa dòng điện xoay chiều từ khung dây đang quay ra mạch ngoài?', o: ['Hai vành khuyên và hai chổi quét', 'Nam châm', 'Bóng đèn', 'Trục quay'], a: 0, g: 'Hai vành khuyên gắn với hai đầu khung dây, quay cùng khung; hai chổi quét tì vào vành khuyên nối với mạch ngoài.' }],
+    build: function (page) {
+      introPage(page, 14, 'Cảm ứng điện từ. Nguyên tắc tạo ra dòng điện xoay chiều', 'Chương IV. Điện từ',
+        ['Rút ra được: khi số đường sức từ xuyên qua tiết diện cuộn dây dẫn kín biến thiên thì trong cuộn dây xuất hiện dòng điện cảm ứng.', 'Nêu được nguyên tắc tạo ra dòng điện xoay chiều (dòng điện luân phiên đổi chiều).'],
+        'Ở lớp 7, dòng điện chạy qua cuộn dây quấn quanh lõi thép thì sinh ra từ trường. Vậy từ trường có thể sinh ra dòng điện không?');
+      page('Phần 1. Dòng điện cảm ứng', 'thi-nghiem', 'Các thí nghiệm về dòng điện cảm ứng', b => {
+        b.appendChild(el('p', 'lead', 'Bấm vào từng thí nghiệm để xem kết quả và nguyên nhân.'));
+        flips(b, [['TN1. Đưa nam châm lại gần / ra xa cuộn dây', 'Kim điện kế lệch sang phải hoặc trái: có dòng điện cảm ứng. Số đường sức từ qua cuộn dây tăng khi lại gần, giảm khi ra xa.'], ['TN2. Đóng, mở công tắc nam châm điện', 'Khi đóng hoặc mở công tắc, kim điện kế lệch: số đường sức từ qua cuộn dây tăng (đóng) hoặc giảm (mở).'], ['TN3. Quay nam châm gần cuộn dây', 'Hai đèn LED (song song, ngược cực) sáng luân phiên: số đường sức từ tăng, giảm luân phiên.'], ['TN4. Bóp mạnh cuộn dây mềm', 'Tiết diện cuộn dây giảm, số đường sức từ qua tiết diện giảm: kim điện kế lệch.']], 'thi-nghiem', 'grid2');
+        infoCard(b, 'Kết luận', '<p>Khi số đường sức từ xuyên qua tiết diện của cuộn dây dẫn kín <b>biến thiên</b> thì trong cuộn dây xuất hiện <b>dòng điện cảm ứng</b>. Hiện tượng này gọi là <b>hiện tượng cảm ứng điện từ</b>.</p>');
+      });
+      page('Phần 1. Dòng điện cảm ứng', 'dieu-kien', 'Có xuất hiện dòng điện cảm ứng không?', b => {
+        choiceRows(b, [['Đưa cực Bắc nam châm lại gần cuộn dây kín', 0], ['Nam châm nằm yên trong lòng cuộn dây kín', 1], ['Kéo nam châm ra xa cuộn dây kín', 0], ['Giữ công tắc nam châm điện luôn đóng, dòng điện không đổi', 1], ['Vừa ngắt công tắc của nam châm điện', 0], ['Quay khung dây kín trong từ trường của nam châm', 0]], ['Có', 'Không'], 'dieu-kien', 'Chỉ cần số đường sức từ qua tiết diện cuộn dây kín thay đổi là có dòng điện cảm ứng.');
+      });
+      page('Phần 2. Dòng điện xoay chiều', 'xoay-chieu', 'Dòng điện xoay chiều', b => {
+        b.appendChild(el('p', 'lead', 'Đồ thị cường độ dòng điện xoay chiều 50 Hz theo thời gian (Hình 14.7). Kéo thanh thời gian để xem cường độ và chiều dòng điện.'));
+        const c = el('div', 'card sim-card'); const svg = svgEl('svg', { viewBox: '0 0 460 240', class: 'simsvg', role: 'img', 'aria-label': 'Đồ thị dòng điện xoay chiều' }); const out = el('p', 'price eq');
+        c.append(slider('Thời gian t', 0, 30, 0.5, 5, 'ms', v => draw(v)), svg, out); b.appendChild(c);
+        const x0 = 50, y0 = 120, W = 380, A = 80; const X = t => x0 + t / 30 * W, Y = i => y0 - i * A;
+        let seenNeg = false, seenPos = false;
+        function draw(t) {
+          svg.innerHTML = '';
+          svg.append(svgEl('line', { x1: x0, y1: y0, x2: x0 + W, y2: y0, stroke: '#13324A', 'stroke-width': 1.5 }), svgEl('line', { x1: x0, y1: 20, x2: x0, y2: 220, stroke: '#13324A', 'stroke-width': 1.5 }));
+          [1, 0.5, -0.5, -1].forEach(v => { svg.append(svgEl('line', { x1: x0, y1: Y(v), x2: x0 + W, y2: Y(v), stroke: '#E2D9C6', 'stroke-dasharray': '4 4' })); const e = svgEl('text', { x: x0 - 6, y: Y(v) + 4, 'font-size': 12, 'text-anchor': 'end', fill: '#5F6B78' }); e.textContent = String(v).replace('.', ','); svg.append(e); });
+          for (let k = 5; k <= 30; k += 5) { const e = svgEl('text', { x: X(k), y: y0 + 16, 'font-size': 12, 'text-anchor': 'middle', fill: '#5F6B78' }); e.textContent = k; svg.append(e); }
+          let d = ''; for (let s = 0; s <= 30; s += 0.25) d += (s ? 'L' : 'M') + X(s) + ',' + Y(Math.sin(2 * Math.PI * s / 20));
+          svg.append(svgEl('path', { d, fill: 'none', stroke: '#E8892B', 'stroke-width': 3 }));
+          const i = Math.sin(2 * Math.PI * t / 20); svg.append(svgEl('line', { x1: X(t), y1: 20, x2: X(t), y2: 220, stroke: '#1E6F6A', 'stroke-dasharray': '3 3' }), svgEl('circle', { cx: X(t), cy: Y(i), r: 7, fill: '#D2462D' }));
+          const lb = svgEl('text', { x: x0 + W, y: y0 + 34, 'font-size': 12, 'text-anchor': 'end', fill: '#13324A', 'font-weight': 700 }); lb.textContent = 't (ms)'; svg.append(lb);
+          const li = svgEl('text', { x: x0 + 6, y: 18, 'font-size': 12, fill: '#13324A', 'font-weight': 700 }); li.textContent = 'i (A)'; svg.append(li);
+          out.innerHTML = `t = ${fmt(t, 1)} ms: i ≈ <b>${fmt(i, 2)} A</b> · ` + (Math.abs(i) < 0.02 ? 'dòng điện bằng 0, sắp đổi chiều' : i > 0 ? 'chiều dương' : 'chiều âm (ngược lại)');
+          if (i < -0.5) seenNeg = true; if (i > 0.5) seenPos = true; if (seenNeg && seenPos) complete('xoay-chieu');
+        }
+        draw(5);
+        b.appendChild(el('div', 'note', 'Dòng điện xoay chiều có cường độ tăng, giảm tuần tự và chiều luân phiên thay đổi theo thời gian. Với tần số 50 Hz, dòng điện đổi chiều 100 lần trong 1 giây.'));
+      });
+      page('Phần 2. Dòng điện xoay chiều', 'nguyen-tac', 'Nguyên tắc tạo ra dòng điện xoay chiều', b => {
+        stepper(b, [['1. Quay cuộn dây trong từ trường', 'Cuộn dây dẫn kín quay trong từ trường của nam châm (hoặc nam châm quay, cuộn dây đứng yên).'], ['2. Số đường sức từ biến thiên', 'Số đường sức từ xuyên qua tiết diện cuộn dây tăng, giảm luân phiên theo thời gian.'], ['3. Xuất hiện dòng điện xoay chiều', 'Theo hiện tượng cảm ứng điện từ, trong cuộn dây xuất hiện dòng điện luân phiên đổi chiều.'], ['4. Đưa dòng điện ra mạch ngoài', 'Hai đầu cuộn dây nối với hai vành khuyên (vòng đồng) quay cùng cuộn dây; hai chổi quét (lá đồng) tì vào vành khuyên dẫn dòng điện ra đèn LED, tạo thành mạch kín.']], 'nguyen-tac');
+        const c = el('div', 'card'); mcq(c, { q: 'Quay chậm cuộn dây trong mô hình Hình 14.8, hai đèn LED mắc song song ngược cực sẽ…', o: ['cùng sáng liên tục', 'sáng, tối luân phiên; quay nhanh thì khó phân biệt', 'đều tắt', 'chỉ một đèn sáng'], a: 1, g: 'Dòng điện đổi chiều nên hai đèn sáng luân phiên. Quay nhanh, sự thay đổi diễn ra quá nhanh nên mắt khó phân biệt.' }); b.appendChild(c);
+      });
+      testPage(page);
+      sumPage(page, [['Dòng điện cảm ứng', 'Xuất hiện trong cuộn dây dẫn kín khi số đường sức từ qua tiết diện cuộn dây biến thiên.'], ['Cảm ứng điện từ', 'Hiện tượng xuất hiện dòng điện cảm ứng.'], ['Dòng điện xoay chiều', 'Cường độ và chiều luân phiên thay đổi theo thời gian.'], ['Nguyên tắc', 'Dựa trên hiện tượng cảm ứng điện từ: số đường sức từ qua cuộn dây kín tăng, giảm luân phiên.']], 'Kể tên thiết bị dùng dòng điện xoay chiều: máy giặt, tủ lạnh, bếp điện, bếp từ…; giải thích cách tạo dòng điện xoay chiều trong cuộn dây kín.');
+    } },
+
+  { id: 'bai15', so: 15, chuDe: 'Chương IV. Điện từ', ten: 'Tác dụng của dòng điện xoay chiều', moTa: 'Tác dụng nhiệt, phát sáng, từ, sinh lí của dòng điện xoay chiều.', key: 'b15-el',
+    final: [
+      { q: 'Ấm đun nước hoạt động dựa trên tác dụng nào của dòng điện xoay chiều?', o: ['Tác dụng từ', 'Tác dụng nhiệt', 'Tác dụng sinh lí', 'Tác dụng phát sáng'], a: 1, g: 'Dòng điện chạy qua dây đốt làm nó nóng lên và đun sôi nước.' },
+      { q: 'Đèn huỳnh quang sáng lên khi có dòng điện xoay chiều chạy qua chứng tỏ dòng điện có tác dụng…', o: ['phát sáng', 'từ', 'sinh lí', 'hóa học'], a: 0, g: 'Đây là tác dụng phát sáng.' },
+      { q: 'Nam châm điện dùng dòng điện xoay chiều hút được bột sắt là nhờ tác dụng…', o: ['nhiệt', 'phát sáng', 'sinh lí', 'từ'], a: 3, g: 'Dòng điện xoay chiều trong cuộn dây sinh ra từ trường: tác dụng từ.' },
+      { q: 'Máy khử rung tim ứng dụng tác dụng nào của dòng điện?', o: ['Nhiệt', 'Từ', 'Sinh lí', 'Phát sáng'], a: 2, g: 'Máy phát xung điện khôi phục nhịp tim: tác dụng sinh lí.' },
+      { q: 'Dòng điện đi qua cơ thể người có thể gây…', o: ['cơ co giật, tim ngừng đập, ngạt thở, thần kinh tê liệt', 'chỉ làm ấm cơ thể', 'không ảnh hưởng gì', 'làm cơ thể phát sáng'], a: 0, g: 'Đó là tác dụng sinh lí; dòng điện xoay chiều có thể nguy hiểm tới tính mạng.' },
+      { q: 'Thay dòng điện xoay chiều bằng dòng điện một chiều trong thí nghiệm Hình 15.4 thì đinh sắt…', o: ['không bị hút nữa', 'bị đẩy ra', 'vẫn bị hút', 'nóng chảy'], a: 2, g: 'Dòng điện một chiều qua cuộn dây cũng sinh ra từ trường nên đinh sắt vẫn bị hút.' },
+      { q: 'Việc làm nào đảm bảo an toàn khi sử dụng điện xoay chiều?', o: ['Chơi gần trạm biến thế', 'Rút phích cắm bằng tay ướt', 'Tự sửa ổ điện khi đang có điện', 'Không lại gần trạm biến thế, ngắt điện trước khi sửa chữa'], a: 3, g: 'Dòng điện xoay chiều có thể gây nguy hiểm tới tính mạng nên cần thận trọng.' }],
+    build: function (page) {
+      introPage(page, 15, 'Tác dụng của dòng điện xoay chiều', 'Chương IV. Điện từ',
+        ['Lấy được ví dụ chứng tỏ dòng điện xoay chiều có tác dụng nhiệt, phát sáng, tác dụng từ, tác dụng sinh lí.'],
+        'Khi dùng quạt điện, bếp từ, bình nước nóng, máy sấy tóc, ấm đun nước, đèn điện… ta không nhìn thấy dòng điện xoay chiều, nhưng nhận biết được nó qua các tác dụng. Vậy dòng điện xoay chiều có những tác dụng gì?');
+      page('Phần 1. Các tác dụng', 'bon-tac-dung', 'Bốn tác dụng của dòng điện xoay chiều', b => {
+        flips(b, [['Tác dụng nhiệt', 'Dòng điện xoay chiều chạy qua vật dẫn làm nó nóng lên: máy sấy tóc (vỏ ấm, thổi hơi nóng), bình nước nóng, ấm đun nước.'], ['Tác dụng phát sáng', 'Làm đèn sợi đốt, đèn huỳnh quang phát sáng (Hình 15.2, 15.3).'], ['Tác dụng từ', 'Dòng điện xoay chiều trong cuộn dây sinh ra từ trường, hút đinh sắt (Hình 15.4); ứng dụng: nam châm điện, rơ le, động cơ điện, máy chụp cộng hưởng từ, tàu đệm từ.'], ['Tác dụng sinh lí', 'Đi qua cơ thể làm cơ co giật, tim ngừng đập, ngạt thở; trong y học: máy khử rung tim, xung điện giảm đau, phục hồi chấn thương.']], 'bon-tac-dung', 'grid2');
+      });
+      page('Phần 1. Các tác dụng', 'phan-loai', 'Thiết bị này dùng tác dụng nào?', b => {
+        b.appendChild(el('p', 'lead', 'Chọn tác dụng chủ yếu của dòng điện xoay chiều được ứng dụng trong mỗi thiết bị.'));
+        choiceRows(b, [['Máy sấy tóc', 0], ['Đèn huỳnh quang', 1], ['Nam châm điện nâng bột sắt (Hình 15.5)', 2], ['Máy khử rung tim', 3], ['Ấm siêu tốc đun nước', 0], ['Động cơ quạt điện', 2], ['Đèn LED chiếu sáng', 1], ['Máy xung điện trị liệu giảm đau', 3]], ['Nhiệt', 'Phát sáng', 'Từ', 'Sinh lí'], 'phan-loai', 'Một thiết bị có thể có nhiều tác dụng; ở đây ta chọn tác dụng chính được sử dụng.');
+      });
+      page('Phần 2. An toàn điện', 'an-toan', 'Sử dụng điện xoay chiều an toàn', b => {
+        const c = el('div', 'card'); mcq(c, { q: 'Thí nghiệm Hình 15.4: nếu thay dòng điện xoay chiều bằng dòng điện một chiều thì đinh sắt có bị hút không?', o: ['Không bị hút', 'Vẫn bị hút vì cuộn dây vẫn sinh ra từ trường', 'Bị đẩy ra xa', 'Bị nóng chảy'], a: 1, g: 'Cả dòng điện xoay chiều và một chiều chạy qua cuộn dây đều sinh ra từ trường.' }); b.appendChild(c);
+        b.appendChild(el('p', 'lead', 'Dòng điện xoay chiều có thể gây nguy hiểm tới tính mạng. Chọn Nên hoặc Không nên.'));
+        choiceRows(b, [['Không lại gần trạm biến thế điện', 0], ['Cắm, rút phích điện khi tay đang ướt', 1], ['Ngắt cầu dao trước khi sửa chữa điện', 0], ['Thả diều gần đường dây điện', 1], ['Báo người lớn khi thấy dây điện bị hở, đứt', 0]], ['Nên', 'Không nên'], 'an-toan', 'Khi thấy người bị điện giật, phải ngắt nguồn điện trước, không chạm tay trực tiếp vào người đó.');
+      });
+      testPage(page);
+      sumPage(page, [['Tác dụng nhiệt', 'Bình nước nóng, ấm đun nước, máy sấy tóc… nóng lên.'], ['Tác dụng phát sáng', 'Đèn sợi đốt, đèn huỳnh quang… phát sáng.'], ['Tác dụng từ', 'Dòng điện trong dây dẫn, cuộn dây sinh ra từ trường.'], ['Tác dụng sinh lí', 'Đi qua cơ thể làm cơ co giật, có thể làm tim ngừng đập, ngạt thở.']], 'Nhận biết các tác dụng của dòng điện xoay chiều qua quạt điện, bếp từ, bình nước nóng, máy sấy tóc, ấm đun nước, đèn điện…');
+    } },
+  { id: 'bai16', so: 16, chuDe: 'Chương V. Năng lượng với cuộc sống', ten: 'Vòng năng lượng trên Trái Đất. Năng lượng hóa thạch', moTa: 'Mặt Trời và vòng tuần hoàn nước, nhiên liệu hóa thạch, giá nhiên liệu.', key: 'b16-el',
     final: [{"q": "Nguồn năng lượng chủ yếu cung cấp cho các quá trình tự nhiên trên Trái Đất là gì?", "o": ["Năng lượng từ lòng đất", "Năng lượng Mặt Trời", "Năng lượng từ Mặt Trăng", "Năng lượng từ nhiên liệu hóa thạch"], "a": 1, "g": "Mặt Trời cung cấp năng lượng cho quang hợp, sự bay hơi của nước và nhiều quá trình tự nhiên."}, {"q": "Trong quá trình quang hợp, thực vật chuyển hóa năng lượng ánh sáng thành dạng năng lượng nào?", "o": ["Nhiệt năng", "Điện năng", "Hóa năng", "Động năng"], "a": 2, "g": "Quang hợp chuyển năng lượng ánh sáng thành hóa năng được tích lũy trong các chất hữu cơ."}, {"q": "Nguồn năng lượng nào sau đây là nhiên liệu hóa thạch?", "o": ["Than đá", "Ánh sáng Mặt Trời", "Gió", "Nước chảy"], "a": 0, "g": "Than đá được hình thành từ vật chất hữu cơ cổ qua thời gian địa chất rất dài."}, {"q": "Nhiên liệu hóa thạch được hình thành chủ yếu từ đâu?", "o": ["Các loại đá nóng chảy", "Nước biển bay hơi", "Ánh sáng Mặt Trời trực tiếp", "Xác sinh vật bị chôn vùi và biến đổi qua thời gian địa chất"], "a": 3, "g": "Xác sinh vật bị chôn vùi và biến đổi dưới điều kiện địa chất trong hàng triệu năm."}, {"q": "Nguồn năng lượng nào sau đây không phải là nhiên liệu hóa thạch?", "o": ["Dầu mỏ", "Khí thiên nhiên", "Năng lượng gió", "Than đá"], "a": 2, "g": "Gió là nguồn năng lượng tái tạo; dầu mỏ, khí thiên nhiên và than đá là nhiên liệu hóa thạch."}, {"q": "Trong vòng tuần hoàn nước, năng lượng Mặt Trời trực tiếp gây ra quá trình nào?", "o": ["Nước bốc hơi", "Nước ngầm chảy xuống", "Mưa rơi xuống đất", "Nước đóng băng ở nhiệt độ thấp"], "a": 0, "g": "Năng lượng Mặt Trời làm nóng nước và thúc đẩy quá trình bay hơi."}, {"q": "Vì sao năng lượng có thể truyền từ thực vật sang động vật ăn cỏ?", "o": ["Động vật hấp thụ ánh sáng trực tiếp như cây xanh", "Động vật lấy hóa năng từ thức ăn", "Động vật tạo ra năng lượng từ không khí", "Thực vật truyền điện năng cho động vật"], "a": 1, "g": "Động vật ăn thực vật và tiếp nhận hóa năng tích lũy trong các chất hữu cơ."}, {"q": "Vì sao nhiên liệu hóa thạch được coi là nguồn năng lượng không tái tạo?", "o": ["Vì không thể đốt cháy", "Vì không chứa năng lượng", "Vì chỉ có trong nước biển", "Vì hình thành rất chậm và có trữ lượng hữu hạn"], "a": 3, "g": "Tốc độ hình thành nhiên liệu hóa thạch chậm hơn rất nhiều so với tốc độ khai thác."}, {"q": "Đốt nhiều nhiên liệu hóa thạch làm gia tăng khí nào góp phần gây hiệu ứng nhà kính?", "o": ["Khí oxygen", "Khí nitrogen", "Khí carbon dioxide (CO₂)", "Khí helium"], "a": 2, "g": "CO₂ sinh ra từ quá trình đốt nhiên liệu hóa thạch góp phần làm tăng hiệu ứng nhà kính."}, {"q": "Yếu tố nào có thể khiến giá dầu mỏ tăng khi các điều kiện khác không đổi?", "o": ["Nguồn cung dầu mỏ giảm", "Nhu cầu dầu mỏ giảm", "Nguồn cung dầu mỏ tăng", "Chi phí khai thác giảm"], "a": 0, "g": "Khi nguồn cung giảm còn nhu cầu không đổi, giá dầu thường chịu áp lực tăng."}, {"q": "Nhận định nào đúng về việc sử dụng nhiên liệu hóa thạch?", "o": ["Không tạo ra chất gây ô nhiễm", "Cung cấp nhiều năng lượng nhưng có thể gây ô nhiễm môi trường", "Có thể tái tạo nhanh sau khi sử dụng", "Không ảnh hưởng đến khí hậu"], "a": 1, "g": "Nhiên liệu hóa thạch cung cấp nhiều năng lượng nhưng việc đốt có thể gây ô nhiễm và phát thải khí nhà kính."}, {"q": "Gia đình muốn giảm sử dụng điện sản xuất từ nhiên liệu hóa thạch. Biện pháp nào phù hợp nhất?", "o": ["Bật đèn cả ngày", "Dùng thêm thiết bị điện không cần thiết", "Để điều hòa hoạt động khi không có người", "Tắt thiết bị điện khi không sử dụng"], "a": 3, "g": "Tiết kiệm điện giúp giảm nhu cầu phát điện, từ đó có thể giảm nhiên liệu hóa thạch tiêu thụ."}, {"q": "Địa phương có nhiều nắng muốn giảm phụ thuộc nhiên liệu hóa thạch. Giải pháp phù hợp là gì?", "o": ["Tăng đốt than", "Tăng sử dụng máy phát điện chạy dầu", "Lắp đặt hệ thống điện Mặt Trời ở nơi phù hợp", "Ngừng sử dụng tất cả thiết bị điện"], "a": 2, "g": "Điện Mặt Trời khai thác năng lượng tái tạo, giúp thay thế một phần điện từ nhiên liệu hóa thạch."}, {"q": "Nhà máy điện than chuyển sang dùng năng lượng gió. Lợi ích môi trường trực tiếp là gì?", "o": ["Giảm phát thải CO₂ từ quá trình đốt than", "Tăng lượng khói bụi", "Làm than đá hình thành nhanh hơn", "Loại bỏ hoàn toàn mọi tác động môi trường"], "a": 0, "g": "Điện gió không cần đốt than khi phát điện nên giảm phát thải trực tiếp từ việc đốt than."}, {"q": "Nhu cầu xăng dầu tăng mạnh, lượng cung ứng không đổi. Giá xăng dầu có khả năng thế nào?", "o": ["Chắc chắn giảm về 0", "Có xu hướng tăng", "Không bao giờ thay đổi", "Luôn giảm một nửa"], "a": 1, "g": "Nhu cầu tăng khi cung không đổi thường gây áp lực tăng giá, dù giá thực tế còn chịu các yếu tố khác."}],
     build: function (page) {
 
@@ -558,7 +1299,7 @@ page('Kiểm tra', 'tong-ket', 'Tổng kết và chuẩn bị bài sau', b => {
 
 
     } },
-  { id: 'bai17', so: 17, chuDe: 'Năng lượng với cuộc sống', ten: 'Một số dạng năng lượng tái tạo', moTa: 'Năng lượng mặt trời, gió, sóng biển, dòng sông; sử dụng hiệu quả năng lượng.', key: 'b17-el',
+  { id: 'bai17', so: 17, chuDe: 'Chương V. Năng lượng với cuộc sống', ten: 'Một số dạng năng lượng tái tạo', moTa: 'Năng lượng mặt trời, gió, sóng biển, dòng sông; sử dụng hiệu quả năng lượng.', key: 'b17-el',
     final: [{"q": "Năng lượng tái tạo là gì?", "o": ["Năng lượng từ nhiên liệu hóa thạch", "Năng lượng từ các nguồn có sẵn trong thiên nhiên, liên tục được bổ sung qua các quá trình tự nhiên", "Năng lượng chỉ có ở biển", "Năng lượng do con người tạo ra trong nhà máy"], "a": 1, "g": "Đây là khái niệm năng lượng tái tạo trong SGK."}, {"q": "Dạng năng lượng nào sau đây không phải là năng lượng tái tạo?", "o": ["Năng lượng từ gió", "Năng lượng từ sóng biển", "Năng lượng từ dầu mỏ", "Năng lượng sinh khối"], "a": 2, "g": "Dầu mỏ là nhiên liệu hóa thạch, hình thành rất chậm, không được bổ sung liên tục."}, {"q": "Ưu điểm của việc sử dụng năng lượng mặt trời là gì?", "o": ["Không gây tiếng ồn, không phát thải khí nhà kính khi sử dụng", "Giá tấm pin mặt trời rất rẻ", "Hệ thống thu nhiệt có hiệu suất rất cao", "Không chiếm diện tích mặt đất"], "a": 0, "g": "Khi sử dụng, năng lượng mặt trời không gây tiếng ồn và không phát thải chất gây ô nhiễm không khí."}, {"q": "Tấm pin mặt trời có thời hạn sử dụng trung bình khoảng bao lâu trước khi trở thành rác thải điện tử?", "o": ["5 năm", "10 năm", "25 năm", "100 năm"], "a": 2, "g": "Theo SGK, tấm pin mặt trời hết hạn sử dụng sau trung bình 25 năm."}, {"q": "Vì sao năng lượng từ gió ngoài khơi có triển vọng phát triển lớn?", "o": ["Nước biển làm mát tuabin", "Tuabin trên biển không cần máy phát điện", "Trên biển không có chim", "Tốc độ gió trên đại dương ổn định và mạnh hơn trên đất liền"], "a": 3, "g": "Gió trên đại dương ổn định và mạnh hơn nên tuabin phát điện hiệu quả hơn."}, {"q": "Nhược điểm nào sau đây là của nhà máy điện gió?", "o": ["Phát thải nhiều khí CO₂", "Gây tiếng ồn, ảnh hưởng đến chim di cư và dơi", "Nguồn gió nhanh chóng cạn kiệt", "Tạo ra nhiều tro xỉ"], "a": 1, "g": "Tuabin gió gây tiếng ồn, có thể làm nhiễu tín hiệu phát thanh và ảnh hưởng đến chim, dơi."}, {"q": "Sóng biển được hình thành chủ yếu do tác động của yếu tố nào?", "o": ["Gió", "Mặt Trăng", "Động đất", "Tàu thuyền"], "a": 0, "g": "Tốc độ gió càng lớn, gió thổi càng lâu thì sóng biển càng lớn."}, {"q": "Theo SGK, vùng bờ biển nào của nước ta có tiềm năng năng lượng sóng biển lớn nhất?", "o": ["Từ Quảng Ninh đến Hải Phòng", "Từ Cà Mau đến Kiên Giang", "Từ Đà Nẵng đến Ninh Thuận", "Từ Thanh Hóa đến Nghệ An"], "a": 2, "g": "Vùng bờ biển miền Trung từ Đà Nẵng đến Ninh Thuận có tiềm năng năng lượng sóng biển lớn nhất."}, {"q": "Việc xây dựng đập thủy điện có thể gây ảnh hưởng nào đến môi trường?", "o": ["Làm tăng diện tích rừng", "Cản trở động vật di chuyển từ hạ nguồn lên thượng nguồn", "Làm tăng lượng khí thải từ đốt than", "Làm nước sông chảy mạnh hơn ở hạ nguồn quanh năm"], "a": 1, "g": "Đập ngăn dòng chảy khiến nhiều loài không di chuyển được lên thượng nguồn."}, {"q": "Việc làm nào sau đây là sử dụng hiệu quả năng lượng?", "o": ["Đặt điều hòa ở 18 °C vào mùa hè", "Mở tủ lạnh thật lâu khi lấy đồ", "Dùng đèn sợi đốt để chiếu sáng", "Thay đèn sợi đốt bằng đèn LED"], "a": 3, "g": "Đèn LED dùng ít điện hơn cho cùng độ sáng nên tiết kiệm năng lượng."}],
     build: function (page) {
 
@@ -741,7 +1482,7 @@ page('Kiểm tra', 'tong-ket', 'Em đã học', b => {
 function renderHome() {
   const box = $('#lessonList'); box.innerHTML = ''; let topic = null, list = null;
   LESSONS.forEach(l => {
-    if (l.chuDe !== topic) { topic = l.chuDe; box.appendChild(el('p', 'topic', 'Chủ đề: ' + topic)); list = el('div', 'list'); box.appendChild(list); }
+    if (l.chuDe !== topic) { topic = l.chuDe; box.appendChild(el('p', 'topic', topic)); list = el('div', 'list'); box.appendChild(list); }
     const s = load(l.key), n = s.done.size, total = s.total;
     const fin = total && n >= total;
     const status = !n ? 'Chưa bắt đầu' : fin ? 'Đã hoàn thành' : `Đã học ${n}/${total} mục`;
