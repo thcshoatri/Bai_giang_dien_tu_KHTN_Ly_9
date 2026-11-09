@@ -228,7 +228,10 @@ figure.illus figcaption{display:flex;gap:10px;align-items:center;padding:8px 14p
 .simrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .simrow .seg{flex:1 1 auto;flex-wrap:wrap;min-width:0}
 .seg button{white-space:normal}
-html,body{overflow-x:hidden}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{overflow-x:hidden;max-width:100%}
+.hsbox>*{min-width:0;max-width:100%}
+input,select,button{max-width:100%}
 .page{min-width:0;overflow-wrap:anywhere}
 .page img,.page svg,.page table{max-width:100%}
 @media (max-width:400px){.datatbl th,.datatbl td{padding:4px 3px;font-size:13px}.datatbl input{font-size:14px;padding:4px 2px}.top{gap:6px;padding:10px 10px}.top .back{font-size:0;padding:7px 10px}.top .back::before{content:"‹ Bài";font-size:14px}.top .theme-btn{font-size:0;padding:6px 10px}.top .theme-btn::before{content:"Nền";font-size:13px;line-height:1.4}.menu-btn{font-size:14px;padding:7px 10px}.foot .btn{padding:10px 14px;font-size:15px}.page{padding:20px 14px 28px}}
@@ -273,7 +276,7 @@ html,body{overflow-x:hidden}
     <span class="ring"></span><span class="sun"></span>
     <p class="school">Trường THCS Hòa Trí · Tổ KHTN – GDTC</p>
     <h1>Bài giảng điện tử KHTN 9 – Phần Vật lí</h1>
-    <p class="sub" style="font-size:14px;color:#F2A65A;margin-bottom:4px">Phiên bản 08/11/2026 (bản 8) · 13 bài (Bài 5 – Bài 17)</p>
+    <p class="sub" style="font-size:14px;color:#F2A65A;margin-bottom:4px">Phiên bản 08/11/2026 (bản 9) · 13 bài (Bài 5 – Bài 17)</p>
     <p class="sub">Chọn bài để học. Tiến độ của em được lưu trên điện thoại hoặc máy tính em đang dùng.</p>
   </header>
   <div class="hbar"><h2>Danh sách bài học</h2><button class="theme-btn" data-theme-toggle>Sáng/Tối</button></div>
@@ -814,8 +817,8 @@ function studentBox() {
       const b = el('button', 'btn sec', 'Đổi tên/lớp'); b.onclick = () => { hsSave(null); draw(); }; c.appendChild(b);
     } else {
       c.appendChild(el('p', 'tlabel', 'Nhập họ tên và lớp để thầy nhận được kết quả bài làm của em'));
-      const row = el('div', 'simrow'); const ten = el('input'); ten.placeholder = 'Họ và tên'; ten.setAttribute('aria-label', 'Họ và tên'); ten.style.minWidth = '220px';
-      const lop = el('select'); lop.setAttribute('aria-label', 'Lớp'); lop.innerHTML = '<option value="">– Lớp –</option>' + LOP.map(l => `<option>${l}</option>`).join('');
+      const row = el('div', 'simrow'); const ten = el('input'); ten.placeholder = 'Họ và tên'; ten.setAttribute('aria-label', 'Họ và tên'); ten.style.cssText = 'flex:1 1 180px;min-width:0;width:100%';
+      const lop = el('select'); lop.style.cssText = 'flex:0 1 auto;min-width:0'; lop.setAttribute('aria-label', 'Lớp'); lop.innerHTML = '<option value="">– Lớp –</option>' + LOP.map(l => `<option>${l}</option>`).join('');
       const ok = el('button', 'btn', 'Lưu'); const msg = el('span', 'hint', '');
       ok.onclick = () => { const t = ten.value.trim().replace(/\s+/g, ' '); if (t.length < 4 || !lop.value) { msg.textContent = 'Em nhập đầy đủ họ tên và chọn lớp nhé.'; return; } hsSave({ ten: t, lop: lop.value }); draw(); };
       row.append(ten, lop, ok, msg); c.appendChild(row);
